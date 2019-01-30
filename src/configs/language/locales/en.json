@@ -1,0 +1,52 @@
+{
+  "appInfo": {
+    "footer": "RAA ©2018 Created by Anh Doan"
+  },
+  "input": {
+    "username": {
+      "placeholder": "Username",
+      "validateMsg": {
+        "required": "Please input your username!"
+      }
+    },
+    "password": {
+      "placeholder": "Password",
+      "validateMsg": {
+        "required": "Please input your password!"
+      }
+    }
+  },
+
+  "form": {
+    "btn": {
+      "add": "Add new",
+      "edit": "Edit"
+    }
+  },
+
+  "login": {
+    "title": "Login",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password",
+    "loginBtn": "Log in"
+  },
+
+  "dashboard": {
+    "title": "Dashboard"
+  },
+
+  "users": {
+    "title": "Users"
+  },
+
+  "posts": {
+    "title": "Posts"
+  },
+  "button": {
+    "create": "Create",
+    "edit": "edit",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "save": "Save"
+  }
+}
