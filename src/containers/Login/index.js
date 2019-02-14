@@ -32,12 +32,12 @@ class Login extends Component {
         </div>
         <Form layout="vertical" onSubmit={this.handleSubmit}>
           <FormItem>
-            {getFieldDecorator('username', {
-              rules: [{ required: true, message: i18n.t('input.username.validateMsg.required') }],
+            {getFieldDecorator('email', {
+              rules: [{ required: true, message: i18n.t('input.email.validateMsg.required') }],
             })(
               <MaterialInput
-                placeholder={i18n.t('input.username.placeholder')}
-                prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                placeholder={i18n.t('input.email.placeholder')}
+                prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
               />
             )}
           </FormItem>

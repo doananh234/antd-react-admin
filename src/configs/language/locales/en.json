@@ -14,6 +14,12 @@
       "validateMsg": {
         "required": "Please input your password!"
       }
+    },
+    "email": {
+      "placeholder": "Email",
+      "validateMsg": {
+        "required": "Please input your email!"
+      }
     }
   },
 
@@ -44,9 +50,14 @@
   },
   "button": {
     "create": "Create",
-    "edit": "edit",
+    "edit": "Edit",
     "cancel": "Cancel",
     "delete": "Delete",
-    "save": "Save"
+    "save": "Save",
+    "ok": "Ok"
+  },
+  "popup": {
+    "alertDelete": "Delete Data",
+    "alertDeleteDes": "Do you want to delete {{customMessage}}?"
   }
 }
