@@ -5,8 +5,8 @@ import RestInputItem from '../../../../components/RestInput/RestInputItem';
 const Form = () => (
   <Row>
     <Col md={24}>
-      <RestInputItem title="name" source="name" />
-      <RestInputItem title="image" source="image" />
+      <RestInputItem title="name" source="shortName.vi" />
+      <RestInputItem title="slug" source="slug" />
     </Col>
   </Row>
 );

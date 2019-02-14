@@ -23,7 +23,7 @@ export const sortByProps = (list, props) => {
   return newList;
 };
 
-export const upperCaseFirstChart = str => str[0].toUpperCase() + str.substring(1).toLowerCase();
+export const upperCaseFirstChart = str => str[0].toUpperCase() + str.substring(1);
 
 export const changeAlias = alias => {
   let str = alias;
@@ -78,7 +78,7 @@ export const getMatchFromPath = string => {
 export const getSearch = filter => {
   const params = {
     limit: filter.limit,
-    skip: filter.skip,
+    page: filter.page,
     ...getValidData(filter.filter),
   };
 
@@ -120,9 +120,9 @@ export const getFilterFromUrl = searchStr => {
         parsed[keyValue[0]] = parsed[keyValue[0]];
       }
     });
-  const filter = { limit: parsed.limit, skip: parsed.skip };
+  const filter = { limit: parsed.limit, page: parsed.page };
   delete parsed.limit;
-  delete parsed.skip;
+  delete parsed.page;
   filter.filter = parsed;
   return filter;
 };
@@ -185,3 +185,18 @@ export const formattedData = list => ({
   data: keyBy(list, 'id'),
   ids: list.map(data => data.id),
 });
+
+export const makeBreadCrumbFromPath = location => {
+  const BREADCRUMB_LIST = [];
+  const paths = location.pathname.split('/');
+  paths.forEach(data => {
+    if (data === '') return;
+    BREADCRUMB_LIST.push({
+      title: data,
+      path: `${
+        BREADCRUMB_LIST.length ? BREADCRUMB_LIST[BREADCRUMB_LIST.length - 1].path : ''
+      }/${data}`,
+    });
+  });
+  return BREADCRUMB_LIST;
+};

@@ -6,7 +6,7 @@ import { makeActionName } from '../../utils/textUtils';
 import { PRIMARY_KEY, CRUD_ACTIONS } from './actions';
 import { convertResponseData, convertRequestParams } from './dataProvider';
 
-function* getAllSaga(data, options = {}, resource, successAction, failureAction) {
+function* getAllSaga(data, options = {}, resource, successAction, failureAction, primaryKey) {
   try {
     const { limit, page, filter } = yield select(state => state[resource]);
     const convertRequest = convertRequestParams(
@@ -17,7 +17,8 @@ function* getAllSaga(data, options = {}, resource, successAction, failureAction)
         filter,
         ...data,
       },
-      resource
+      resource,
+      { primaryKey }
     );
     const response = yield call(
       apiWrapper,
@@ -26,7 +27,7 @@ function* getAllSaga(data, options = {}, resource, successAction, failureAction)
       options.customApiResource || resource,
       convertRequest
     );
-    const result = convertResponseData('GET_ALL', response);
+    const result = convertResponseData('GET_ALL', response, { primaryKey });
     if (result.data) {
       yield put(
         successAction({
@@ -47,7 +48,8 @@ function* getDataByIdSaga(
   options = { isRequestApi: true },
   resource,
   successAction,
-  failureAction
+  failureAction,
+  primaryKey = PRIMARY_KEY
 ) {
   try {
     if (!options.isRequestApi) {
@@ -61,7 +63,7 @@ function* getDataByIdSaga(
       options.customApiResource || resource,
       data[PRIMARY_KEY]
     );
-    const result = convertResponseData('GET_BY_ID', response);
+    const result = convertResponseData('GET_BY_ID', response, { primaryKey });
     if (result) {
       yield put(successAction(result));
     } else {
@@ -72,7 +74,14 @@ function* getDataByIdSaga(
   }
 }
 // function* editSaga(data, resource, successAction, failureAction, getOne)
-function* editSaga(data, options = {}, resource, successAction, failureAction) {
+function* editSaga(
+  data,
+  options = {},
+  resource,
+  successAction,
+  failureAction,
+  primaryKey = PRIMARY_KEY
+) {
   // delete data.c
   try {
     const response = yield call(
@@ -83,7 +92,7 @@ function* editSaga(data, options = {}, resource, successAction, failureAction) {
       data[PRIMARY_KEY],
       data
     );
-    const result = convertResponseData('EDIT', response);
+    const result = convertResponseData('EDIT', response, { primaryKey });
     if (result) {
       yield put(successAction({ ...data, ...result }));
       // yield put(successAction({ ...data, ...result }));
@@ -96,7 +105,7 @@ function* editSaga(data, options = {}, resource, successAction, failureAction) {
   }
 }
 
-function* createSaga(data, options = {}, resource, successAction, failureAction) {
+function* createSaga(data, options = {}, resource, successAction, failureAction, primaryKey) {
   try {
     const response = yield call(
       apiWrapper,
@@ -105,7 +114,7 @@ function* createSaga(data, options = {}, resource, successAction, failureAction)
       options.customApiResource || resource,
       data
     );
-    const result = convertResponseData('CREATE', response);
+    const result = convertResponseData('CREATE', response, { primaryKey });
     if (result) {
       yield put(successAction(result));
     } else {
@@ -117,7 +126,14 @@ function* createSaga(data, options = {}, resource, successAction, failureAction)
   }
 }
 
-function* delSaga(data, options = {}, resource, successAction, failureAction) {
+function* delSaga(
+  data,
+  options = {},
+  resource,
+  successAction,
+  failureAction,
+  primaryKey = PRIMARY_KEY
+) {
   try {
     const response = yield call(
       apiWrapper,
@@ -126,7 +142,7 @@ function* delSaga(data, options = {}, resource, successAction, failureAction) {
       options.customApiResource || resource,
       data.path || data[PRIMARY_KEY]
     );
-    const result = convertResponseData('DELETE', response);
+    const result = convertResponseData('DELETE', response, { primaryKey });
     if (result) {
       yield put(successAction(result || {}));
     } else {
@@ -137,7 +153,7 @@ function* delSaga(data, options = {}, resource, successAction, failureAction) {
   }
 }
 
-const makeCRUDSagaCreator = (resource, actions) => {
+const makeCRUDSagaCreator = (resource, actions, primaryKey) => {
   function* getAllSagaCreator({ data, options }) {
     yield fork(
       getAllSaga,
@@ -145,7 +161,8 @@ const makeCRUDSagaCreator = (resource, actions) => {
       options,
       resource,
       actions[makeActionName(`GET_ALL_${_.snakeCase(resource).toUpperCase()}_SUCCESS`)],
-      actions[makeActionName(`GET_ALL_${_.snakeCase(resource).toUpperCase()}_FAILURE`)]
+      actions[makeActionName(`GET_ALL_${_.snakeCase(resource).toUpperCase()}_FAILURE`)],
+      primaryKey
     );
   }
   function* getDataByIdSagaCreator({ data, options }) {
@@ -155,7 +172,8 @@ const makeCRUDSagaCreator = (resource, actions) => {
       options,
       resource,
       actions[makeActionName(`GET_BY_ID_${_.snakeCase(resource).toUpperCase()}_SUCCESS`)],
-      actions[makeActionName(`GET_BY_ID_${_.snakeCase(resource).toUpperCase()}_FAILURE`)]
+      actions[makeActionName(`GET_BY_ID_${_.snakeCase(resource).toUpperCase()}_FAILURE`)],
+      primaryKey
     );
   }
   function* editSagaCreator({ data, options }) {
@@ -166,7 +184,8 @@ const makeCRUDSagaCreator = (resource, actions) => {
       resource,
       actions[makeActionName(`EDIT_${_.snakeCase(resource).toUpperCase()}_SUCCESS`)],
       actions[makeActionName(`EDIT_${_.snakeCase(resource).toUpperCase()}_FAILURE`)],
-      getDataByIdSaga
+      getDataByIdSaga,
+      primaryKey
     );
   }
   function* deleteSagaCreator({ data, options }) {
@@ -176,7 +195,8 @@ const makeCRUDSagaCreator = (resource, actions) => {
       options,
       resource,
       actions[makeActionName(`DELETE_${_.snakeCase(resource).toUpperCase()}_SUCCESS`)],
-      actions[makeActionName(`DELETE_${_.snakeCase(resource).toUpperCase()}_FAILURE`)]
+      actions[makeActionName(`DELETE_${_.snakeCase(resource).toUpperCase()}_FAILURE`)],
+      primaryKey
     );
   }
   function* createSagaCreator({ data, options }) {
@@ -186,7 +206,8 @@ const makeCRUDSagaCreator = (resource, actions) => {
       options,
       resource,
       actions[makeActionName(`CREATE_${_.snakeCase(resource).toUpperCase()}_SUCCESS`)],
-      actions[makeActionName(`CREATE_${_.snakeCase(resource).toUpperCase()}_FAILURE`)]
+      actions[makeActionName(`CREATE_${_.snakeCase(resource).toUpperCase()}_FAILURE`)],
+      primaryKey
     );
   }
   const sagas = {
@@ -199,8 +220,8 @@ const makeCRUDSagaCreator = (resource, actions) => {
   return sagas;
 };
 
-const rootCRUDSaga = (resource, ignoreActions = [], actions) => {
-  const sagaCreators = makeCRUDSagaCreator(resource, actions);
+const rootCRUDSaga = (resource, ignoreActions = [], actions, primaryKey) => {
+  const sagaCreators = makeCRUDSagaCreator(resource, actions, primaryKey);
   const acceptActions = _.xor(CRUD_ACTIONS, ignoreActions);
   return acceptActions.map(data =>
     takeLatest(`${data}_${_.snakeCase(resource).toUpperCase()}`, sagaCreators[data])

@@ -32,7 +32,6 @@ export function* apiWrapper(
   try {
     console.log('config', config);
     const response = yield call(apiFunc, ...params);
-    console.log('response', response);
     yield fork(checkError, response);
     return response;
   } catch (err) {

@@ -4,32 +4,29 @@ import { Modal } from 'antd';
 import I18n from 'i18next';
 import { ButtonWrapper } from './styles';
 
+const { confirm } = Modal;
+
 class EditButton extends Component {
-  state = {
-    visible: false,
-  };
-
   onOk = () => {
-    this.setState({ visible: false });
-    const { deleteItem, record, source } = this.props;
-    return new Promise((resolve, reject) => {
-      setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
-      deleteItem(record.id);
-    }).catch(() => {
-      console.log('Oops errors!', source);
-    });
-  };
-
-  onCancel = () => {
-    this.setState({ visible: false });
+    const { deleteItem, record } = this.props;
+    deleteItem(record.id);
   };
 
   handleDelete = () => {
-    this.setState({ visible: true });
+    const { record, source } = this.props;
+    confirm({
+      title: I18n.t('popup.alertDelete'),
+      content: I18n.t('popup.alertDeleteDes', { customMessage: `(#${record.id})` }),
+      okText: I18n.t('button.ok'),
+      cancelText: I18n.t('button.cancel'),
+      onOk() {
+        this.onOk(source);
+      },
+      onCancel() {},
+    });
   };
 
   render() {
-    const { record } = this.props;
     return (
       <div>
         {/* <Tooltip title={<IntlMessages id="tooltip.delete" />}> */}
@@ -37,18 +34,6 @@ class EditButton extends Component {
           {I18n.t('button.delete')}
         </ButtonWrapper>
         {/* </Tooltip> */}
-        <Modal
-          visible={this.state.visible}
-          onOk={this.onOk}
-          onCancel={this.onCancel}
-          okText={I18n.t('button.ok')}
-          cancelText={I18n.t('button.cancel')}
-        >
-          <span>
-            {I18n.t('text.alertDelete')}
-            {`(#${record.id})?`}
-          </span>
-        </Modal>
       </div>
     );
   }

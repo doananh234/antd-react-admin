@@ -2,14 +2,21 @@ import { keyBy } from 'lodash';
 import { PRIMARY_KEY } from './actions';
 import { getValidData } from '../../utils/tools';
 
-export const convertRequestParams = (type, params, resource) => {
-  console.log('resource', resource);
-  delete params.page;
+export const convertRequestParams = (
+  type,
+  params
+  // resource
+  // options = { primaryKey: PRIMARY_KEY }
+) => {
+  const formatedParams = {
+    ...params,
+    page: undefined,
+  };
   switch (type) {
     case 'GET_ALL':
       return {
-        ...params,
-        filter: JSON.stringify(getValidData(params.filter)),
+        ...formatedParams,
+        filter: JSON.stringify(getValidData(formatedParams.filter)),
       };
     case 'GET_BY_ID':
       break;
@@ -22,13 +29,19 @@ export const convertRequestParams = (type, params, resource) => {
   return {};
 };
 
-export const convertResponseData = (type, response) => {
-  console.log('response', response);
+export const convertResponseData = (type, response, options = { primaryKey: PRIMARY_KEY }) => {
   switch (type) {
     case 'GET_ALL':
       return {
-        data: keyBy(response.results, PRIMARY_KEY),
-        ids: response.results.map(data => data[PRIMARY_KEY]),
+        data: keyBy(
+          response.results.map(data => ({
+            ...data,
+            [PRIMARY_KEY]: data[options.primaryKey || PRIMARY_KEY],
+            backupId: data[PRIMARY_KEY],
+          })),
+          options.primaryKey || PRIMARY_KEY
+        ),
+        ids: response.results.map(data => data[options.primaryKey || PRIMARY_KEY]),
         total: response.total,
       };
     case 'GET_BY_ID':

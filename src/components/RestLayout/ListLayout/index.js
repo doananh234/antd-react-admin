@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { List } from 'antd';
+import I18n from 'i18next';
+import { List, Col, Row, Card } from 'antd';
 import { getAction } from '../TableLayout';
 
 class RestListLayout extends Component {
@@ -40,17 +41,38 @@ class RestListLayout extends Component {
 
   renderListItem = record => {
     const { children } = this.props;
-    return React.Children.map(children, item => (
-      <div key={item.props.title}>
-        {React.cloneElement(item, {
+    const actions = React.Children.map(
+      children.find(element => element.props.source === 'group').props.children,
+      item =>
+        React.cloneElement(item, {
           record,
           table: true,
           list: true,
           onChange: () => this.onChangeRecord(record, item),
           ...getAction(this.props, item),
-        })}
-      </div>
-    ));
+        })
+    );
+    return (
+      <Card className="item" actions={actions}>
+        <Row>
+          {React.Children.map(children, item => {
+            if (item.props.source === 'group') return null;
+            return (
+              <Col span={24} key={item.props.title}>
+                <div className="title">{I18n.t(item.props.title)}</div>
+                {React.cloneElement(item, {
+                  record,
+                  table: true,
+                  list: true,
+                  onChange: () => this.onChangeRecord(record, item),
+                  ...getAction(this.props, item),
+                })}
+              </Col>
+            );
+          })}
+        </Row>
+      </Card>
+    );
   };
 
   render() {
@@ -74,7 +96,7 @@ class RestListLayout extends Component {
         style={{ marginTop: 20 }}
         dataSource={resourceData || []}
         renderItem={record => (
-          <List.Item className="item" key={record.id}>
+          <List.Item key={record.id}>
             {responseRender && !isList
               ? responseRender(record, {
                   gotoShowPage,

@@ -20,6 +20,7 @@ class RestList extends Component {
 
   retrieveList = filter => {
     this.props.pushQuery(filter);
+    this.props.retrieveList(filter, true);
   };
 
   gotoEditPage = id => {
@@ -133,8 +134,8 @@ RestList.propTypes = {
 ConnectRestList.defaultProps = {
   rootPath: '',
   redirects: {
-    edit: '',
-    create: '',
+    edit: 'modal',
+    create: 'modal',
   },
 };
 

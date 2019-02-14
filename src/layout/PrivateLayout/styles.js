@@ -8,7 +8,7 @@ const PrivateLayoutWrapper = styled.div`
     height: 100vh;
     margin-left: 80px;
     overflow: hidden;
-    transition: all 0.2s ease 0s;
+    transition: all 0.3s ease 0s;
     background: #f4f6fc;
   }
   .container {
@@ -89,16 +89,36 @@ const PrivateLayoutWrapper = styled.div`
   @media only screen and (max-width: 430px) {
     .sidebar {
       left: -80px;
+      position: fixed;
+      z-index: 9999;
     }
     .mainView {
       margin-left: 0px;
+      z-index: 1;
+    }
+    .overlay {
+      z-index: 9998;
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      opacity: 0;
+      pointer-events: none;
+      background: rgba(0, 0, 0, 0.5);
+      transition: all 0.5s ease 0s;
     }
     #collapsedTracker:checked ~ .sidebar {
       left: 0px;
     }
 
     #collapsedTracker:checked ~ .mainView {
-      margin-left: 200px !important;
+      margin-left: 0px !important;
+      z-index: 1;
+    }
+    #collapsedTracker:checked ~ .overlay {
+      opacity: 1;
+      pointer-events: auto;
     }
   }
 `;

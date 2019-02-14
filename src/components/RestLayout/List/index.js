@@ -27,8 +27,8 @@ class RestListComponent extends Component {
   };
 
   onChangePagination = (page, pageSize) => {
-    const { resourceFilter } = this.props;
-    this.props.retrieveList({
+    const { resourceFilter, retrieveList } = this.props;
+    retrieveList({
       page,
       limit: pageSize,
       filter: resourceFilter.filter,
@@ -53,6 +53,7 @@ class RestListComponent extends Component {
       resourceData,
       resource,
       hasCreate,
+      layoutButtonCreate,
       gotoCreatePage,
       filter,
       title,
@@ -85,7 +86,7 @@ class RestListComponent extends Component {
             onTextSearch={this.onTextSearch}
           />
         )}
-        {hasCreate && (
+        {hasCreate && layoutButtonCreate !== 'inline' && (
           <CreateButton title={createTitle} resource={resource} gotoCreatePage={gotoCreatePage} />
         )}
         {hasExport && <ExportExcelButton />}
@@ -178,7 +179,18 @@ class RestListComponent extends Component {
           title={<CustomBreadcrumb data={BREADCRUMB_LIST} />}
           extra={actions}
         >
-          <PageTitle>
+          <PageTitle
+            extraAction={
+              hasCreate &&
+              layoutButtonCreate === 'inline' && (
+                <CreateButton
+                  title={createTitle}
+                  resource={resource}
+                  gotoCreatePage={gotoCreatePage}
+                />
+              )
+            }
+          >
             <CustomBreadcrumb data={BREADCRUMB_LIST} />
           </PageTitle>
           {content}
@@ -204,6 +216,7 @@ RestListComponent.propTypes = {
   location: PropTypes.object,
   createTitle: PropTypes.string,
   resourceFilter: PropTypes.object,
+  layoutButtonCreate: PropTypes.string,
 };
 RestListComponent.defaultProps = {
   noCardWrapper: false,
@@ -211,5 +224,6 @@ RestListComponent.defaultProps = {
   hasExport: true,
   hasSearch: true,
   hasCreate: true,
+  layoutButtonCreate: 'inline',
 };
 export default RestListComponent;

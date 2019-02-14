@@ -13,7 +13,7 @@ const LayoutContentWrapper = styled.div`
   }
 
   @media (max-width: 580px) {
-    padding: 15px;
+    padding: 15px 0px;
   }
 `;
 

@@ -1,5 +1,5 @@
-import rooms from './rooms/actions';
+import caseTypes from './caseTypes/actions';
 
 export default {
-  rooms,
+  caseTypes,
 };

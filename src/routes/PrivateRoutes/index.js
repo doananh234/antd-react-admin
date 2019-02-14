@@ -5,7 +5,8 @@ import { flatMap, map } from 'lodash';
 import PrivateLayout from '../../layout/PrivateLayout';
 import NotFoundPage from '../../containers/404Page';
 import Home from '../../pages/Dashboard';
-import Rooms from '../../pages/Rooms';
+import CaseTypes from '../../pages/CaseTypes';
+import ModalRoute from '../ModalRoute';
 
 const routes = [
   {
@@ -15,25 +16,25 @@ const routes = [
     title: t('dashboard.title'),
   },
   {
-    path: '/rooms',
+    path: '/caseTypes',
     routes: [
       {
         path: '/',
-        component: Rooms.List,
+        component: CaseTypes.List,
       },
       {
         path: '/create',
-        component: Rooms.Create,
+        component: CaseTypes.Create,
       },
       {
-        path: '/:id',
-        component: Rooms.Edit,
+        path: '/:id/edit',
+        component: CaseTypes.Edit,
       },
     ],
   },
 ];
 
-const PrivateRoutes = () => (
+const PrivateRoutes = props => (
   <PrivateLayout>
     <Switch>
       {map(
@@ -53,6 +54,7 @@ const PrivateRoutes = () => (
       )}
       <Route component={NotFoundPage} />
     </Switch>
+    <ModalRoute {...props} />
   </PrivateLayout>
 );
 

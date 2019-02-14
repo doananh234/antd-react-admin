@@ -32,7 +32,7 @@ const ButtonRow = props => {
   return (
     <Row gutter={8} type="flex" justify="end" style={{ marginTop: 20 }}>
       <Col lg={12} md={0} sm={0} xs={24} />
-      <Col lg={showModal ? 6 : 3} md={3} sm={12} xs={12}>
+      <Col lg={showModal ? 6 : 3} md={3} sm={24} xs={24}>
         <ButtonWrapper
           onClick={() => {
             handleSubmit();
@@ -44,7 +44,7 @@ const ButtonRow = props => {
         </ButtonWrapper>
       </Col>
       <Col md={0} sm={0} xs={24} />
-      <Col lg={showModal ? 6 : 3} md={3} sm={12} xs={12}>
+      <Col lg={showModal ? 6 : 3} md={3} sm={24} xs={24}>
         <ButtonWrapper
           onClick={() => {
             onBack();

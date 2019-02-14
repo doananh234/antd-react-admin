@@ -21,7 +21,7 @@ const ActionGroup = ({
           record,
         })
       )}
-      trigger="click"
+      trigger="hover"
     >
       <Icon className="iconSetting" type="setting" />
     </Popover>
@@ -35,8 +35,11 @@ ActionGroup.propTypes = {
   gotoEditPage: PropTypes.func,
   gotoShowPage: PropTypes.func,
   deleteItem: PropTypes.func,
+  source: PropTypes.string,
 };
 
-ActionGroup.defaultProps = {};
+ActionGroup.defaultProps = {
+  source: 'group',
+};
 
 export default ActionGroup;

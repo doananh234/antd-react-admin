@@ -8,6 +8,7 @@ import Layout from '../../common/Layout';
 import Box from '../../common/Box';
 import ActionView from '../ActionLayout';
 import PageTitle from '../../common/PageTitle';
+import { makeBreadCrumbFromPath } from '../../../utils/tools';
 
 class RestShowComponent extends Component {
   state = {};
@@ -27,13 +28,8 @@ class RestShowComponent extends Component {
       title,
       location,
     } = this.props;
-    const BREADCRUMB_LIST = [];
-    location.pathname.split('/').forEach((data, index) => {
-      BREADCRUMB_LIST.push({
-        title: data,
-        path: `${BREADCRUMB_LIST[index - 1] ? BREADCRUMB_LIST[index - 1].path : ''}/${data}`,
-      });
-    });
+    const BREADCRUMB_LIST = makeBreadCrumbFromPath(location);
+
     if (!record) return null;
 
     const actions = (

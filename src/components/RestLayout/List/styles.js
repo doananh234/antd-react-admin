@@ -58,4 +58,8 @@ export const ListWrapper = styled.div`
     justify-content: flex-end;
     margin-bottom: 20px;
   }
+  .title {
+    font-size: 18px;
+    font-weight: bold;
+  }
 `;

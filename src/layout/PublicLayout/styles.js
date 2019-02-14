@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+// import loginBackground from '../../assets/images/login_background.jpg';
 
 const PublicLayoutWrapper = styled.div`
   .layout {
@@ -8,7 +9,7 @@ const PublicLayoutWrapper = styled.div`
   }
 
   .main-img {
-    background-image: url(https://farm5.staticflickr.com/4312/35463838634_4fc79a297c_k.jpg);
+    background-image: url(https://res.cloudinary.com/csmenouvo/image/upload/v1550032735/background/login_background.jpg);
     background-color: transparent;
     background-size: cover;
     background-position: center center;

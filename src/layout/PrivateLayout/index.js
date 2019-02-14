@@ -23,10 +23,10 @@ const sidebarMenu = [
     url: '/users',
   },
   {
-    key: 'rooms',
-    text: 'Rooms',
+    key: 'caseTypes',
+    text: 'caseTypes',
     icon: 'snippets',
-    url: '/rooms',
+    url: '/caseTypes',
   },
 ];
 const profileMenu = [
@@ -41,7 +41,7 @@ class PrivateLayout extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      collapsed: false,
+      collapsed: true,
       defaultSelectedKeys:
         findLast(sidebarMenu, menu => window.location.pathname.indexOf(menu.url) === 0) ||
         sidebarMenu[0],
@@ -57,11 +57,16 @@ class PrivateLayout extends Component {
   render() {
     const { children, isAuthenticated } = this.props;
     if (!isAuthenticated) return <Redirect to="/login" />;
-    console.log('this.state.collapsed', this.state.collapsed);
     return (
       <PrivateLayoutWrapper>
         <Layout className="windowView">
-          <input id="collapsedTracker" type="checkbox" checked={!this.state.collapsed} />
+          <input
+            onChange={() => {}}
+            id="collapsedTracker"
+            type="checkbox"
+            checked={!this.state.collapsed}
+          />
+          <label htmlFor="collapsedTracker" className="overlay" onClick={this.toggle} />
           <Sider trigger={null} collapsible collapsed={this.state.collapsed} className="sidebar">
             <div className="logo" />
             <Menu mode="inline" defaultSelectedKeys={[this.state.defaultSelectedKeys.key]}>

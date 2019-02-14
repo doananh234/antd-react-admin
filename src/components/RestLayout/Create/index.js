@@ -6,6 +6,7 @@ import RestCreateForm from '../RestCreateForm';
 import Layout from '../../common/Layout';
 import Box from '../../common/Box';
 import PageTitle from '../../common/PageTitle';
+import { makeBreadCrumbFromPath } from '../../../utils/tools';
 
 class RestCreateComponent extends Component {
   constructor(props) {
@@ -15,14 +16,7 @@ class RestCreateComponent extends Component {
 
   render() {
     const { onBack, showModal, title, location, noCardWrapper } = this.props;
-    const BREADCRUMB_LIST = [];
-    location.pathname.split('/').forEach((data, index) => {
-      BREADCRUMB_LIST.push({
-        title: data,
-        path: `${BREADCRUMB_LIST[index - 1] ? BREADCRUMB_LIST[index - 1].path : ''}/${data}`,
-      });
-    });
-
+    const BREADCRUMB_LIST = makeBreadCrumbFromPath(location);
     const actions = <BackButton onBack={onBack} />;
     const content = (
       <div style={{ width: '100%' }}>

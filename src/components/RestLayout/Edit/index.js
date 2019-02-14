@@ -5,22 +5,17 @@ import RestEditForm from '../RestEditForm';
 import Layout from '../../common/Layout';
 import Box from '../../common/Box';
 import PageTitle from '../../common/PageTitle';
+import { makeBreadCrumbFromPath } from '../../../utils/tools';
 
 class RestEditComponent extends Component {
   state = {};
 
   render() {
     const { showModal, title, noCardWrapper, location } = this.props;
-    const BREADCRUMB_LIST = [];
-    const paths = location.pathname.split('/');
-    paths.forEach((data, index) => {
-      BREADCRUMB_LIST.push({
-        title: data,
-        path: `${BREADCRUMB_LIST[index - 1] ? BREADCRUMB_LIST[index - 1].path : ''}/${data}`,
-      });
-    });
+    const BREADCRUMB_LIST = makeBreadCrumbFromPath(location);
     if (title && !showModal) {
-      BREADCRUMB_LIST[paths.length].title = title || BREADCRUMB_LIST[paths.length].title;
+      BREADCRUMB_LIST[BREADCRUMB_LIST.length - 1].title =
+        title || BREADCRUMB_LIST[BREADCRUMB_LIST.length - 1].title;
     }
     const actions = <div />;
     return !showModal && !noCardWrapper ? (
