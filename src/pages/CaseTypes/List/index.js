@@ -9,8 +9,8 @@ class CaseTypesList extends PureComponent {
   render() {
     return (
       <List {...this.props} resource="caseTypes">
-        <RestFieldItem title="name" source="shortName.vi" />
-        <RestFieldItem title="slug" source="slug" />
+        <RestFieldItem hasSearch title="name" source="shortName.vi" />
+        <RestFieldItem hasSearch title="slug" source="slug" />
         <ActionGroup>
           <EditButton />
           <DeleteButton />

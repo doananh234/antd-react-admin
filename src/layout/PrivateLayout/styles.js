@@ -20,6 +20,9 @@ const PrivateLayoutWrapper = styled.div`
   .content {
     padding: 40px 20px;
     flex: 1;
+    ${'' /* @media only screen and (max-width: 430px) {
+      padding-top: 80px;
+    } */}
   }
   .trigger {
     font-size: 20px;
@@ -28,7 +31,29 @@ const PrivateLayoutWrapper = styled.div`
     transition: color 0.3s;
 
     &:hover {
-      color: #1890ff;
+      color: ${({ theme }) => theme.palette.primary};
+    }
+    @media only screen and (max-width: 430px) {
+      color: ${({ theme }) => theme.palette.primary};
+    }
+  }
+
+  .triggerMobile {
+    font-size: 20px;
+    line-height: 64px;
+    cursor: pointer;
+    color: ${({ theme }) => theme.palette.primary};
+    transition: color 0.3s;
+    position: fixed;
+    top: 0px;
+    left: 20px;
+    z-index: 2;
+    display: none;
+    &:hover {
+      color: ${({ theme }) => theme.palette.primary};
+    }
+    @media only screen and (max-width: 430px) {
+      display: block;
     }
   }
 
@@ -58,12 +83,45 @@ const PrivateLayoutWrapper = styled.div`
     padding: 0 24px;
     display: flex;
     justify-content: space-between;
+    transition: all 0.5s ease 0.2s;
+    @media only screen and (max-width: 430px) {
+      display: inherit;
+    }
+    .leftHeader {
+      @media only screen and (max-width: 430px) {
+        width: 100%;
+        display: inherit;
+        padding-right: 45px;
+      }
+    }
+    .rightHeader {
+      @media only screen and (max-width: 430px) {
+        display: none;
+      }
+    }
+    .title {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+      text-align: center;
+      @media only screen and (max-width: 430px) {
+        opacity: 1;
+        display: inline-block;
+        padding-left: 20px;
+        font-size: 20px;
+        font-weight: 500;
+        width: 100%;
+      }
+    }
 
     & .ant-avatar-lg.ant-avatar-icon {
       .anticon {
         font-size: 24px;
       }
     }
+    ${'' /* @media only screen and (max-width: 430px) {
+      margin-top: -80px;
+    } */}
   }
 
   .mainContent {
@@ -74,6 +132,9 @@ const PrivateLayoutWrapper = styled.div`
 
   .footer {
     text-align: center;
+    @media only screen and (max-width: 430px) {
+      display: none;
+    }
   }
   #collapsedTracker {
     width: 0px;
@@ -119,6 +180,30 @@ const PrivateLayoutWrapper = styled.div`
     #collapsedTracker:checked ~ .overlay {
       opacity: 1;
       pointer-events: auto;
+    }
+  }
+
+  .footerMobile {
+    position: fixed;
+    height: 60px;
+    left: 0px;
+    right: 0px;
+    bottom: -60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);
+    transition: all 0.5s ease 0.2s;
+    a {
+      text-align: center;
+      flex: 1;
+    }
+    .tabIcon {
+      font-size: 25px;
+    }
+    @media only screen and (max-width: 430px) {
+      bottom: 0px;
     }
   }
 `;

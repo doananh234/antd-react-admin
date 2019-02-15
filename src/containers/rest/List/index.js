@@ -19,7 +19,7 @@ class RestList extends Component {
   }
 
   retrieveList = filter => {
-    this.props.pushQuery(filter);
+    this.props.pushQuery(getSearch(filter));
     this.props.retrieveList(filter, true);
   };
 
@@ -109,7 +109,7 @@ const mapDispatchToProps = (dispatch, props) => ({
         [PRIMARY_KEY]: id,
       })
     ),
-  pushQuery: filter => dispatch(push(`${props.rootPath}/${props.resource}?${getSearch(filter)}`)),
+  pushQuery: searchStr => dispatch(push(`${props.rootPath}/${props.resource}?${searchStr}`)),
   showModal: data => dispatch(showModalAction(data)),
   pushRoute: data => dispatch(push(data)),
 });

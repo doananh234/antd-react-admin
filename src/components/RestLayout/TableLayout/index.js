@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import { update } from 'lodash';
 import PropTypes from 'prop-types';
-import { Table } from 'antd';
+import { Table, Button, Input, Icon } from 'antd';
 import I18n from 'i18next';
 import Text from '../../common/Text';
 import { getRecordData } from '../../../utils/tools';
@@ -12,10 +13,22 @@ class RestTableLayout extends Component {
     const formatSort =
       sorter && sorter.field ? `${sorter.order === 'descend' ? '-' : ''}${sorter.field}` : null;
     Object.keys(filters).forEach(filter => {
-      formatFilter[filter] = { $in: filters[filter] };
+      const filterKey = filter.substring(0, filter.indexOf('-col'));
+      const $in = filters[filter].filter(data => typeof data === 'string');
+      const searchFilter = filters[filter].find(
+        data => typeof data !== 'string' && data.searchText
+      );
+      update(formatFilter, filterKey, () => ({}));
+      if ($in.length) {
+        update(formatFilter, filterKey, () => ({ $in }));
+      }
+      if (searchFilter) {
+        update(formatFilter, filterKey, () => ({ $like: searchFilter.searchText }));
+      }
     });
+    console.log('formatFilter', formatFilter);
     retrieveList({
-      skip: (e.current - 1) * e.pageSize,
+      page: e.current,
       limit: e.pageSize,
       filter: { ...resourceFilter.filter, ...formatFilter },
       order: formatSort,
@@ -38,23 +51,88 @@ class RestTableLayout extends Component {
     }
   }
 
+  handleSearch = confirm => {
+    confirm();
+  };
+
+  handleReset = clearFilters => {
+    clearFilters();
+  };
+
+  getColumnSearchProps = (dataIndex, title, hasSearch) =>
+    hasSearch
+      ? {
+          filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => {
+            const searchSelected = selectedKeys.find(
+              data => typeof data !== 'string' && data.searchText
+            );
+            const filters = selectedKeys.filter(data => typeof data === 'string');
+            return (
+              <div style={{ padding: 8 }}>
+                <Input
+                  ref={node => {
+                    this.searchInput = node;
+                  }}
+                  placeholder={`Search ${I18n.t(title)}`}
+                  value={searchSelected && searchSelected.searchText}
+                  onChange={e =>
+                    setSelectedKeys(
+                      e.target.value ? [...filters, { searchText: e.target.value }] : [filters]
+                    )
+                  }
+                  onPressEnter={() => this.handleSearch(confirm)}
+                  style={{ width: 188, marginBottom: 8, display: 'block' }}
+                />
+                <Button
+                  type="primary"
+                  onClick={() => this.handleSearch(confirm)}
+                  icon="search"
+                  size="small"
+                  style={{ width: 90, marginRight: 8 }}
+                >
+                  {I18n.t('button.search')}
+                </Button>
+                <Button
+                  onClick={() => {
+                    setSelectedKeys([...filters]);
+                    setTimeout(() => confirm());
+                  }}
+                  size="small"
+                  style={{ width: 90 }}
+                >
+                  {I18n.t('button.reset')}
+                </Button>
+              </div>
+            );
+          },
+          filterIcon: filtered => (
+            <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+          ),
+          onFilterDropdownVisibleChange: visible => {
+            if (visible) {
+              setTimeout(() => this.searchInput.select());
+            }
+          },
+        }
+      : {};
+
   render() {
     const {
       resourceData,
-      resourceFilter,
       children,
       gotoEditPage,
       loading,
       onRow,
       customQuery,
+      resourceFilter,
     } = this.props;
     const columns = children.map((item, index) => ({
       fixed: item.props.fixed,
-      title: item.props.title ? I18n.t(item.props.title) : null,
-      dataIndex: item.props.source,
+      title: item.props.title ? I18n.t(item.props.title) : '',
+      dataIndex: `${item.props.source}`,
       width: item.props.width,
       align: item.props.align,
-      key: `${item.props.source}col${index}`,
+      key: `${item.props.source}-col${index}`,
       sorter: item.props.sorter
         ? (a, b) => getRecordData(a, item.props.source) > getRecordData(b, item.props.source)
         : undefined,
@@ -76,6 +154,7 @@ class RestTableLayout extends Component {
           });
           return RecordComponent;
         }),
+      ...this.getColumnSearchProps(item.props.source, item.props.title, item.props.hasSearch),
     }));
 
     return (
@@ -130,6 +209,14 @@ export const getAction = (props, item) => {
       return {};
   }
 };
+
+// const getFilteredValue = (resourceFilter, source) => {
+//   const sourceFilter = getRecordData(resourceFilter, source);
+//   if (!sourceFilter) return [];
+//   return sourceFilter.$in
+//     ? [...sourceFilter.$in, { searchText: sourceFilter.$link }]
+//     : [{ searchText: sourceFilter.$link }];
+// };
 
 RestTableLayout.propTypes = {
   children: PropTypes.node,

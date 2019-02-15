@@ -33,7 +33,7 @@ class RestListLayout extends Component {
   onChangePage = page => {
     const { resourceFilter } = this.props;
     this.props.retrieveList({
-      skip: page,
+      page,
       limit: resourceFilter.limit || 10,
       filter: resourceFilter.filter,
     });

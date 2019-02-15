@@ -37,6 +37,21 @@ const profileMenu = [
   },
 ];
 
+const mobileTabs = [
+  {
+    key: 'home',
+    text: 'Profile',
+    url: '/',
+    icon: 'home',
+  },
+  {
+    key: 'user',
+    text: 'Profile',
+    url: '#',
+    icon: 'user',
+  },
+];
+
 class PrivateLayout extends Component {
   constructor(props) {
     super(props);
@@ -80,14 +95,15 @@ class PrivateLayout extends Component {
           </Sider>
           <Layout className="mainView">
             <Header className="header">
-              <div>
+              <div className="leftHeader">
                 <Icon
                   className="trigger"
                   type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
                   onClick={this.toggle}
                 />
+                <div className="title">{I18n.t('appInfo.name')}</div>
               </div>
-              <div>
+              <div className="rightHeader">
                 <Dropdown
                   overlay={(
                     <Menu style={{ minWidth: '120px' }}>
@@ -109,6 +125,13 @@ class PrivateLayout extends Component {
             <Content className="container">
               <div className="content">{children}</div>
               <Footer className="footer">{I18n.t('appInfo.footer')}</Footer>
+              <Footer className="footerMobile">
+                {mobileTabs.map(tab => (
+                  <a href={tab.url} key={tab.key}>
+                    <Icon type={tab.icon} className="tabIcon" />
+                  </a>
+                ))}
+              </Footer>
             </Content>
           </Layout>
         </Layout>

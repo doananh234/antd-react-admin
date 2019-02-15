@@ -1,6 +1,7 @@
 {
   "appInfo": {
-    "footer": "RAA ©2018 Created by Anh Doan"
+    "footer": "RAA ©2018 Created by Anh Doan",
+    "name": "React Admin"
   },
   "input": {
     "username": {
@@ -54,7 +55,9 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "save": "Save",
-    "ok": "Ok"
+    "ok": "Ok",
+    "search": "Search",
+    "reset": "Reset"
   },
   "popup": {
     "alertDelete": "Delete Data",

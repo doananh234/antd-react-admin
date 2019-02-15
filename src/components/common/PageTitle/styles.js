@@ -5,6 +5,7 @@ export default styled.div`
   display: flex;
   margin-bottom: 30px;
   align-items: center;
+  transition: padding-left 0.3s ease 0.1s, padding-right 0.3s ease 0.1s, position 0 ease 0.3s;
   .extraAction {
     margin-bottom: 0.5em;
     margin-left: 15px;

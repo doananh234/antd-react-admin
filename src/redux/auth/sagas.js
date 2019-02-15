@@ -29,7 +29,6 @@ function* loginSaga({ params }) {
       loginApi,
       params
     );
-    console.log('response', response);
     if (response.token) {
       localStorage.setItem('sessionToken', response.token);
       yield put(loginSuccessAction(response));
