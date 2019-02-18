@@ -2,10 +2,25 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Modal from '../../components/common/Modal';
+import TypeGroups from '../../pages/TypeGroups';
 import CaseTypes from '../../pages/CaseTypes';
 import { closeModal as closeModalAction } from '../../redux/modal/actions';
 
 const modalRoutes = [
+
+  {
+    path: '/typeGroups',
+    routes: [
+      {
+        path: '/create',
+        component: TypeGroups.Create,
+      },
+      {
+        path: '/edit',
+        component: TypeGroups.Edit,
+      },
+    ],
+  },
   {
     path: '/caseTypes',
     routes: [
