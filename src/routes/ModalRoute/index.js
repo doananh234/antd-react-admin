@@ -2,11 +2,26 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Modal from '../../components/common/Modal';
+import ProductTypes from '../../pages/ProductTypes';
 import TypeGroups from '../../pages/TypeGroups';
 import CaseTypes from '../../pages/CaseTypes';
 import { closeModal as closeModalAction } from '../../redux/modal/actions';
 
 const modalRoutes = [
+
+  {
+    path: '/productTypes',
+    routes: [
+      {
+        path: '/create',
+        component: ProductTypes.Create,
+      },
+      {
+        path: '/edit',
+        component: ProductTypes.Edit,
+      },
+    ],
+  },
 
   {
     path: '/typeGroups',

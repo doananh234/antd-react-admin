@@ -19,10 +19,10 @@ class EditButton extends Component {
       content: I18n.t('popup.alertDeleteDes', { customMessage: `(#${record.id})` }),
       okText: I18n.t('button.ok'),
       cancelText: I18n.t('button.cancel'),
-      onOk() {
+      onOk: () => {
         this.onOk(source);
       },
-      onCancel() {},
+      onCancel: () => {},
     });
   };
 

@@ -1,10 +1,12 @@
 import { takeLatest, put, call, fork, select } from 'redux-saga/effects';
 import _ from 'lodash';
+import { goBack } from 'connected-react-router';
 import { apiWrapper } from '../../utils/reduxUtils';
 import { getAllApi, getDataByIdApi, postApi, putApi, delApi } from '../../api/crud';
 import { makeActionName } from '../../utils/textUtils';
 import { PRIMARY_KEY, CRUD_ACTIONS } from './actions';
 import { convertResponseData, convertRequestParams } from './dataProvider';
+import { closeModal } from '../modal/actions';
 
 function* getAllSaga(data, options = {}, resource, successAction, failureAction, primaryKey) {
   try {
@@ -84,6 +86,7 @@ function* editSaga(
 ) {
   // delete data.c
   try {
+    const currentModal = yield select(state => state.modal.current);
     const response = yield call(
       apiWrapper,
       { isShowProgress: options.isShowProgress },
@@ -96,6 +99,7 @@ function* editSaga(
     if (result) {
       yield put(successAction({ ...data, ...result }));
       // yield put(successAction({ ...data, ...result }));
+      yield put(currentModal ? closeModal() : goBack());
     } else {
       yield put(failureAction({ ...data, ...response }));
     }
@@ -107,6 +111,7 @@ function* editSaga(
 
 function* createSaga(data, options = {}, resource, successAction, failureAction, primaryKey) {
   try {
+    const currentModal = yield select(state => state.modal.current);
     const response = yield call(
       apiWrapper,
       { isShowProgress: options.isShowProgress },
@@ -117,6 +122,7 @@ function* createSaga(data, options = {}, resource, successAction, failureAction,
     const result = convertResponseData('CREATE', response, { primaryKey });
     if (result) {
       yield put(successAction(result));
+      yield put(currentModal ? closeModal() : goBack());
     } else {
       yield put(failureAction(response));
     }
@@ -142,7 +148,7 @@ function* delSaga(
       options.customApiResource || resource,
       data.path || data[PRIMARY_KEY]
     );
-    const result = convertResponseData('DELETE', response, { primaryKey });
+    const result = convertResponseData('DELETE', data, { primaryKey });
     if (result) {
       yield put(successAction(result || {}));
     } else {

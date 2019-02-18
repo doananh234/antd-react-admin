@@ -4,12 +4,31 @@ import { t } from 'i18next';
 import { flatMap, map } from 'lodash';
 import PrivateLayout from '../../layout/PrivateLayout';
 import NotFoundPage from '../../containers/404Page';
+import ProductTypes from '../../pages/ProductTypes';
 import TypeGroups from '../../pages/TypeGroups';
 import Home from '../../pages/Dashboard';
 import CaseTypes from '../../pages/CaseTypes';
 import ModalRoute from '../ModalRoute';
 
 const routes = [
+
+  {
+    path: '/productTypes',
+    routes: [
+      {
+        path: '/',
+        component: ProductTypes.List,
+      },
+      {
+        path: '/create',
+        component: ProductTypes.Create,
+      },
+      {
+        path: '/:id/edit',
+        component: ProductTypes.Edit,
+      },
+    ],
+  },
 
   {
     path: '/typeGroups',

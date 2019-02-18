@@ -29,6 +29,12 @@ class FormComponent extends Component {
       });
     });
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.loading && !this.props.loading && !this.props.error) {
+      this.props.form.resetFields();
+    }
+  }
+
   render() {
     const {
       loading,
@@ -86,6 +92,7 @@ FormComponent.propTypes = {
   record: PropTypes.object,
   showModal: PropTypes.bool,
   formatOnSubmit: PropTypes.func,
+  error: PropTypes.any,
 };
 
 FormComponent.defaultProps = {

@@ -8,7 +8,7 @@ import RestCreateComponent from '../../../components/RestLayout/Create';
 import Text from '../../../components/common/Text';
 import { closeModal as closeModalAction } from '../../../redux/modal/actions';
 import { upperCaseFirstChart } from '../../../utils/tools';
-import { getDefaultCreateData } from '../../../redux/crudCreator/selectors';
+import { getDefaultCreateData, getLoading, getError } from '../../../redux/crudCreator/selectors';
 
 class RestCreate extends Component {
   onBack = () => {
@@ -38,6 +38,8 @@ class RestCreate extends Component {
 const mapStateToProps = (state, props) => ({
   route: state.modal.current,
   record: getDefaultCreateData(state, props),
+  loading: getLoading(state, props),
+  error: getError(state, props),
 });
 
 const mapDispatchToProps = (dispatch, props) => {

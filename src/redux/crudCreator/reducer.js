@@ -112,8 +112,9 @@ export const del = (state, { data }) => ({
 
 export const delSuccess = (state, { data }) => ({
   ...state,
-  data: data[PRIMARY_KEY] ? { ...state.data, [data[PRIMARY_KEY]]: null } : null,
-  itemLoadings: data[PRIMARY_KEY] ? { ...state.data, [data[PRIMARY_KEY]]: null } : null,
+  data: data[PRIMARY_KEY] ? { ...state.data, [data[PRIMARY_KEY]]: null } : {},
+  itemLoadings: data[PRIMARY_KEY] ? { ...state.data, [data[PRIMARY_KEY]]: null } : {},
+  ids: state.ids.filter(id => `${id}` !== `${[data[PRIMARY_KEY]]}`),
   error: null,
   currentId: null,
 });
