@@ -80,7 +80,7 @@ const mapDispatchToProps = (dispatch, props) => ({
           ...props.initialFilter,
           ...filter,
         },
-        { isRefresh }
+        { ...props.defaultOptions, isRefresh }
       )
     ),
   customQuery: (id, queryUrl, data, isChangeToEdit) =>
@@ -137,6 +137,7 @@ ConnectRestList.defaultProps = {
     edit: 'modal',
     create: 'modal',
   },
+  defaultOptions: {},
 };
 
 export default ConnectRestList;

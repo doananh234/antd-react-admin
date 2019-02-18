@@ -26,7 +26,7 @@ function* getAllSaga(data, options = {}, resource, successAction, failureAction,
       apiWrapper,
       { isShowProgress: options.isShowProgress },
       getAllApi,
-      options.customApiResource || resource,
+      options.customApi || resource,
       convertRequest
     );
     const result = convertResponseData('GET_ALL', response, { primaryKey });
@@ -62,7 +62,7 @@ function* getDataByIdSaga(
       apiWrapper,
       { isShowProgress: options.isShowProgress },
       getDataByIdApi,
-      options.customApiResource || resource,
+      options.customApi || resource,
       data[PRIMARY_KEY]
     );
     const result = convertResponseData('GET_BY_ID', response, { primaryKey });
@@ -91,7 +91,7 @@ function* editSaga(
       apiWrapper,
       { isShowProgress: options.isShowProgress },
       putApi,
-      options.customApiResource || resource,
+      options.customApi || resource,
       data[PRIMARY_KEY],
       data
     );
@@ -116,7 +116,7 @@ function* createSaga(data, options = {}, resource, successAction, failureAction,
       apiWrapper,
       { isShowProgress: options.isShowProgress },
       postApi,
-      options.customApiResource || resource,
+      options.customApi || resource,
       data
     );
     const result = convertResponseData('CREATE', response, { primaryKey });
@@ -145,7 +145,7 @@ function* delSaga(
       apiWrapper,
       { isShowProgress: true },
       delApi,
-      options.customApiResource || resource,
+      options.customApi || resource,
       data.path || data[PRIMARY_KEY]
     );
     const result = convertResponseData('DELETE', data, { primaryKey });

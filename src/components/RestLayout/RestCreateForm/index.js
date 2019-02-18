@@ -5,6 +5,12 @@ import ButtonRow from '../FooterButtonRow';
 import { RestInputContext } from '../../RestInput/RestInputContext';
 
 class FormComponent extends Component {
+  componentDidUpdate(prevProps) {
+    if (prevProps.loading && !this.props.loading && !this.props.error) {
+      this.props.form.resetFields();
+    }
+  }
+
   getData = () =>
     new Promise(resolve => {
       this.props.form.validateFields((err, values) => {
@@ -28,12 +34,6 @@ class FormComponent extends Component {
         }
       });
     });
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.loading && !this.props.loading && !this.props.error) {
-      this.props.form.resetFields();
-    }
-  }
 
   render() {
     const {
