@@ -6,14 +6,18 @@ import EditButton from '../../../components/RestActions/EditButton';
 import DeleteButton from '../../../components/RestActions/DeleteButton';
 
 const ProductTypesList = props => (
-  <List {...props} resource="productTypes">
-    <RestFieldItem source="name" title="name" />
+  <List {...props} onEditHeaderSuccess={onEditHeaderSuccess} resource="productTypes">
+    <RestFieldItem isEditHeader isEditOnCel source="name" title="name" />
     <ActionGroup>
       <EditButton />
       <DeleteButton />
     </ActionGroup>
   </List>
 );
+
+const onEditHeaderSuccess = data => {
+  console.log('data', data);
+};
 
 ProductTypesList.propTypes = {};
 

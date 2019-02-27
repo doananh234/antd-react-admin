@@ -5,6 +5,7 @@ import { Table, Button, Input, Icon } from 'antd';
 import I18n from 'i18next';
 import Text from '../../common/Text';
 import { getRecordData } from '../../../utils/tools';
+import { HeaderTableWrapper } from './styles';
 
 class RestTableLayout extends Component {
   onChangePagination = (e, filters, sorter) => {
@@ -26,7 +27,6 @@ class RestTableLayout extends Component {
         update(formatFilter, filterKey, () => ({ $like: searchFilter.searchText }));
       }
     });
-    console.log('formatFilter', formatFilter);
     retrieveList({
       page: e.current,
       limit: e.pageSize,
@@ -57,6 +57,17 @@ class RestTableLayout extends Component {
 
   handleReset = clearFilters => {
     clearFilters();
+  };
+
+  onBlur = (index, source) => e => {
+    const { onEditHeaderSuccess } = this.props;
+    onEditHeaderSuccess({ index, source, value: e.currentTarget.value });
+  };
+
+  onKeyPress = e => {
+    if (e.key === 'Enter') {
+      e.currentTarget.blur();
+    }
   };
 
   getColumnSearchProps = (dataIndex, title, hasSearch) =>
@@ -120,15 +131,22 @@ class RestTableLayout extends Component {
     const {
       resourceData,
       children,
-      gotoEditPage,
+      // gotoEditPage,
       loading,
-      onRow,
+      // onRow,
       customQuery,
       resourceFilter,
     } = this.props;
     const columns = children.map((item, index) => ({
       fixed: item.props.fixed,
-      title: item.props.title ? I18n.t(item.props.title) : '',
+      title: (
+        <HeaderTableWrapper
+          onBlur={this.onBlur(index, item.props.source)}
+          onKeyPress={this.onKeyPress}
+          disabled={!item.props.isEditHeader}
+          defaultValue={item.props.title ? I18n.t(item.props.title) : ''}
+        />
+      ),
       dataIndex: `${item.props.source}`,
       width: item.props.width,
       align: item.props.align,
@@ -159,11 +177,11 @@ class RestTableLayout extends Component {
 
     return (
       <Table
-        onRow={record => ({
-          onDoubleClick: () => {
-            onRow ? onRow(record) : gotoEditPage(record.id);
-          },
-        })}
+        // onRow={record => ({
+        //   onDoubleClick: () => {
+        //     onRow ? onRow(record) : gotoEditPage(record.id);
+        //   },
+        // })}
         onChange={this.onChangePagination}
         pagination={{
           position: 'none',
@@ -221,13 +239,18 @@ export const getAction = (props, item) => {
 RestTableLayout.propTypes = {
   children: PropTypes.node,
   retrieveList: PropTypes.func,
-  gotoEditPage: PropTypes.func,
+  // gotoEditPage: PropTypes.func,
   resourceData: PropTypes.array,
   resourceFilter: PropTypes.object,
   loading: PropTypes.bool,
   updateRecord: PropTypes.func,
-  onRow: PropTypes.func,
+  // onRow: PropTypes.func,
   customQuery: PropTypes.func,
+  onEditHeaderSuccess: PropTypes.func,
+};
+
+RestTableLayout.defaultProps = {
+  onEditHeaderSuccess: () => {},
 };
 
 export default RestTableLayout;

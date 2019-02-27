@@ -23,10 +23,10 @@ const sidebarMenu = [
     url: '/users',
   },
   {
-    key: 'caseTypes',
-    text: 'caseTypes',
+    key: 'productTypes',
+    text: 'productTypes',
     icon: 'snippets',
-    url: '/caseTypes',
+    url: '/productTypes',
   },
 ];
 const profileMenu = [
