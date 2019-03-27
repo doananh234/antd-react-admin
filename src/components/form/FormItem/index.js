@@ -7,7 +7,7 @@ const FormItem = Form.Item;
 const FormItemUI = props => {
   const {
     source,
-    title,
+    header,
     required,
     requiredMessage,
     form,
@@ -19,7 +19,7 @@ const FormItemUI = props => {
     errorMessageType,
   } = props;
   return (
-    <FormItem label={title}>
+    <FormItem label={header}>
       {form.getFieldDecorator(source, {
         rules: [
           { required, message: requiredMessage },
@@ -35,7 +35,7 @@ const FormItemUI = props => {
 
 FormItemUI.propTypes = {
   source: PropTypes.string,
-  title: PropTypes.any,
+  header: PropTypes.any,
   required: PropTypes.bool,
   requiredMessage: PropTypes.node,
   form: PropTypes.object,

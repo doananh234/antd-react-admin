@@ -51,7 +51,7 @@ class FormComponent extends Component {
             form={form}
             defaultValue={record[key]}
             name={key}
-            title={key}
+            header={key}
           >
             <Input />
           </RestInputItem>

@@ -69,7 +69,7 @@ export const timeoutPromise = (ms, promise) =>
 export default customFetch;
 
 function requestWrapper(method) {
-  return async function(url, data = null, params = {}) {
+  const request = async (url, data = null, params = {}) => {
     let convertUrl = process.env.REACT_APP_SERVER_URL + url;
     let convertParams = params;
     let convertData = data;
@@ -113,9 +113,10 @@ function requestWrapper(method) {
     };
     return customFetch(convertUrl, paramsObj);
   };
+  return request;
 }
 
-function getQueryString(params) {
+export function getQueryString(params) {
   const esc = encodeURIComponent;
   return Object.keys(params)
     .filter(k => params[k] || params[k] === 0)

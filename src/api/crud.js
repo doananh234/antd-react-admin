@@ -1,6 +1,4 @@
-import {
-  get, post, put, del,
-} from './utils';
+import { get, post, put, del } from './utils';
 
 export async function getAllApi(resource, data) {
   return get(`/${resource}`, data);
@@ -23,4 +21,8 @@ export async function postApi(resource, data) {
 
 export async function putApi(resource, id, data) {
   return put(`/${resource}/${id}`, data);
+}
+
+export async function exportExcelApi(resource, data) {
+  return get(`/${resource}/exportExcel`, data);
 }

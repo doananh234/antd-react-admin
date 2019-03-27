@@ -11,11 +11,11 @@ class RestEditComponent extends Component {
   state = {};
 
   render() {
-    const { showModal, title, noCardWrapper, location } = this.props;
+    const { showModal, header, noCardWrapper, location } = this.props;
     const BREADCRUMB_LIST = makeBreadCrumbFromPath(location);
-    if (title && !showModal) {
+    if (header && !showModal) {
       BREADCRUMB_LIST[BREADCRUMB_LIST.length - 1].title =
-        title || BREADCRUMB_LIST[BREADCRUMB_LIST.length - 1].title;
+        header || BREADCRUMB_LIST[BREADCRUMB_LIST.length - 1].title;
     }
     const actions = <div />;
     return !showModal && !noCardWrapper ? (
@@ -36,7 +36,7 @@ class RestEditComponent extends Component {
 RestEditComponent.propTypes = {
   location: PropTypes.object,
   showModal: PropTypes.bool,
-  title: PropTypes.any,
+  header: PropTypes.any,
   noCardWrapper: PropTypes.bool,
 };
 

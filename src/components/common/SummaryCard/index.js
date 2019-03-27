@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Text from '../Text';
 import { SummaryCardWrapper } from './styles';
 
-const SummaryCard = ({ color, value, title, icon }) => (
+const SummaryCard = ({ color, value, header, icon }) => (
   <SummaryCardWrapper style={{ background: color }}>
     <div>
       <Icon type={icon} theme="outlined" className="icon" />
@@ -15,7 +15,7 @@ const SummaryCard = ({ color, value, title, icon }) => (
         {value}
       </Text>
       <Text type="h5" className="title">
-        {I18n.t(title)}
+        {I18n.t(header)}
       </Text>
     </div>
   </SummaryCardWrapper>
@@ -23,7 +23,7 @@ const SummaryCard = ({ color, value, title, icon }) => (
 SummaryCard.propTypes = {
   color: PropTypes.string,
   value: PropTypes.any,
-  title: PropTypes.any,
+  header: PropTypes.any,
   icon: PropTypes.string,
 };
 

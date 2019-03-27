@@ -5,7 +5,7 @@ import I18n from 'i18next';
 import { ButtonWrapper } from './styles';
 
 const ShowButton = props => (
-  <Tooltip title={I18n.t('tooltip.viewDetail')}>
+  <Tooltip header={I18n.t('tooltip.viewDetail')}>
     <ButtonWrapper icon="profile" onClick={() => props.gotoShowPage(props.record.id, props.source)}>
       {/* <IntlMessages id="button.show" /> */}
     </ButtonWrapper>

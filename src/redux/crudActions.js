@@ -1,11 +1,23 @@
 // import crud action
+import companies from './companies/actions';
+import clients from './clients/actions';
+import activityTypes from './activityTypes/actions';
+import titles from './titles/actions';
+import departments from './departments/actions';
+import statuses from './statuses/actions';
+import projects from './projects/actions';
+import users from './users/actions';
 import productTypes from './productTypes/actions';
-import typeGroups from './typeGroups/actions';
-import caseTypes from './caseTypes/actions';
 
 export default {
   // actions here
+  companies,
+  clients,
+  activityTypes,
+  titles,
+  departments,
+  statuses,
+  projects,
+  users,
   productTypes,
-  typeGroups,
-  caseTypes,
 };

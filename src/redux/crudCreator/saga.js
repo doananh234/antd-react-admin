@@ -78,7 +78,7 @@ function* getDataByIdSaga(
 // function* editSaga(data, resource, successAction, failureAction, getOne)
 function* editSaga(
   data,
-  options = {},
+  options = { isBack: true },
   resource,
   successAction,
   failureAction,
@@ -87,19 +87,22 @@ function* editSaga(
   // delete data.c
   try {
     const currentModal = yield select(state => state.modal.current);
+    const requestParams = convertRequestParams('EDIT', data);
     const response = yield call(
       apiWrapper,
       { isShowProgress: options.isShowProgress },
       putApi,
       options.customApi || resource,
       data[PRIMARY_KEY],
-      data
+      requestParams
     );
     const result = convertResponseData('EDIT', response, { primaryKey });
     if (result) {
       yield put(successAction({ ...data, ...result }));
       // yield put(successAction({ ...data, ...result }));
-      yield put(currentModal ? closeModal() : goBack());
+      if (options.isBack) {
+        yield put(currentModal ? closeModal() : goBack());
+      }
     } else {
       yield put(failureAction({ ...data, ...response }));
     }

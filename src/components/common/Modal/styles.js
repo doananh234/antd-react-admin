@@ -120,13 +120,15 @@ export const ModalWrapper = styled(Modal)`
   }
 
   .ant-form-item {
-    margin-bottom: 10px;
-    margin-right: -1px;
   }
   .ant-form-item-control {
     line-height: 2;
   }
   .txtTitle {
     font-size: 12px;
+  }
+  .ant-form-item-label {
+    line-height: 1.5em;
+    padding-bottom: 5px;
   }
 `;

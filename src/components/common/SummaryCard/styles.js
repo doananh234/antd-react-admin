@@ -18,7 +18,7 @@ export const SummaryCardWrapper = styled.div`
     color: white;
     height: 36px;
   }
-  .title,
+  .header,
   .value {
     color: white;
   }

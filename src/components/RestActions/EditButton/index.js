@@ -5,7 +5,7 @@ import I18n from 'i18next';
 import { ButtonWrapper } from './styles';
 
 const EditButton = props => (
-  // <Tooltip title={<IntlMessages id="tooltip.edit" />}>
+  // <Tooltip header={<IntlMessages id="tooltip.edit" />}>
   <ButtonWrapper
     source={props.source}
     icon="edit"

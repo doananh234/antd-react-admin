@@ -1,4 +1,5 @@
 import { takeEvery, put, call } from 'redux-saga/effects';
+import { push } from 'connected-react-router';
 import { apiWrapper } from '../../utils/reduxUtils';
 import {
   AuthTypes,
@@ -9,6 +10,12 @@ import {
   updateUserFailure,
   getCurentUserFailure,
   getCurentUserSuccess,
+  forgotPasswordFailure,
+  forgotPasswordSuccess,
+  resetPasswordSuccess,
+  resetPasswordFailure,
+  registerSuccessAction,
+  registerFailureAction,
 } from './actions';
 import {
   loginApi,
@@ -16,6 +23,9 @@ import {
   logoutApi,
   updateCurrentUserApi,
   getCurrentUserApi,
+  resetPasswordApi,
+  forgotPasswordApi,
+  registerApi,
 } from '../../api/user';
 
 function* loginSaga({ params }) {
@@ -43,6 +53,9 @@ function* loginSaga({ params }) {
 
 function* logoutSaga() {
   try {
+    localStorage.clear('sessionToken');
+    localStorage.clear('fullName');
+    localStorage.clear('id');
     const installationId = localStorage.getItem('installationId');
     yield call(
       apiWrapper,
@@ -64,9 +77,6 @@ function* logoutSaga() {
       );
       localStorage.clear('installationId');
     }
-    localStorage.clear('sessionToken');
-    localStorage.clear('fullName');
-    localStorage.clear('id');
   } catch (error) {
     // /logic here
   }
@@ -118,9 +128,74 @@ function* updateUserSaga({ params }) {
   }
 }
 
+function* forgotPasswordSaga({ email }) {
+  try {
+    const response = yield call(
+      apiWrapper,
+      {
+        isShowLoading: true,
+        isShowSuccessNoti: true,
+      },
+      forgotPasswordApi,
+      { email }
+    );
+    yield put(forgotPasswordSuccess(response));
+  } catch (error) {
+    yield put(forgotPasswordFailure(error));
+  }
+}
+
+function* resetPasswordSaga({ password, resetPasswordToken }) {
+  try {
+    const response = yield call(
+      apiWrapper,
+      {
+        isShowLoading: true,
+        isShowSuccessNoti: true,
+      },
+      resetPasswordApi,
+      {
+        password,
+        resetPasswordToken,
+      }
+    );
+    yield put(resetPasswordSuccess(response));
+    yield put(push('/login'));
+  } catch (error) {
+    yield put(resetPasswordFailure(error));
+  }
+}
+
+function* registerSaga({ params }) {
+  try {
+    const response = yield call(
+      apiWrapper,
+      {
+        isShowLoading: true,
+        isShowSuccessNoti: false,
+      },
+      registerApi,
+      params
+    );
+    if (response.token) {
+      localStorage.setItem('sessionToken', response.token);
+      yield put(registerSuccessAction(response));
+      yield put(getCurentUser());
+      yield put(push('/home'));
+    } else {
+      yield put(registerFailureAction(response));
+    }
+  } catch (error) {
+    yield put(registerFailureAction(error));
+  }
+}
+
 export default [
   takeEvery(AuthTypes.LOGIN, loginSaga),
   takeEvery(AuthTypes.LOGOUT, logoutSaga),
   takeEvery(AuthTypes.GET_CURRENT_USER, getCurrentUserSaga),
   takeEvery(AuthTypes.UPDATE_USER, updateUserSaga),
+  takeEvery(AuthTypes.FORGOT_PASSWORD, forgotPasswordSaga),
+  takeEvery(AuthTypes.RESET_PASSWORD, resetPasswordSaga),
+  takeEvery(AuthTypes.REGISTER, registerSaga),
 ];

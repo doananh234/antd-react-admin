@@ -42,7 +42,7 @@ class RestListLayout extends Component {
   renderListItem = record => {
     const { children } = this.props;
     const actions = React.Children.map(
-      children.find(element => element.props.source === 'group').props.children,
+      children.find(element => element.props.source === 'actionGroup').props.children,
       item =>
         React.cloneElement(item, {
           record,
@@ -56,10 +56,10 @@ class RestListLayout extends Component {
       <Card className="item" actions={actions}>
         <Row>
           {React.Children.map(children, item => {
-            if (item.props.source === 'group') return null;
+            if (item.props.source === 'actionGroup') return null;
             return (
-              <Col span={24} key={item.props.title}>
-                <div className="title">{I18n.t(item.props.title)}</div>
+              <Col span={24} key={item.props.header}>
+                <div className="title">{I18n.t(item.props.header)}</div>
                 {React.cloneElement(item, {
                   record,
                   table: true,

@@ -11,6 +11,7 @@ export default styled.div`
     line-height: 1.5;
     top: 4px;
     transition: 300ms ease all;
+    pointer-events: none;
     color: rgba(0, 0, 0, 0.45);
   }
 
@@ -21,6 +22,7 @@ export default styled.div`
     border-radius: 0;
     display: block;
     padding-left: ${props => (props.isPrefix ? '30px' : '11px')};
+    padding-right: ${props => (props.isSuffix ? '30px' : '11px')};
 
     &:focus {
       outline: none;
@@ -64,5 +66,10 @@ export default styled.div`
     position: absolute;
     top: 8px;
     left: 11px;
+  }
+  .suffix {
+    position: absolute;
+    right: 30px;
+    top: 0;
   }
 `;

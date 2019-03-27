@@ -9,11 +9,11 @@ export async function logoutApi() {
 }
 
 export async function getCurrentUserApi(filter) {
-  return get('/auth/me', filter);
+  return get('/users/me', filter);
 }
 
 export async function updateCurrentUserApi(data) {
-  return put('/auth/me', data);
+  return put('/users/me', data);
 }
 
 export async function createInstallationApi(params) {
@@ -26,4 +26,16 @@ export async function updateInstallationApi(id, params) {
 
 export async function deleteInstallationApi(id) {
   return del(`/installations/${id}`);
+}
+
+export async function forgotPasswordApi(data) {
+  return post('/auth/forgotPassword', data);
+}
+
+export async function resetPasswordApi(data) {
+  return post('/auth/resetPassword', data);
+}
+
+export async function registerApi(data) {
+  return post('/auth/register', data);
 }

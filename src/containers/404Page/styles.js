@@ -3,8 +3,10 @@ import theme from '../../configs/theme';
 
 export default styled.div`
   height: 100vh;
+  width: 100vw;
   min-height: 500px;
   display: flex;
+  position: fixed;
   justify-content: center;
   align-items: center;
   text-align: center;

@@ -5,7 +5,7 @@ import I18n from 'i18next';
 import { ButtonWrapper } from './styles';
 
 const BackButton = props => (
-  <Tooltip title={I18n.t('tooltip.goBack')}>
+  <Tooltip header={I18n.t('tooltip.goBack')}>
     <ButtonWrapper icon="rollback" onClick={() => props.onBack(props.source)}>
       {/* <IntlMessages id="button.back" /> */}
     </ButtonWrapper>

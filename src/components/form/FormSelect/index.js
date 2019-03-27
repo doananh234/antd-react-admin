@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import i18n from 'i18next';
 import { Select } from 'antd';
 import { map, isObject } from 'lodash';
 import FormItem from '../FormItem';
@@ -28,7 +29,7 @@ class FormSelect extends Component {
 
   render() {
     const {
-      title,
+      header,
       required,
       placeholder,
       defaultValue,
@@ -43,14 +44,19 @@ class FormSelect extends Component {
       className,
       loading,
       selectProps,
+      formatText,
       // onEnter,
     } = this.props;
-
     return (
-      <FormItem {...this.props} title={title} required={required} defaultValue={defaultValue}>
+      <FormItem
+        {...this.props}
+        header={i18n.t(header)}
+        required={required}
+        defaultValue={`${defaultValue}`}
+      >
         <SelectWrapper
           disabled={disabled}
-          placeholder={placeholder}
+          placeholder={i18n.t(placeholder)}
           filterOption={this.onSelectOption}
           showSearch
           allowClear
@@ -77,7 +83,7 @@ class FormSelect extends Component {
                 key={valueProp ? getRecordData(data, valueProp) : data}
                 value={valueProp ? getRecordData(data, valueProp) : data}
               >
-                {titleProp ? getRecordData(data, titleProp) : data}
+                {formatText(titleProp ? getRecordData(data, titleProp) : data)}
               </Option>
             )
           )}
@@ -93,7 +99,7 @@ class FormSelect extends Component {
 
 FormSelect.propTypes = {
   source: PropTypes.string,
-  title: PropTypes.any,
+  header: PropTypes.any,
   required: PropTypes.bool,
   requiredMessage: PropTypes.node,
   icon: PropTypes.string,
@@ -113,6 +119,7 @@ FormSelect.propTypes = {
   className: PropTypes.string,
   loading: PropTypes.bool,
   selectProps: PropTypes.object,
+  formatText: PropTypes.func,
   // onEnter: PropTypes.func,
 };
 
@@ -123,6 +130,7 @@ FormSelect.defaultProps = {
   placeholder: 'placeholder.undefined',
   onChange: () => {},
   onSearch: () => {},
+  formatText: data => data,
   selectProps: {},
 };
 

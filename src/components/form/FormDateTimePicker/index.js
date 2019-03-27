@@ -8,7 +8,7 @@ import { DateTimePickerWrapper } from './styles';
 const FormDatePicker = props => {
   const {
     source,
-    title,
+    header,
     required,
     requiredMessage,
     form,
@@ -24,7 +24,7 @@ const FormDatePicker = props => {
   const value = form.getFieldValue(source) || moment(defaultValue || initialValue);
   return (
     <DateTimePickerWrapper>
-      <FormItem {...props} className="title" title={title} required={required}>
+      <FormItem {...props} className="title" header={header} required={required}>
         <TimePicker
           onChange={newDate => {
             form.setFieldsValue({
@@ -46,7 +46,7 @@ const FormDatePicker = props => {
 
 FormDatePicker.propTypes = {
   source: PropTypes.string,
-  title: PropTypes.any,
+  header: PropTypes.any,
   required: PropTypes.bool,
   requiredMessage: PropTypes.node,
   icon: PropTypes.string,

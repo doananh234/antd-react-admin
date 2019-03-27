@@ -7,6 +7,7 @@ import UploadImageWrapper from './style';
 import { getRecordData } from '../../../utils/tools';
 import { del } from '../../../api/utils';
 import user from '../../../assets/images/user.png';
+import { getUrl, uploadMedia } from '../../../api/uploadMedia';
 
 const uploadUrl = `${process.env.REACT_APP_SERVER_URL}/uploadFile`;
 const FormItem = Form.Item;
@@ -15,40 +16,40 @@ const FormItem = Form.Item;
 
 class UploadImage extends Component {
   static getDerivedStateFromProps = (nextProps, prevState) => {
-    if (
-      prevState.isFirstTime &&
-      getRecordData(nextProps.record, nextProps.source) !== prevState.imgDisplay
-    ) {
-      return { isFirstTime: false, imgDisplay: getRecordData(nextProps.record, nextProps.source) };
+    if (getRecordData(nextProps.record, nextProps.source) !== prevState.prevRecordImgSource) {
+      return {
+        prevRecordImgSource: getRecordData(nextProps.record, nextProps.source),
+        imgDisplay: getRecordData(nextProps.record, nextProps.source),
+      };
     }
     return {};
   };
 
   state = {
     file: null,
-    imgDisplay: getRecordData(this.props.record, this.props.source) || null,
+    prevRecordImgSource: getRecordData(this.props.record, this.props.source) || undefined,
+    imgDisplay: getRecordData(this.props.record, this.props.source) || undefined,
     loading: false,
     loadingProgress: 0,
     isShowCropperModal: false,
     hasErr: false,
-    isFirstTime: true,
   };
 
   componentDidMount() {
     window.addEventListener('beforeunload', this.onUnload);
-    this.onLoad();
+    // this.onLoad();
   }
 
   componentWillUnmount() {
     window.removeEventListener('beforeunload', this.onUnload);
   }
 
-  onLoad = () => {
-    const getUrl = localStorage.getItem('url');
-    if (getUrl) {
-      this.onRemove(getUrl);
-    }
-  };
+  // onLoad = () => {
+  //   const getUrl = localStorage.getItem('url');
+  //   if (getUrl) {
+  //     this.onRemove(getUrl);
+  //   }
+  // };
 
   onUnload = e => {
     if (this.state.imgDisplay && this.props.form) {
@@ -63,63 +64,89 @@ class UploadImage extends Component {
     });
   };
 
-  onChangePreview = ({ croppedFile }) => {
-    if (this.state.imgDisplay) {
-      this.onRemove(this.state.imgDisplay);
-    }
-    this.setState({
-      isShowCropperModal: false,
-      loading: true,
-    });
-    const xhr = new XMLHttpRequest();
-    const fd = new FormData();
-    xhr.open('POST', uploadUrl);
-
-    xhr.upload.addEventListener('progress', e => {
+  onChangePreview = async ({ croppedFile }) => {
+    try {
+      if (this.state.imgDisplay) {
+        this.onRemove(this.state.imgDisplay);
+      }
       this.setState({
-        loadingProgress: Math.round((e.loaded * 100) / e.total),
+        isShowCropperModal: false,
+        loading: true,
       });
-    });
 
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState === 4 && xhr.status === 200) {
-        // File uploaded successfully
-        const response = JSON.parse(xhr.responseText);
-        if (response.Location) {
-          this.setState({
-            imgDisplay: response.Location,
-            loading: false,
-            hasErr: false,
-          });
-          this.props.form
-            ? this.props.form.setFieldsValue({ [this.props.source]: response.Location })
-            : this.props.onUploadImage(response.Location);
-        }
-      }
-      if (xhr.readyState === 4 && xhr.status > 200) {
-        // File uploaded fail
-        const response = JSON.parse(xhr.responseText);
-        this.props.showErrorMsg(response);
-        notification.error({
-          title: 'Error',
-          message:
-            response && response.message
-              ? response.message
-              : 'Server Internall Error. Please try later !!!!',
-          position: 'tr',
-          autoDismiss: 15,
-        });
-        this.setState({
-          file: null,
-          imgDisplay: null,
-          loading: false,
-          hasErr: true,
-          loadingProgress: 0,
-        });
-      }
-    };
-    fd.append('file', croppedFile, croppedFile.name);
-    xhr.send(fd);
+      const responseS3 = await getUrl(croppedFile.name, croppedFile.type);
+      const response = await uploadMedia(responseS3.url, croppedFile);
+      this.setState({
+        imgDisplay: response,
+        loading: false,
+        hasErr: false,
+      });
+    } catch (error) {
+      this.props.showErrorMsg(error);
+      notification.error({
+        title: 'Error',
+        message:
+          error && error.message ? error.message : 'Server Internall Error. Please try later !!!!',
+        position: 'tr',
+        autoDismiss: 15,
+      });
+      this.setState({
+        file: null,
+        imgDisplay: null,
+        loading: false,
+        hasErr: true,
+        loadingProgress: 0,
+      });
+    }
+    // const xhr = new XMLHttpRequest();
+    // const fd = new FormData();
+    // xhr.open('POST', uploadUrl);
+
+    // xhr.upload.addEventListener('progress', e => {
+    //   this.setState({
+    //     loadingProgress: Math.round((e.loaded * 100) / e.total),
+    //   });
+    // });
+
+    // xhr.onreadystatechange = () => {
+    //   if (xhr.readyState === 4 && xhr.status === 200) {
+    //     // File uploaded successfully
+    //     const response = JSON.parse(xhr.responseText);
+    //     if (response.Location) {
+    //       this.setState({
+    //         imgDisplay: response.Location,
+    //         loading: false,
+    //         hasErr: false,
+    //       });
+    //       this.props.form
+    //         ? this.props.form.setFieldsValue({ [this.props.source]: response.Location })
+    //         : this.props.onUploadImage(response.Location);
+    //     }
+    //   }
+    //   if (xhr.readyState === 4 && xhr.status > 200) {
+    //     // File uploaded fail
+    //     const response = JSON.parse(xhr.responseText);
+    //     this.props.showErrorMsg(response);
+    //     notification.error({
+    //       title: 'Error',
+    //       message:
+    //         response && response.message
+    //           ? response.message
+    //           : 'Server Internall Error. Please try later !!!!',
+    //       position: 'tr',
+    //       autoDismiss: 15,
+    //     });
+    //     this.setState({
+    //       file: null,
+    //       imgDisplay: null,
+    //       loading: false,
+    //       hasErr: true,
+    //       loadingProgress: 0,
+    //     });
+    //   }
+    // };
+    // fd.append('file', croppedFile, croppedFile.name);
+    // xhr.send(fd);
   };
 
   onRemove = url => {

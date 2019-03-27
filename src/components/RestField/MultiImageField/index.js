@@ -6,11 +6,11 @@ import { ImageWrapper } from './styles';
 import { getRecordData } from '../../../utils/tools';
 
 const RestImageField = props => {
-  const { record, title, source, imageStyle, table } = props;
+  const { record, header, source, imageStyle, table } = props;
   if (record) {
     return (
       <div>
-        {title && !table && <Title>{title}</Title>}
+        {header && !table && <Title>{header}</Title>}
         <List
           grid={{
             gutter: 16,
@@ -38,7 +38,7 @@ RestImageField.propTypes = {
   table: PropTypes.bool,
   source: PropTypes.string,
   record: PropTypes.object,
-  title: PropTypes.any,
+  header: PropTypes.any,
   imageStyle: PropTypes.any,
 };
 

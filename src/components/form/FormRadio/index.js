@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Radio } from 'antd';
-import FormTitle from '../FormTitle';
 
 const FormItem = Form.Item;
 const RadioButton = Radio.Button;
@@ -9,10 +8,9 @@ const RadioGroup = Radio.Group;
 const FormRadio = props => {
   const {
     source,
-    title,
+    header,
     required,
     requiredMessage,
-    icon,
     placeholder,
     form,
     defaultValue,
@@ -23,15 +21,14 @@ const FormRadio = props => {
     rules,
   } = props;
   return (
-    <FormItem>
-      <FormTitle title={title} icon={icon} required={required} />
+    <FormItem label={header}>
       {form.getFieldDecorator(source, {
         rules: [{ required, message: requiredMessage, ...rules }],
         initialValue: defaultValue,
       })(
         <RadioGroup placeholder={placeholder}>
-          {dataResource.map(data => {
-            return type === 'button' ? (
+          {dataResource.map(data =>
+            type === 'button' ? (
               <RadioButton key={data[valuePops]} value={data[valuePops]}>
                 {data[titleProps]}
               </RadioButton>
@@ -39,9 +36,9 @@ const FormRadio = props => {
               <Radio key={data[valuePops]} value={data[valuePops]}>
                 {data[titleProps]}
               </Radio>
-            );
-          })}
-        </RadioGroup>,
+            )
+          )}
+        </RadioGroup>
       )}
     </FormItem>
   );
@@ -49,10 +46,9 @@ const FormRadio = props => {
 
 FormRadio.propTypes = {
   source: PropTypes.string,
-  title: PropTypes.any,
+  header: PropTypes.any,
   required: PropTypes.bool,
   requiredMessage: PropTypes.node,
-  icon: PropTypes.string,
   placeholder: PropTypes.string,
   form: PropTypes.object,
   defaultValue: PropTypes.any,

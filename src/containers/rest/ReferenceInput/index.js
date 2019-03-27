@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import CRUDActions from '../../../redux/crudActions';
 import { retrieveReference } from '../../../redux/referenceData/actions';
 import { getRecordData, upperCaseFirstChart } from '../../../utils/tools';
-import { getReferenceResource } from '../../../redux/referenceData/selectors';
-import { getLoading, getTotal } from '../../../redux/crudCreator/selectors';
+import { getReferenceResource, getTotalReference } from '../../../redux/referenceData/selectors';
+import { getLoading } from '../../../redux/crudCreator/selectors';
 
 class RestReference extends Component {
   constructor(props) {
@@ -21,16 +21,9 @@ class RestReference extends Component {
     if (getRecordData(record, source)) {
       this.props.retrieveReference(getRecordData(record, source));
     } else {
-      this.props.retrieveList(initialFilter || {});
+      this.props.retrieveList(initialFilter || {}, { isRefresh: true });
     }
     this.debouceSearch = _.debounce(this.onSearch, 300);
-  }
-
-  componentWillUpdate(nextProps) {
-    const { initialFilter, retrieveList } = this.props;
-    if (!_.isEqual(initialFilter, nextProps.initialFilter)) {
-      retrieveList(nextProps.initialFilter);
-    }
   }
 
   onSearch = value => {
@@ -98,7 +91,7 @@ RestReference.propTypes = {
 const mapStateToProps = (state, props) => ({
   resourceData: getReferenceResource(state, props),
   loadingData: getLoading(state, props),
-  count: getTotal(state, props),
+  count: getTotalReference(state, props),
 });
 
 const mapDispatchToProps = (dispatch, props) => ({
@@ -108,14 +101,12 @@ const mapDispatchToProps = (dispatch, props) => ({
     ),
   retrieveList: (filter, isRefresh) =>
     dispatch(
-      dispatch(
-        CRUDActions[props.resource][`getAll${upperCaseFirstChart(props.resource)}`](
-          {
-            ...props.initialFilter,
-            ...filter,
-          },
-          { isRefresh }
-        )
+      CRUDActions[props.resource][`getAll${upperCaseFirstChart(props.resource)}`](
+        {
+          ...props.initialFilter,
+          ...filter,
+        },
+        { isRefresh }
       )
     ),
 });

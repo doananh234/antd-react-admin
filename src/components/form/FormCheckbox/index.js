@@ -6,7 +6,7 @@ import FormItem from '../FormItem';
 const CheckboxGroup = Checkbox.Group;
 const FormCheckbox = ({
   source,
-  title,
+  header,
   required,
   requiredMessage,
   icon,
@@ -19,7 +19,7 @@ const FormCheckbox = ({
   rules,
   ...props
 }) => (
-  <FormItem {...props} title={title} required={required} defaultValue={defaultValue}>
+  <FormItem {...props} header={header} required={required} defaultValue={defaultValue}>
     <CheckboxGroup placeholder={placeholder}>
       {dataResource.map(data => (
         <Checkbox key={data[valueProp]} value={data[valueProp]}>
@@ -32,7 +32,7 @@ const FormCheckbox = ({
 
 FormCheckbox.propTypes = {
   source: PropTypes.string,
-  title: PropTypes.any,
+  header: PropTypes.any,
   required: PropTypes.bool,
   requiredMessage: PropTypes.node,
   icon: PropTypes.string,

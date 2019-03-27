@@ -36,10 +36,14 @@ ActionGroup.propTypes = {
   gotoShowPage: PropTypes.func,
   deleteItem: PropTypes.func,
   source: PropTypes.string,
+  fixed: PropTypes.string,
+  width: PropTypes.number,
 };
 
 ActionGroup.defaultProps = {
-  source: 'group',
+  source: 'actionGroup',
+  fixed: 'right',
+  width: 100,
 };
 
 export default ActionGroup;

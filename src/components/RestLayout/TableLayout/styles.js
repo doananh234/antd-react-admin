@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Icon } from 'antd';
 
 export const HeaderTableWrapper = styled.input`
   background: transparent;
@@ -17,5 +18,14 @@ export const HeaderTableWrapper = styled.input`
   }
   &:disabled {
     border: 1px dashed transparent;
+  }
+  .highlightFilter {
+    color: ${({ theme }) => theme.palette.primary};
+  }
+`;
+
+export const IconWrapper = styled(Icon)`
+  &.highlightFilter {
+    color: ${({ theme }) => theme.palette.primary} !important;
   }
 `;

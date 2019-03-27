@@ -56,12 +56,12 @@ class RestListComponent extends Component {
       layoutButtonCreate,
       gotoCreatePage,
       filter,
-      title,
+      header,
       isList,
       location,
       hasSearch,
       hasExport,
-      createTitle,
+      createHeader,
       resourceFilter,
     } = this.props;
     const BREADCRUMB_LIST = [];
@@ -75,8 +75,8 @@ class RestListComponent extends Component {
     if (BREADCRUMB_LIST.length > 0) {
       BREADCRUMB_LIST[BREADCRUMB_LIST.length - 1].title =
         typeof title === 'string'
-          ? I18n.t(title)
-          : title || BREADCRUMB_LIST[BREADCRUMB_LIST.length - 1].title;
+          ? I18n.t(header)
+          : header || BREADCRUMB_LIST[BREADCRUMB_LIST.length - 1].title;
     }
     const actions = (
       <div className="vActions">
@@ -87,9 +87,9 @@ class RestListComponent extends Component {
           />
         )}
         {hasCreate && layoutButtonCreate !== 'inline' && (
-          <CreateButton title={createTitle} resource={resource} gotoCreatePage={gotoCreatePage} />
+          <CreateButton header={createHeader} resource={resource} gotoCreatePage={gotoCreatePage} />
         )}
-        {hasExport && <ExportExcelButton />}
+        {hasExport && <ExportExcelButton resource={resource} resourceFilter={resourceFilter} />}
       </div>
     );
 
@@ -176,7 +176,7 @@ class RestListComponent extends Component {
       <ListWrapper>
         <Layout
           bordered={false}
-          title={<CustomBreadcrumb data={BREADCRUMB_LIST} />}
+          header={<CustomBreadcrumb data={BREADCRUMB_LIST} />}
           extra={actions}
         >
           <PageTitle
@@ -184,7 +184,7 @@ class RestListComponent extends Component {
               hasCreate &&
               layoutButtonCreate === 'inline' && (
                 <CreateButton
-                  title={createTitle}
+                  header={createHeader}
                   resource={resource}
                   gotoCreatePage={gotoCreatePage}
                 />
@@ -208,15 +208,16 @@ RestListComponent.propTypes = {
   hasCreate: PropTypes.bool,
   gotoCreatePage: PropTypes.func,
   filter: PropTypes.object,
-  title: PropTypes.any,
+  header: PropTypes.any,
   children: PropTypes.any,
   isList: PropTypes.bool,
   hasSearch: PropTypes.bool,
   hasExport: PropTypes.bool,
   location: PropTypes.object,
-  createTitle: PropTypes.string,
+  createHeader: PropTypes.string,
   resourceFilter: PropTypes.object,
   layoutButtonCreate: PropTypes.string,
+  exportExcel: PropTypes.func,
 };
 RestListComponent.defaultProps = {
   noCardWrapper: false,

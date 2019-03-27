@@ -58,7 +58,7 @@ export default class AvatarCropper extends Component {
             visible={this.props.isShowModal}
             onCancel={this.props.onHideModal}
             className="avatar-editor-modal"
-            title="Edit Avatar"
+            header="Edit Avatar"
             bodyStyle={{ textAlign: 'center' }}
             footer={[
               <Button
@@ -81,7 +81,7 @@ export default class AvatarCropper extends Component {
               rotate={0}
               borderRadius={125}
               onPositionChange={p => this.handlePositionChange(p)}
-              onSave={() => this.handleSave()}
+              // onImageChange={() => this.handleSave()}
               image={this.props.image}
             />
             <br />

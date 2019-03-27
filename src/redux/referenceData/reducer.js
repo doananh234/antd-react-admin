@@ -16,13 +16,12 @@ const retrieveReference = (state, { resource, filter = {} }) => ({
   },
 });
 
-const retrieveReferenceSuccess = (state, { resource, data, ids }) => ({
+const retrieveReferenceSuccess = (state, { resource, data }) => ({
   ...state,
   [resource]: {
     ...state[resource],
     loading: false,
-    data,
-    ids,
+    ...data,
   },
 });
 
@@ -30,6 +29,7 @@ const retrieveReferenceFailed = (state, { resource, error }) => ({
   ...state,
   error,
   [resource]: {
+    ...state[resource],
     loading: false,
   },
 });
@@ -44,13 +44,14 @@ const searchReference = (state, { resource, text, searchKey }) => ({
   },
 });
 
-const searchReferenceSuccess = (state, { resource, data, ids }) => ({
+const searchReferenceSuccess = (state, { resource, data }) => ({
   ...state,
   [resource]: {
     ...state[resource],
     loading: false,
-    data: { ...state[resource].data, ...data },
-    filterIds: ids,
+    data: { ...state[resource].data, ...data.data },
+    filterIds: data.ids,
+    ids: data.ids,
   },
 });
 

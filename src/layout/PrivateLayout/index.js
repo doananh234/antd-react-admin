@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import I18n from 'i18next';
+import { push } from 'connected-react-router';
 import { Layout, Menu, Icon, Dropdown, Avatar } from 'antd';
 import { findLast } from 'lodash';
 import { Redirect } from 'react-router-dom';
 import { history } from '../../redux/store';
 import PrivateLayoutWrapper from './styles';
+import { logout as logoutAction } from '../../redux/auth/actions';
 
 const { Header, Sider, Content, Footer } = Layout;
 const sidebarMenu = [
@@ -17,16 +19,28 @@ const sidebarMenu = [
     url: '/',
   },
   {
+    key: 'clients',
+    text: 'Clients',
+    icon: 'user',
+    url: '/clients',
+  },
+  {
     key: 'users',
     text: 'Users',
     icon: 'user',
     url: '/users',
   },
   {
-    key: 'productTypes',
-    text: 'productTypes',
-    icon: 'snippets',
-    url: '/productTypes',
+    key: 'companies',
+    text: 'Companies',
+    icon: 'user',
+    url: '/companies',
+  },
+  {
+    key: 'settings',
+    text: 'Settings',
+    icon: 'setting',
+    url: '/settings',
   },
 ];
 const profileMenu = [
@@ -63,6 +77,10 @@ class PrivateLayout extends Component {
     };
   }
 
+  componentDidMount() {
+    this.props.isAuthenticated && push('/login');
+  }
+
   toggle = () => {
     this.setState(prevState => ({
       collapsed: !prevState.collapsed,
@@ -70,7 +88,7 @@ class PrivateLayout extends Component {
   };
 
   render() {
-    const { children, isAuthenticated } = this.props;
+    const { children, logout, isAuthenticated } = this.props;
     if (!isAuthenticated) return <Redirect to="/login" />;
     return (
       <PrivateLayoutWrapper>
@@ -113,7 +131,9 @@ class PrivateLayout extends Component {
                         </Menu.Item>
                       ))}
                       <Menu.Divider />
-                      <Menu.Item key="logout">Logout</Menu.Item>
+                      <Menu.Item onClick={logout} key="logout">
+                        Logout
+                      </Menu.Item>
                     </Menu>
 )}
                   trigger={['click']}
@@ -143,8 +163,14 @@ class PrivateLayout extends Component {
 PrivateLayout.propTypes = {
   children: PropTypes.any,
   isAuthenticated: PropTypes.bool,
+  logout: PropTypes.func,
 };
 
-export default connect(state => ({
-  isAuthenticated: state.auth.isAuthenticated,
-}))(PrivateLayout);
+export default connect(
+  state => ({
+    isAuthenticated: state.auth.isAuthenticated,
+  }),
+  {
+    logout: logoutAction,
+  }
+)(PrivateLayout);

@@ -1,9 +1,10 @@
-import { call, put, cancel, fork } from 'redux-saga/effects';
+import { call, put, cancel, fork, takeEvery } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import _ from 'lodash';
-import * as actions from './actions';
+import { REST_ACTION_TYPES, retrieveReferenceSuccess, retrieveReferenceFailed } from './actions';
 import { apiWrapper } from '../../utils/reduxUtils';
 import { getAllApi } from '../../api/crud';
+import { convertResponseData } from '../crudCreator/dataProvider';
 
 const debouncedIds = {};
 const mappeds = {};
@@ -52,20 +53,16 @@ export function* retrieveReferenceList(resource) {
         },
       }),
     };
-    const response = yield call(apiWrapper, getAllApi, false, false, resource, params);
-    const convertData = {
-      results: _.keyBy(response.results, mappeds[resource]),
-      ids: response.results.map(data => data[mappeds[resource]]),
-      count: response.total,
-    };
+    const response = yield call(apiWrapper, { isShowProgress: false }, getAllApi, resource, params);
+    const result = convertResponseData('GET_ALL', response);
     yield put(
-      actions.retrieveReferenceSuccess(resource, {
-        data: convertData.results,
-        ids: convertData.ids,
-        count: convertData.count,
+      retrieveReferenceSuccess(resource, {
+        ...result,
       })
     );
   } catch (error) {
-    yield put(actions.retrieveReferenceFailed(resource, error));
+    yield put(retrieveReferenceFailed(resource, error));
   }
 }
+
+export default [takeEvery(REST_ACTION_TYPES.RETRIEVE_REFERENCE, retrieveReference)];

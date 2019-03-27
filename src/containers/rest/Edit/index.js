@@ -28,6 +28,12 @@ class RestEdit extends Component {
     props.retrieveOneRecord(getIdByUrl(props));
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.route !== this.props.route && this.props.route) {
+      this.props.retrieveOneRecord(getIdByUrl(this.props));
+    }
+  }
+
   onBack = () => {
     const { route, closeModal, goBack } = this.props;
     if (!route) {
@@ -49,7 +55,7 @@ class RestEdit extends Component {
     ) : (
       <div>
         <Text type="h4White" className="modalTitle">
-          {!title || typeof title === 'string' ? i18n.t(title || resource) : title}
+          {!title || typeof title === 'string' ? i18n.t(title || `${resource}.editPage`) : title}
         </Text>
         <RestEditComponent
           {...this.props}

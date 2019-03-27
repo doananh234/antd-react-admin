@@ -7,7 +7,12 @@ import { RestInputContext } from '../RestInputContext';
 const RestFormInput = props => (
   <RestInputContext.Consumer>
     {({ record, form }) => (
-      <FormUploadAvatar {...props} form={form} defaultValue={getRecordData(record, props.source)} />
+      <FormUploadAvatar
+        {...props}
+        record={record}
+        form={form}
+        defaultValue={getRecordData(record, props.source)}
+      />
     )}
   </RestInputContext.Consumer>
 );

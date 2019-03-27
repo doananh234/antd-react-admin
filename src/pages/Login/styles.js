@@ -23,4 +23,7 @@ export default styled.div`
       width: 100%;
     }
   }
+  .register-form-button {
+    margin-top: 10px;
+  }
 `;

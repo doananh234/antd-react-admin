@@ -4,7 +4,7 @@ import RestFieldItem from '../../../components/RestField/RestFieldItem';
 
 const ProductTypesShow = props => (
   <RestShow {...props} hasEdit resource="productTypes">
-    <RestFieldItem source="name" title="name" />
+    <RestFieldItem source="name" header="name" />
   </RestShow>
 );
 

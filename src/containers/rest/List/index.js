@@ -90,7 +90,7 @@ const mapDispatchToProps = (dispatch, props) => ({
           ...data,
           [PRIMARY_KEY]: id,
         },
-        { isChangeToEdit, customApiResource: queryUrl }
+        { isChangeToEdit, customApiResource: queryUrl, isBack: false }
       )
     ),
   updateRecord: (id, data, isChangeToEdit) =>
@@ -100,15 +100,20 @@ const mapDispatchToProps = (dispatch, props) => ({
           ...data,
           [PRIMARY_KEY]: id,
         },
-        { isChangeToEdit }
+        { isChangeToEdit, isBack: false }
       )
     ),
   deleteItem: id =>
     dispatch(
-      CRUDActions[props.resource][`delete${upperCaseFirstChart(props.resource)}`]({
-        [PRIMARY_KEY]: id,
-      })
+      CRUDActions[props.resource][`delete${upperCaseFirstChart(props.resource)}`](
+        {
+          [PRIMARY_KEY]: id,
+        },
+        { isBack: false }
+      )
     ),
+  exportExcel: () =>
+    dispatch(CRUDActions[props.resource][`exportExcel${upperCaseFirstChart(props.resource)}`]()),
   pushQuery: searchStr => dispatch(push(`${props.rootPath}/${props.resource}?${searchStr}`)),
   showModal: data => dispatch(showModalAction(data)),
   pushRoute: data => dispatch(push(data)),

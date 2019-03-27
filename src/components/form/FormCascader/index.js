@@ -6,7 +6,7 @@ import FormItem from '../FormItem';
 const FormCascader = props => {
   const {
     source,
-    title,
+    header,
     required,
     requiredMessage,
     placeholder,
@@ -20,7 +20,7 @@ const FormCascader = props => {
     showSearch,
   } = props;
   return (
-    <FormItem {...props} title={title} required={required}>
+    <FormItem {...props} header={header} required={required}>
       {form.getFieldDecorator(source, {
         rules: [{ required, message: requiredMessage }, ...rules],
         initialValue: defaultValue,
@@ -42,7 +42,7 @@ const FormCascader = props => {
 
 FormCascader.propTypes = {
   source: PropTypes.string,
-  title: PropTypes.any,
+  header: PropTypes.any,
   required: PropTypes.bool,
   requiredMessage: PropTypes.node,
   icon: PropTypes.string,

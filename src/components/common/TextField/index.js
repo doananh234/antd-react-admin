@@ -5,12 +5,12 @@ import Text from '../Text';
 import { DivWrapper, IconWrapper } from './styles';
 
 const TextField = props => {
-  const { title, value, icon } = props;
+  const { header, value, icon } = props;
   return (
     <DivWrapper>
       <Title>
         {icon && <IconWrapper type={icon} />}
-        <Text type="smallText">{title}</Text>
+        <Text type="smallText">{header}</Text>
       </Title>
       <Text type="body">{value}</Text>
     </DivWrapper>
@@ -18,7 +18,7 @@ const TextField = props => {
 };
 
 TextField.propTypes = {
-  title: PropTypes.node,
+  header: PropTypes.node,
   value: PropTypes.string,
   icon: PropTypes.node,
 };

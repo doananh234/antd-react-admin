@@ -15,7 +15,7 @@ class RestCreateComponent extends Component {
   }
 
   render() {
-    const { onBack, showModal, title, location, noCardWrapper } = this.props;
+    const { onBack, showModal, header, location, noCardWrapper } = this.props;
     const BREADCRUMB_LIST = makeBreadCrumbFromPath(location);
     const actions = <BackButton onBack={onBack} />;
     const content = (
@@ -27,7 +27,7 @@ class RestCreateComponent extends Component {
       content
     ) : (
       <Layout bordered={false} extra={actions}>
-        {title || (
+        {header || (
           <PageTitle>
             <CustomBreadcrumb data={BREADCRUMB_LIST} />
           </PageTitle>
@@ -40,7 +40,7 @@ class RestCreateComponent extends Component {
 RestCreateComponent.propTypes = {
   onBack: PropTypes.func,
   showModal: PropTypes.bool,
-  title: PropTypes.any,
+  header: PropTypes.any,
   location: PropTypes.object,
   noCardWrapper: PropTypes.bool,
 };

@@ -44,6 +44,9 @@ const theme = {
   color: {
     gray: '#a3a3a3',
   },
+  alert: {
+    error: 'red',
+  },
 };
 
 module.exports = theme;

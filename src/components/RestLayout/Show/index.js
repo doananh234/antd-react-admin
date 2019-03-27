@@ -25,7 +25,7 @@ class RestShowComponent extends Component {
       children,
       hasEdit,
       hasDel,
-      title,
+      header,
       location,
     } = this.props;
     const BREADCRUMB_LIST = makeBreadCrumbFromPath(location);
@@ -55,7 +55,7 @@ class RestShowComponent extends Component {
       content
     ) : (
       <Layout bordered={false} extra={actions}>
-        {title || (
+        {header || (
           <PageTitle>
             <CustomBreadcrumb data={BREADCRUMB_LIST} />
           </PageTitle>
@@ -75,7 +75,7 @@ RestShowComponent.propTypes = {
   resource: PropTypes.string,
   hasEdit: PropTypes.bool,
   hasDel: PropTypes.bool,
-  title: PropTypes.any,
+  header: PropTypes.any,
   noActions: PropTypes.bool,
   location: PropTypes.object,
 };

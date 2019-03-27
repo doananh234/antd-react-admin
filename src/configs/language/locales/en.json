@@ -16,6 +16,12 @@
         "required": "Please input your password!"
       }
     },
+    "confirmPassword": {
+      "placeholder": "Confirm Password",
+      "validateMsg": {
+        "required": "Please input your confirm password!"
+      }
+    },
     "email": {
       "placeholder": "Email",
       "validateMsg": {
@@ -34,14 +40,31 @@
   "login": {
     "title": "Login",
     "rememberMe": "Remember me",
-    "forgotPassword": "Forgot password",
-    "loginBtn": "Log in"
+    "loginBtn": "Log in",
+    "yourEmail": "Your Email",
+    "resetPassword": "Reset password",
+    "password": "Password"
+  },
+
+  "register": {
+    "title": "Register",
+    "registerBtn": "Register"
+  },
+
+  "forgotPassword": {
+    "title": "Forgot password",
+    "success": {
+      "title": "Reset Password Success!",
+      "description": "Please check your email and create a new password."
+    }
   },
 
   "dashboard": {
     "title": "Dashboard"
   },
-
+  "settings": {
+    "title": "Settings"
+  },
   "users": {
     "title": "Users"
   },
@@ -57,10 +80,98 @@
     "save": "Save",
     "ok": "Ok",
     "search": "Search",
-    "reset": "Reset"
+    "reset": "Reset",
+    "resetMyPassword": "Reset Password",
+    "submit": "Submit"
   },
   "popup": {
     "alertDelete": "Delete Data",
     "alertDeleteDes": "Do you want to delete {{customMessage}}?"
+  },
+  "error": {
+    "title": "Oops!",
+    "description": "Some thing wrong!"
+  },
+  "success": {
+    "title": "Successfully!",
+    "description": "the update is successful!"
+  },
+  "tabs": {
+    "projects": "Projects",
+    "productTypes": "Product Types",
+    "statuses": "Statuses",
+    "titles": "Titles",
+    "departments": "Departments",
+    "activityTypes": "Activity Types"
+  },
+  "productTypes": {
+    "name": "Name",
+    "isActive": "Status",
+    "createPage": "Create Product Types",
+    "editPage": "Edit Product Types"
+  },
+  "statuses": {
+    "name": "Name",
+    "color": "Color",
+    "isActive": "Status",
+    "createPage": "Create Status",
+    "editPage": "Edit Status"
+  },
+  "departments": {
+    "name": "Name",
+    "description": "Description",
+    "isActive": "Status",
+    "createPage": "Create Departments",
+    "editPage": "Edit Departments"
+  },
+  "titles": {
+    "name": "Name",
+    "description": "Description",
+    "isActive": "Status",
+    "createPage": "Create Titles",
+    "editPage": "Edit Titles"
+  },
+  "activityTypes": {
+    "activityType": "Name",
+    "note": "Note",
+    "pushMessage": "Push Message",
+    "isActive": "Status",
+    "createPage": "Create Activity Types",
+    "editPage": "Edit Activity Types"
+  },
+  "clients": {
+    "avatar": "Avatar",
+    "fullName": "Full name",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "gender": "Gender",
+    "phoneNumber": "Phone number",
+    "address": "Address",
+    "company": "Company",
+    "isActive": "Status",
+    "createPage": "Create Client",
+    "editPage": "Edit Client",
+    "createdAt": "Created time"
+  },
+  "companies": {
+    "title": "Companies",
+    "name": "Name",
+    "createPage": "Create Companies",
+    "editPage": "Edit Companies",
+    "thumbnail": "Thumbnail",
+    "description": "Description"
+  },
+  "gender": {
+    "title": "Gender",
+    "male": "Male",
+    "female": "Female"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "placeholder": {
+    "undefined": "select..."
   }
 }

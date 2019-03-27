@@ -12,20 +12,11 @@ class RestReference extends Component {
     this.props.retrieveReference(getRecordData(record, source));
   }
 
-  componentWillUpdate(nextProps) {
-    if (this.props.record !== nextProps.record && !nextProps.resourceData) {
-      const { source } = this.props;
-      const { record } = nextProps;
-      this.props.retrieveReference(getRecordData(record, source));
-    }
-  }
-
   render() {
     const {
       resourceData,
       resource,
       record,
-      reference,
       children,
       retrieveList,
       source,
@@ -35,10 +26,10 @@ class RestReference extends Component {
     } = this.props;
     return isLink ? (
       <Link
-        href={`${rootPath}/${reference}/${
+        href={`${rootPath}/${resource}/${
           resourceData ? resourceData.id : getRecordData(record, source)
         }/edit`}
-        to={`${rootPath}/${reference}/${
+        to={`${rootPath}/${resource}/${
           resourceData ? resourceData.id : getRecordData(record, source)
         }/edit`}
       >
@@ -46,7 +37,6 @@ class RestReference extends Component {
           React.cloneElement(element, {
             record: resourceData,
             resource,
-            reference,
             retrieveList,
             loading,
           })
@@ -57,7 +47,6 @@ class RestReference extends Component {
         React.cloneElement(element, {
           record: resourceData,
           resource,
-          reference,
           retrieveList,
           loading,
         })
@@ -70,7 +59,6 @@ RestReference.propTypes = {
   resourceData: PropTypes.object,
   resource: PropTypes.string,
   record: PropTypes.object,
-  reference: PropTypes.string,
   retrieveList: PropTypes.func,
   children: PropTypes.node,
   source: PropTypes.string,
@@ -91,7 +79,7 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = (dispatch, props) => ({
   retrieveReference: id =>
-    dispatch(retrieveReference(props.reference, id ? [id] : [], props.mappedBy)),
+    dispatch(retrieveReference(props.resource, id ? [id] : [], props.mappedBy)),
 });
 
 export default connect(

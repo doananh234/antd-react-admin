@@ -6,11 +6,11 @@ import { BoxTitle, BoxSubTitle } from './style';
 
 const BoxTitleUI = props => (
   <div style={{ marginBottom: 20 }}>
-    {props.title ? (
+    {props.header ? (
       <BoxTitle className="isoBoxTitle">
         {props.icon && <Icon type={props.icon} />} 
         {' '}
-        {I18n.t(props.title)}
+        {I18n.t(props.header)}
         {' '}
       </BoxTitle>
     ) : (
@@ -26,7 +26,7 @@ const BoxTitleUI = props => (
   </div>
 );
 BoxTitleUI.propTypes = {
-  title: PropTypes.any,
+  header: PropTypes.any,
   icon: PropTypes.string,
   subtitle: PropTypes.string,
 };

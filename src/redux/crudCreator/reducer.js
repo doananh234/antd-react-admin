@@ -91,15 +91,18 @@ export const editSuccess = (state, { data }) => ({
   data: {
     ...state.data,
     [data[PRIMARY_KEY]]: { ...state.data[data[PRIMARY_KEY]], ...data },
+    loading: false,
   },
   itemLoadings: { ...state.itemLoadings, [data[PRIMARY_KEY]]: false },
   error: null,
+  loading: false,
 });
 
 export const editFailure = (state, { data }) => ({
   ...state,
   itemLoadings: { ...state.itemLoadings, [data[PRIMARY_KEY]]: false },
   error: data,
+  loading: false,
 });
 
 // Delete

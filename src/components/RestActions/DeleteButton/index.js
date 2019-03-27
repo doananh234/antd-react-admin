@@ -29,7 +29,7 @@ class EditButton extends Component {
   render() {
     return (
       <div>
-        {/* <Tooltip title={<IntlMessages id="tooltip.delete" />}> */}
+        {/* <Tooltip header={<IntlMessages id="tooltip.delete" />}> */}
         <ButtonWrapper icon="delete" onClick={this.handleDelete}>
           {I18n.t('button.delete')}
         </ButtonWrapper>

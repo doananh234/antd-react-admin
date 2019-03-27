@@ -27,7 +27,7 @@ class RestCreate extends Component {
     ) : (
       <div>
         <Text type="h4White" className="modalTitle">
-          {!title || typeof title === 'string' ? I18n.t(title || resource) : title}
+          {!title || typeof title === 'string' ? I18n.t(title || `${resource}.createPage`) : title}
         </Text>
         <RestCreateComponent {...this.props} onBack={this.onBack} />
       </div>

@@ -89,7 +89,7 @@ class InputAddition extends Component {
 
   render() {
     const { formDatas } = this.state;
-    const { form, source, children, numberOfCols, record, title } = this.props;
+    const { form, source, children, numberOfCols, record, header } = this.props;
     const formItems = formDatas ? (
       formDatas.map((k, index) => {
         const key = index;
@@ -97,7 +97,7 @@ class InputAddition extends Component {
           <Row gutter={16} key={key}>
             <Col xs={24}>
               <h3>
-                {I18n.t(title)}
+                {I18n.t(header)}
                 {' '}
 (
                 {index + 1}
@@ -139,7 +139,7 @@ class InputAddition extends Component {
           <Icon type="plus" />
           {I18n.t('button.add')} 
           {' '}
-          {I18n.t(title)}
+          {I18n.t(header)}
         </Button>
       </InputAdditionWrapper>
     );
@@ -151,7 +151,7 @@ InputAddition.propTypes = {
   source: PropTypes.string,
   children: PropTypes.any,
   numberOfCols: PropTypes.number,
-  title: PropTypes.any,
+  header: PropTypes.any,
 };
 
 InputAddition.defaultProps = {

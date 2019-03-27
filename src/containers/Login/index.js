@@ -54,13 +54,16 @@ class Login extends Component {
           </FormItem>
           <div className="sub-action-div">
             <Checkbox>{i18n.t('login.rememberMe')}</Checkbox>
-            <a className="login-form-forgot" href="/login">
-              {i18n.t('login.forgotPassword')}
+            <a className="login-form-forgot" href="/forgot-password">
+              {i18n.t('forgotPassword.title')}
             </a>
           </div>
           <div className="action-div">
             <Button type="primary" htmlType="submit" className="login-form-button">
               {i18n.t('login.loginBtn')}
+            </Button>
+            <Button type="secondary" className="register-form-button">
+              <a href="/register">{i18n.t('register.registerBtn')}</a>
             </Button>
           </div>
         </Form>

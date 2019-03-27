@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { update } from 'lodash';
+import { update, get } from 'lodash';
 import PropTypes from 'prop-types';
-import { Table, Button, Input, Icon } from 'antd';
+import { Table, Button, Input } from 'antd';
 import I18n from 'i18next';
 import Text from '../../common/Text';
 import { getRecordData } from '../../../utils/tools';
-import { HeaderTableWrapper } from './styles';
+import { HeaderTableWrapper, IconWrapper } from './styles';
 
 class RestTableLayout extends Component {
   onChangePagination = (e, filters, sorter) => {
@@ -13,18 +13,21 @@ class RestTableLayout extends Component {
     const formatFilter = {};
     const formatSort =
       sorter && sorter.field ? `${sorter.order === 'descend' ? '-' : ''}${sorter.field}` : null;
+
     Object.keys(filters).forEach(filter => {
       const filterKey = filter.substring(0, filter.indexOf('-col'));
       const $in = filters[filter].filter(data => typeof data === 'string');
-      const searchFilter = filters[filter].find(
-        data => typeof data !== 'string' && data.searchText
-      );
+      const searchFilter = filters[filter].find(data => typeof data !== 'string');
       update(formatFilter, filterKey, () => ({}));
       if ($in.length) {
         update(formatFilter, filterKey, () => ({ $in }));
       }
       if (searchFilter) {
-        update(formatFilter, filterKey, () => ({ $like: searchFilter.searchText }));
+        update(formatFilter, filterKey, () =>
+          $in.length > 0 ? { $in, ...searchFilter } : { ...searchFilter }
+        );
+      } else {
+        update(formatFilter, filterKey, () => ({ $in }));
       }
     });
     retrieveList({
@@ -35,28 +38,28 @@ class RestTableLayout extends Component {
     });
   };
 
-  onChangeRecord(record, item) {
-    switch (item.props.type) {
-      case 'switch':
-        return this.props.updateRecord(
-          record.id,
-          {
-            [item.props.source]: !record[item.props.source],
-          },
-          true
-        );
-
-      default:
-        return null;
-    }
-  }
+  onChangeRecord = (record, item) => value => {
+    this.props.updateRecord(
+      record.id,
+      {
+        [item.props.source]: value,
+      },
+      true
+    );
+  };
 
   handleSearch = confirm => {
     confirm();
   };
 
-  handleReset = clearFilters => {
-    clearFilters();
+  handleReset = dataIndex => {
+    const { resourceFilter, retrieveList } = this.props;
+    const formatFilter = { ...resourceFilter.filter };
+    update(formatFilter, dataIndex, () => undefined);
+    retrieveList({
+      ...resourceFilter,
+      filter: { ...formatFilter },
+    });
   };
 
   onBlur = (index, source) => e => {
@@ -70,13 +73,12 @@ class RestTableLayout extends Component {
     }
   };
 
-  getColumnSearchProps = (dataIndex, title, hasSearch) =>
-    hasSearch
+  getColumnSearchProps = (dataIndex, header, hasSearch) => {
+    const { resourceFilter } = this.props;
+    const defaultValue = get(resourceFilter.filter, `${dataIndex}.$like`);
+    return hasSearch
       ? {
           filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => {
-            const searchSelected = selectedKeys.find(
-              data => typeof data !== 'string' && data.searchText
-            );
             const filters = selectedKeys.filter(data => typeof data === 'string');
             return (
               <div style={{ padding: 8 }}>
@@ -84,15 +86,15 @@ class RestTableLayout extends Component {
                   ref={node => {
                     this.searchInput = node;
                   }}
-                  placeholder={`Search ${I18n.t(title)}`}
-                  value={searchSelected && searchSelected.searchText}
+                  placeholder={`Search ${I18n.t(header)}`}
                   onChange={e =>
                     setSelectedKeys(
-                      e.target.value ? [...filters, { searchText: e.target.value }] : [filters]
+                      e.target.value ? [...filters, { $like: e.target.value }] : filters
                     )
                   }
                   onPressEnter={() => this.handleSearch(confirm)}
                   style={{ width: 188, marginBottom: 8, display: 'block' }}
+                  defaultValue={defaultValue}
                 />
                 <Button
                   type="primary"
@@ -105,8 +107,8 @@ class RestTableLayout extends Component {
                 </Button>
                 <Button
                   onClick={() => {
-                    setSelectedKeys([...filters]);
-                    setTimeout(() => confirm());
+                    // setSelectedKeys([...filters]);
+                    this.handleReset(dataIndex, filters);
                   }}
                   size="small"
                   style={{ width: 90 }}
@@ -117,7 +119,11 @@ class RestTableLayout extends Component {
             );
           },
           filterIcon: filtered => (
-            <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+            <IconWrapper
+              type="search"
+              className={filtered || defaultValue ? 'highlightFilter' : ''}
+              // style={{ color: filtered || defaultValue ? '#1890ff' : undefined }}
+            />
           ),
           onFilterDropdownVisibleChange: visible => {
             if (visible) {
@@ -126,6 +132,7 @@ class RestTableLayout extends Component {
           },
         }
       : {};
+  };
 
   render() {
     const {
@@ -139,13 +146,15 @@ class RestTableLayout extends Component {
     } = this.props;
     const columns = children.map((item, index) => ({
       fixed: item.props.fixed,
-      title: (
+      title: item.props.isEditHeader ? (
         <HeaderTableWrapper
           onBlur={this.onBlur(index, item.props.source)}
           onKeyPress={this.onKeyPress}
           disabled={!item.props.isEditHeader}
-          defaultValue={item.props.title ? I18n.t(item.props.title) : ''}
+          defaultValue={item.props.header ? I18n.t(item.props.header) : ''}
         />
+      ) : (
+        I18n.t(item.props.header) || ''
       ),
       dataIndex: `${item.props.source}`,
       width: item.props.width,
@@ -156,7 +165,8 @@ class RestTableLayout extends Component {
         : undefined,
       sortOrder: item.props.sortOrder,
       filters: item.props.filters,
-      filterMultiple: item.props.filterMultiple,
+      filteredValue: get(resourceFilter.filter || {}, `${item.props.source}.$in`) || undefined,
+      filterMultiple: item.props.filterMultiple !== false,
       onFilter: (value, record) =>
         `${getRecordData(record, item.props.source)}`.search(`${value}`) > -1,
       render:
@@ -166,13 +176,27 @@ class RestTableLayout extends Component {
             table: true,
             record,
             loading: resourceData.itemLoading && resourceData.itemLoading[record.id],
-            onChange: () => this.onChangeRecord(record, item),
+            onChangeRecord: this.onChangeRecord(record, item),
             customQuery,
             ...getAction(this.props, item),
           });
           return RecordComponent;
         }),
-      ...this.getColumnSearchProps(item.props.source, item.props.title, item.props.hasSearch),
+      filterIcon: filtered => (
+        <IconWrapper
+          type="filter"
+          className={
+            filtered || get(resourceFilter.filter || {}, `${item.props.source}`)
+              ? 'highlightFilter'
+              : ''
+          }
+          // style={{ color: filtered || defaultValue ? '#1890ff' : undefined }}
+        />
+      ),
+      filterDropdown: item.props.filterDropdown
+        ? item.props.filterDropdown(item.props.source, resourceFilter, this.handleReset)
+        : undefined,
+      ...this.getColumnSearchProps(item.props.source, item.props.header, item.props.hasSearch),
     }));
 
     return (
@@ -216,7 +240,7 @@ export const getAction = (props, item) => {
       return { deleteItem: item.props.deleteItem || props.deleteItem };
     case 'show':
       return { gotoShowPage: item.props.gotoShowPage || props.gotoShowPage };
-    case 'group':
+    case 'actionGroup':
       return {
         gotoShowPage: props.gotoShowPage,
         deleteItem: props.deleteItem,
