@@ -19,22 +19,10 @@ const sidebarMenu = [
     url: '/',
   },
   {
-    key: 'clients',
-    text: 'Clients',
-    icon: 'user',
-    url: '/clients',
-  },
-  {
     key: 'users',
     text: 'Users',
     icon: 'user',
     url: '/users',
-  },
-  {
-    key: 'companies',
-    text: 'Companies',
-    icon: 'user',
-    url: '/companies',
   },
   {
     key: 'settings',

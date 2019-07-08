@@ -2,45 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Modal from '../../components/common/Modal';
-import Companies from '../../pages/Companies';
-import Clients from '../../pages/Clients';
 import ActivityTypes from '../../pages/ActivityTypes';
 import Titles from '../../pages/Titles';
 import Departments from '../../pages/Departments';
 import Statuses from '../../pages/Statuses';
-import Projects from '../../pages/Projects';
 import Users from '../../pages/Users';
 import ProductTypes from '../../pages/ProductTypes';
 import { closeModal as closeModalAction } from '../../redux/modal/actions';
 
 const modalRoutes = [
-  {
-    path: '/companies',
-    routes: [
-      {
-        path: '/create',
-        component: Companies.Create,
-      },
-      {
-        path: '/edit',
-        component: Companies.Edit,
-      },
-    ],
-  },
-
-  {
-    path: '/clients',
-    routes: [
-      {
-        path: '/create',
-        component: Clients.Create,
-      },
-      {
-        path: '/edit',
-        component: Clients.Edit,
-      },
-    ],
-  },
   {
     path: '/activityTypes',
     routes: [
@@ -94,20 +64,6 @@ const modalRoutes = [
       },
     ],
   },
-  {
-    path: '/projects',
-    routes: [
-      {
-        path: '/create',
-        component: Projects.Create,
-      },
-      {
-        path: '/edit',
-        component: Projects.Edit,
-      },
-    ],
-  },
-
   {
     path: '/users',
     routes: [

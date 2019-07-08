@@ -4,54 +4,17 @@ import { Switch, Route } from 'react-router-dom';
 import { t } from 'i18next';
 import { flatMap, map } from 'lodash';
 import PrivateLayout from '../../layout/PrivateLayout';
-import Companies from '../../pages/Companies';
 import ActivityTypes from '../../pages/ActivityTypes';
 import Titles from '../../pages/Titles';
 import Departments from '../../pages/Departments';
 import Statuses from '../../pages/Statuses';
-import Projects from '../../pages/Projects';
 import Users from '../../pages/Users';
 import ProductTypes from '../../pages/ProductTypes';
 import Home from '../../pages/Dashboard';
 import Settings from '../../pages/Settings';
-import Clients from '../../pages/Clients';
 
 const routes = [
 
-  {
-    path: '/companies',
-    routes: [
-      {
-        path: '/',
-        component: Companies.List,
-      },
-      {
-        path: '/create',
-        component: Companies.Create,
-      },
-      {
-        path: '/:id/edit',
-        component: Companies.Edit,
-      },
-    ],
-  },
-  {
-    path: '/clients',
-    routes: [
-      {
-        path: '/',
-        component: Clients.List,
-      },
-      {
-        path: '/create',
-        component: Clients.Create,
-      },
-      {
-        path: '/:id/edit',
-        component: Clients.Edit,
-      },
-    ],
-  },
   {
     path: '/activityTypes',
     routes: [
@@ -121,24 +84,6 @@ const routes = [
       },
     ],
   },
-  {
-    path: '/projects',
-    routes: [
-      {
-        path: '/',
-        component: Projects.List,
-      },
-      {
-        path: '/create',
-        component: Projects.Create,
-      },
-      {
-        path: '/:id/edit',
-        component: Projects.Edit,
-      },
-    ],
-  },
-
   {
     path: '/users',
     routes: [
