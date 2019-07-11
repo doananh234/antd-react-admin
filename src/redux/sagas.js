@@ -7,9 +7,11 @@ import departmentsSagas from './departments/sagas';
 import titlesSagas from './titles/sagas';
 import activityTypesSagas from './activityTypes/sagas';
 import referenceSagas from './referenceData/sagas';
+import testsSagas from './tests/sagas';
 
 export default function* root() {
   yield all([
+    ...testsSagas,
     ...activityTypesSagas,
     ...titlesSagas,
     ...departmentsSagas,

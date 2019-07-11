@@ -14,7 +14,6 @@ import Home from '../../pages/Dashboard';
 import Settings from '../../pages/Settings';
 
 const routes = [
-
   {
     path: '/activityTypes',
     routes: [

@@ -10,7 +10,7 @@
     "i18next-browser-languagedetector": "^2.2.4",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
-    "plopfile-generate": "^2.0.4",
+    "plopfile-generate": "^2.0.14",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
     "react-avatar-editor": "^11.0.6",

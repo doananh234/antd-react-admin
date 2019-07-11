@@ -1,4 +1,5 @@
 // import crud action
+import tests from './tests/actions';
 import companies from './companies/actions';
 import clients from './clients/actions';
 import activityTypes from './activityTypes/actions';
@@ -11,6 +12,7 @@ import productTypes from './productTypes/actions';
 
 export default {
   // actions here
+  tests,
   companies,
   clients,
   activityTypes,
