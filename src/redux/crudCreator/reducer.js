@@ -10,16 +10,27 @@ export const INITIAL_CRUD_STATE = {
   currentId: null,
   filter: {},
   page: 1,
-  limit: 10,
+  limit: 20,
   total: 0,
   numberOfPages: 1,
   sort: '',
+  currentData: {},
 };
 // getAll
 
 export const getAll = (state, { data = {}, options = {} }) =>
   options.isRefresh
-    ? { ...INITIAL_CRUD_STATE, loading: true, ...data }
+    ? {
+        ...state,
+        ...INITIAL_CRUD_STATE,
+        data: state.data,
+        ids: state.ids,
+        currentId: state.currentId,
+        currentData: state.currentData,
+        loading: true,
+        total: state.total,
+        ...data,
+      }
     : {
         ...state,
         loading: true,
@@ -28,11 +39,11 @@ export const getAll = (state, { data = {}, options = {} }) =>
         ...data,
       };
 
-export const getAllSuccess = (state, { data }) => ({
+export const getAllSuccess = (state, { data, options }) => ({
   ...state,
   loading: false,
   ...data,
-  ids: [...state.ids, ...data.ids],
+  ids: options.isRefresh ? data.ids : _.union(state.ids, data.ids),
   data: { ...state.data, ...data.data },
 });
 
@@ -43,37 +54,45 @@ export const getAllFailure = (state, { data }) => ({ ...state, loading: false, e
 export const setCurrent = (state, { data }) => ({
   ...state,
   currentId: data[PRIMARY_KEY],
-  loading: true,
+  currentData: { ...data, ...state.data[data[PRIMARY_KEY]] },
+  itemLoadings: { ...state.itemLoadings, [data[PRIMARY_KEY]]: true },
 });
 
 export const setCurrentSuccess = (state, { data }) => ({
   ...state,
   data: { ...state.data, [data[PRIMARY_KEY]]: data },
-  loading: false,
+  currentData: data,
+  itemLoadings: { ...state.itemLoadings, [data[PRIMARY_KEY]]: false },
 });
 
-export const setCurrentFailure = (state, { data }) => ({ ...state, loading: false, error: data });
+export const setCurrentFailure = (state, { data }) => ({
+  ...state,
+  itemLoadings: { ...state.itemLoadings, [data[PRIMARY_KEY]]: true },
+  error: data,
+});
 
 // Create
 
 export const create = state => ({
   ...state,
   error: null,
-  loading: true,
+  createLoading: true,
 });
 
 export const createSuccess = (state, { data }) => ({
   ...state,
   data: { ...state.data, [data[PRIMARY_KEY]]: data },
-  ids: [...state.ids, data[PRIMARY_KEY]],
+  ids: [data[PRIMARY_KEY], ...state.ids.slice(0, state.limit - 1)],
   currentId: data.id,
-  loading: false,
+  currentData: data,
+  createLoading: false,
   error: null,
+  total: state.total + 1,
 });
 
 export const createFailure = (state, { data }) => ({
   ...state,
-  loading: false,
+  createLoading: false,
   error: data,
 });
 
@@ -82,8 +101,8 @@ export const createFailure = (state, { data }) => ({
 export const edit = (state, { data }) => ({
   ...state,
   error: null,
+  currentData: data,
   itemLoadings: { ...state.itemLoadings, [data[PRIMARY_KEY]]: true },
-  loading: true,
 });
 
 export const editSuccess = (state, { data }) => ({
@@ -91,18 +110,16 @@ export const editSuccess = (state, { data }) => ({
   data: {
     ...state.data,
     [data[PRIMARY_KEY]]: { ...state.data[data[PRIMARY_KEY]], ...data },
-    loading: false,
   },
   itemLoadings: { ...state.itemLoadings, [data[PRIMARY_KEY]]: false },
+  currentData: data,
   error: null,
-  loading: false,
 });
 
 export const editFailure = (state, { data }) => ({
   ...state,
   itemLoadings: { ...state.itemLoadings, [data[PRIMARY_KEY]]: false },
   error: data,
-  loading: false,
 });
 
 // Delete
@@ -117,9 +134,10 @@ export const delSuccess = (state, { data }) => ({
   ...state,
   data: data[PRIMARY_KEY] ? { ...state.data, [data[PRIMARY_KEY]]: null } : {},
   itemLoadings: data[PRIMARY_KEY] ? { ...state.data, [data[PRIMARY_KEY]]: null } : {},
-  ids: state.ids.filter(id => `${id}` !== `${[data[PRIMARY_KEY]]}`),
+  ids: state.ids.filter(id => id !== data[PRIMARY_KEY]),
   error: null,
   currentId: null,
+  total: state.total - 1,
 });
 
 export const delFailure = (state, { data }) => ({

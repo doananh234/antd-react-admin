@@ -7,6 +7,7 @@ export const HeaderTableWrapper = styled.input`
   transition: all 0.3s;
   padding-left: 5px;
   transform: translate(-5px, 0px);
+  text-transform: uppercase;
   &:hover {
     border: 1px dashed ${({ theme }) => theme.border.default};
   }

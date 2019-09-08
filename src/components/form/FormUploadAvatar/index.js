@@ -75,14 +75,13 @@ class UploadImage extends Component {
       });
 
       const responseS3 = await getUrl(croppedFile.name, croppedFile.type);
-      const response = await uploadMedia(responseS3.url, croppedFile);
+      await uploadMedia(responseS3.uploadUrl, croppedFile);
       this.setState({
-        imgDisplay: response,
+        imgDisplay: responseS3.url,
         loading: false,
         hasErr: false,
       });
     } catch (error) {
-      this.props.showErrorMsg(error);
       notification.error({
         title: 'Error',
         message:
@@ -192,7 +191,7 @@ class UploadImage extends Component {
   }
 
   render() {
-    const { form, source, style } = this.props;
+    const { form, source, style, className } = this.props;
     const { imgDisplay } = this.state;
     const props = {
       showUploadList: false,
@@ -207,13 +206,13 @@ class UploadImage extends Component {
     };
 
     return (
-      <UploadImageWrapper style={style}>
+      <UploadImageWrapper className={className} style={style}>
         <FormItem>
           {form &&
             form.getFieldDecorator(source, {
               initialValue: imgDisplay,
             })(<Input style={{ display: 'none' }} />)}
-          <Upload {...props}>
+          <Upload {...props} accept="image/*">
             <div className="image-uploader">
               {this.renderImage()}
               <div className="image-hover" style={style}>
@@ -242,6 +241,7 @@ UploadImage.propTypes = {
   defaultText: PropTypes.string,
   defaultIcon: PropTypes.string,
   onUploadImage: PropTypes.func,
+  className: PropTypes.string,
 };
 
 export default connect(

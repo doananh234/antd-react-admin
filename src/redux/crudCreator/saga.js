@@ -32,10 +32,13 @@ function* getAllSaga(data, options = {}, resource, successAction, failureAction,
     const result = convertResponseData('GET_ALL', response, { primaryKey });
     if (result.data) {
       yield put(
-        successAction({
-          numberOfPages: Math.round(result.total / limit),
-          ...result,
-        })
+        successAction(
+          {
+            numberOfPages: Math.round(result.total / limit),
+            ...result,
+          },
+          options
+        )
       );
     } else {
       yield put(failureAction(response));
@@ -58,12 +61,13 @@ function* getDataByIdSaga(
       yield put(successAction(data));
       return;
     }
+    const convertRequest = convertResponseData('GET_BY_ID', data, { primaryKey });
     const response = yield call(
       apiWrapper,
       { isShowProgress: options.isShowProgress },
       getDataByIdApi,
       options.customApi || resource,
-      data[PRIMARY_KEY]
+      convertRequest[primaryKey]
     );
     const result = convertResponseData('GET_BY_ID', response, { primaryKey });
     if (result) {
@@ -86,7 +90,7 @@ function* editSaga(
 ) {
   // delete data.c
   try {
-    const currentModal = yield select(state => state.modal.current);
+    const currentModal = yield select(state => state.router.location.pathname);
     const requestParams = convertRequestParams('EDIT', data);
     const response = yield call(
       apiWrapper,
@@ -112,12 +116,23 @@ function* editSaga(
   }
 }
 
-function* createSaga(data, options = {}, resource, successAction, failureAction, primaryKey) {
+function* createSaga(
+  data,
+  options = { isBack: true },
+  resource,
+  successAction,
+  failureAction,
+  primaryKey
+) {
   try {
-    const currentModal = yield select(state => state.modal.current);
+    const currentModal = yield select(state => state.router.location.pathname);
     const response = yield call(
       apiWrapper,
-      { isShowProgress: options.isShowProgress },
+      {
+        isShowProgress: options.isShowProgress,
+        isShowSuccessNoti: options.isShowSuccessNoti,
+        successDescription: options.successDescription,
+      },
       postApi,
       options.customApi || resource,
       data
@@ -125,13 +140,15 @@ function* createSaga(data, options = {}, resource, successAction, failureAction,
     const result = convertResponseData('CREATE', response, { primaryKey });
     if (result) {
       yield put(successAction(result));
-      yield put(currentModal ? closeModal() : goBack());
+      if (options.isBack) {
+        yield put(currentModal ? closeModal() : goBack());
+      }
     } else {
-      yield put(failureAction(response));
+      yield put(failureAction(data, response));
     }
   } catch (error) {
     //
-    yield put(failureAction(error));
+    yield put(failureAction(data, error));
   }
 }
 

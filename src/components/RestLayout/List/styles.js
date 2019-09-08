@@ -62,4 +62,19 @@ export const ListWrapper = styled.div`
     font-size: 18px;
     font-weight: bold;
   }
+  .ant-table-thead {
+    & > tr {
+      & > th {
+        ${'' /* text-transform: uppercase; */}
+        ${'' /* line-height: 17px; */}
+        background: ${({ theme }) => theme.background.headerTable};
+        color: ${({ theme }) => theme.text.headerTable};
+        font-size: 12px;
+        font-weight: ${({ theme }) => theme.fontWeight.medium};
+        & > div {
+          white-space: nowrap;
+        }
+      }
+    }
+  }
 `;

@@ -1,62 +1,88 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { pick } from 'lodash';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import CRUDActions from '../../../redux/crudActions';
+import crudSelectors from '../../../redux/crudSelectors';
 import RestListComponent from '../../../components/RestLayout/List';
-import { getFilterFromUrl, getSearch, upperCaseFirstChart } from '../../../utils/tools';
-import { getLoading, getFilters, getDataArr } from '../../../redux/crudCreator/selectors';
-import { showModal as showModalAction } from '../../../redux/modal/actions';
+import {
+  getFilterFromUrl,
+  getSearch,
+  upperCaseFirstChart,
+  getValidData,
+  convertObjToSearchStr,
+} from '../../../utils/tools';
 import { PRIMARY_KEY } from '../../../redux/crudCreator/actions';
 
 class RestList extends Component {
-  constructor(props) {
-    super(props);
+  componentDidMount() {
     const filter =
       (this.props.location && getFilterFromUrl(this.props.location.search)) ||
       this.props.initialFilter;
-    this.props.retrieveList(filter || { limit: 10, page: 1, filter: {} }, true);
+    this.props.retrieveList(filter || { limit: 20, page: 1, filter: {} }, true);
   }
 
+  // shouldComponentUpdate(nextProps) {
+  //   const { location, resource, rootPath } = nextProps;
+  //   if (location.pathname === `${rootPath}/${resource}`) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
+
   retrieveList = filter => {
-    this.props.pushQuery(getSearch(filter));
+    const { isUpdateRoute } = this.props;
+    isUpdateRoute && this.props.pushQuery(getSearch(filter));
     this.props.retrieveList(filter, true);
   };
 
   gotoEditPage = id => {
-    const { redirects, pushRoute, showModal, resource, rootPath } = this.props;
+    const { redirects, pushRoute, resource, rootPath } = this.props;
     const route = `${rootPath}/${resource}/${id}/edit`;
     if (redirects.edit === 'modal') {
-      showModal(route);
+      pushRoute(`#${resource}/${id}/edit`);
     } else {
       pushRoute(route);
     }
   };
 
   gotoShowPage = id => {
-    const { redirects, pushRoute, showModal, resource, rootPath } = this.props;
+    const { redirects, pushRoute, resource, rootPath } = this.props;
     const route = `${rootPath}/${resource}/${id}/show`;
     if (redirects.edit === 'modal') {
-      showModal(route);
+      pushRoute(`#${resource}/${id}/edit`);
     } else {
       pushRoute(route);
     }
   };
 
   gotoCreatePage = () => {
-    const { redirects, pushRoute, showModal, resource, rootPath } = this.props;
+    const { redirects, pushRoute, resource, rootPath, initCreateData } = this.props;
     const route = `${rootPath}/${resource}/create`;
     if (redirects.create === 'modal') {
-      showModal(route);
+      pushRoute(`#${resource}/create?${convertObjToSearchStr(initCreateData)}`);
     } else {
       pushRoute(route);
     }
   };
 
+  getFilterData = () => {
+    const { resourceFilter, isUpdateRoute } = this.props;
+    const filter =
+      (this.props.location && getFilterFromUrl(this.props.location.search)) ||
+      this.props.initialFilter;
+    return isUpdateRoute
+      ? { ...filter, ...pick(resourceFilter, ['limit', 'page', 'count']) }
+      : getValidData(resourceFilter);
+  };
+
   render() {
     return (
       <RestListComponent
+        header={`${this.props.resource}.title`}
         {...this.props}
+        resourceFilter={this.getFilterData()}
         gotoEditPage={this.gotoEditPage}
         gotoCreatePage={this.gotoCreatePage}
         gotoShowPage={this.gotoShowPage}
@@ -67,9 +93,9 @@ class RestList extends Component {
 }
 
 const mapStateToProps = (state, props) => ({
-  loading: getLoading(state, props),
-  resourceData: getDataArr(state, props),
-  resourceFilter: getFilters(state, props),
+  loading: crudSelectors[props.resource].getLoading(state, props),
+  resourceData: crudSelectors[props.resource].getDataArr(state, props),
+  resourceFilter: crudSelectors[props.resource].getFilters(state, props),
 });
 
 const mapDispatchToProps = (dispatch, props) => ({
@@ -115,7 +141,6 @@ const mapDispatchToProps = (dispatch, props) => ({
   exportExcel: () =>
     dispatch(CRUDActions[props.resource][`exportExcel${upperCaseFirstChart(props.resource)}`]()),
   pushQuery: searchStr => dispatch(push(`${props.rootPath}/${props.resource}?${searchStr}`)),
-  showModal: data => dispatch(showModalAction(data)),
   pushRoute: data => dispatch(push(data)),
 });
 
@@ -132,17 +157,32 @@ RestList.propTypes = {
   resource: PropTypes.string,
   redirects: PropTypes.object,
   pushRoute: PropTypes.func,
-  showModal: PropTypes.func,
   rootPath: PropTypes.string,
+  isUpdateRoute: PropTypes.bool,
+};
+
+ConnectRestList.propTypes = {
+  location: PropTypes.object,
+  pushQuery: PropTypes.func,
+  retrieveList: PropTypes.func,
+  initialFilter: PropTypes.object,
+  resource: PropTypes.string,
+  redirects: PropTypes.object,
+  pushRoute: PropTypes.func,
+  rootPath: PropTypes.string,
+  isUpdateRoute: PropTypes.bool,
+  initCreateData: PropTypes.object,
 };
 
 ConnectRestList.defaultProps = {
+  isUpdateRoute: true,
   rootPath: '',
   redirects: {
     edit: 'modal',
     create: 'modal',
   },
   defaultOptions: {},
+  initCreateData: {},
 };
 
 export default ConnectRestList;

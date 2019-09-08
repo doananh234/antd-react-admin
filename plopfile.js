@@ -1,5 +1,7 @@
 const plopInit = require('plopfile-generate');
 
-module.exports = function(plop) {
+const plopConfig = (plop) => {
   plopInit(plop);
 };
+
+module.exports = plopConfig;

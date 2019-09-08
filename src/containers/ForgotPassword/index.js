@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import i18next from 'i18next';
 import { connect } from 'react-redux';
-import { Form, Button, Icon } from 'antd';
+import { Link } from 'react-router-dom';
+import { Form, Button, Icon, Divider } from 'antd';
 import { forgotPassword as forgotPasswordAction } from '../../redux/auth/actions';
 import ForgotPasswordStyleWrapper from './styles';
 import MaterialInput from '../../components/common/MaterialInput';
@@ -38,7 +39,7 @@ class ForgotPassword extends Component {
 
   render() {
     const { isRequestSuccess } = this.state;
-    const { form } = this.props;
+    const { form, loading } = this.props;
     const { getFieldDecorator } = form;
     if (isRequestSuccess) {
       return (
@@ -51,6 +52,10 @@ class ForgotPassword extends Component {
               <Text align="center" className="txtDescription">
                 {i18next.t('forgotPassword.success.description')}
               </Text>
+              <br />
+              <Button type="primary">
+                <Link to="/login">{i18next.t('login.loginBtn')}</Link>
+              </Button>
             </div>
           </div>
         </ForgotPasswordStyleWrapper>
@@ -70,6 +75,7 @@ class ForgotPassword extends Component {
                     {getFieldDecorator('email', {
                       rules: [
                         { required: true, message: i18next.t('input.email.validateMsg.required') },
+                        { type: 'email', message: i18next.t('input.email.validateMsg.invalid') },
                       ],
                     })(
                       <MaterialInput
@@ -80,8 +86,17 @@ class ForgotPassword extends Component {
                   </FormItem>
                 </div>
                 <div className="buttonWrapper">
-                  <Button type="primary" htmlType="submit" onClick={this.handleLogin}>
+                  <Button
+                    loading={loading}
+                    type="primary"
+                    htmlType="submit"
+                    onClick={this.handleLogin}
+                  >
                     {i18next.t('button.resetMyPassword')}
+                  </Button>
+                  <Divider>{i18next.t('text.or')}</Divider>
+                  <Button type="secondary">
+                    <Link to="/login">{i18next.t('login.loginBtn')}</Link>
                   </Button>
                 </div>
               </Form>

@@ -26,6 +26,7 @@ import {
   resetPasswordApi,
   forgotPasswordApi,
   registerApi,
+  registerWithTokenApi,
 } from '../../api/user';
 
 function* loginSaga({ params }) {
@@ -53,9 +54,9 @@ function* loginSaga({ params }) {
 
 function* logoutSaga() {
   try {
-    localStorage.clear('sessionToken');
-    localStorage.clear('fullName');
-    localStorage.clear('id');
+    localStorage.removeItem('sessionToken');
+    localStorage.removeItem('fullName');
+    localStorage.removeItem('id');
     const installationId = localStorage.getItem('installationId');
     yield call(
       apiWrapper,
@@ -75,7 +76,7 @@ function* logoutSaga() {
         },
         installationId
       );
-      localStorage.clear('installationId');
+      localStorage.removeItem('installationId');
     }
   } catch (error) {
     // /logic here
@@ -181,7 +182,29 @@ function* registerSaga({ params }) {
       localStorage.setItem('sessionToken', response.token);
       yield put(registerSuccessAction(response));
       yield put(getCurentUser());
-      yield put(push('/home'));
+    } else {
+      yield put(registerFailureAction(response));
+    }
+  } catch (error) {
+    yield put(registerFailureAction(error));
+  }
+}
+
+function* registerWithTokenSaga({ params }) {
+  try {
+    const response = yield call(
+      apiWrapper,
+      {
+        isShowLoading: true,
+        isShowSuccessNoti: false,
+      },
+      registerWithTokenApi,
+      params
+    );
+    if (response.token) {
+      localStorage.setItem('sessionToken', response.token);
+      yield put(registerSuccessAction(response));
+      yield put(getCurentUser());
     } else {
       yield put(registerFailureAction(response));
     }
@@ -198,4 +221,5 @@ export default [
   takeEvery(AuthTypes.FORGOT_PASSWORD, forgotPasswordSaga),
   takeEvery(AuthTypes.RESET_PASSWORD, resetPasswordSaga),
   takeEvery(AuthTypes.REGISTER, registerSaga),
+  takeEvery(AuthTypes.REGISTER_WITH_TOKEN, registerWithTokenSaga),
 ];

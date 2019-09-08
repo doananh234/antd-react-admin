@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
 const UploadImageWrapper = styled.div`
+  border: solid 1px ${({ theme }) => theme.border.default};
+  border-radius: 50%;
   .ant-form-item-control {
     display: flex;
     justify-content: center;

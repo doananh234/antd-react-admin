@@ -39,3 +39,7 @@ export async function resetPasswordApi(data) {
 export async function registerApi(data) {
   return post('/auth/register', data);
 }
+
+export async function registerWithTokenApi(data) {
+  return post('/auth/registerByToken', data);
+}

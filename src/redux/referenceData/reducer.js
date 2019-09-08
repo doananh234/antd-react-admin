@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { makeReducerCreator } from '../../utils/reduxUtils';
 import { REST_ACTION_TYPES } from './actions';
 
@@ -11,19 +12,20 @@ const retrieveReference = (state, { resource, filter = {} }) => ({
     ...state[resource],
     ...filter,
     loading: true,
-    ids: [],
+    ids: state[resource] ? state[resource].ids : [],
     data: state[resource] ? state[resource].data : {},
   },
 });
 
 const retrieveReferenceSuccess = (state, { resource, data }) => ({
-  ...state,
-  [resource]: {
-    ...state[resource],
-    loading: false,
-    ...data,
-  },
-});
+    ...state,
+    [resource]: {
+      ...state[resource],
+      data: { ...state[resource].data, ...data.data },
+      ids: _.union(state[resource].ids, data.ids),
+      loading: false,
+    },
+  });
 
 const retrieveReferenceFailed = (state, { resource, error }) => ({
   ...state,

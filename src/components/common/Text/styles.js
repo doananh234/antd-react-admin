@@ -64,8 +64,8 @@ export const TextWrapper = styled.span`
     /* 16 - semibold */
     font-size: 16px;
     line-height: 24px;
-    font-weight: ${({ theme }) => theme.fontWeight.regular};
-    color: ${({ theme }) => theme.text.secondary};
+    font-weight: ${({ theme }) => theme.fontWeight.semibold};
+    color: ${({ theme }) => theme.text.primary};
   }
   .buttonWhite {
     /* 14 - medium */
@@ -142,7 +142,7 @@ export const TextWrapper = styled.span`
     font-size: 10px;
     line-height: 15px;
     font-weight: ${({ theme }) => theme.fontWeight.regular};
-    color: ${({ theme }) => theme.text.primary};
+    color: ${({ theme }) => theme.text.lightPrimary};
   }
   /* txtUnderline */
   .txtUnderline {

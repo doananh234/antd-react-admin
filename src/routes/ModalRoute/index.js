@@ -1,107 +1,49 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { replace } from 'connected-react-router';
 import Modal from '../../components/common/Modal';
-import ActivityTypes from '../../pages/ActivityTypes';
-import Titles from '../../pages/Titles';
-import Departments from '../../pages/Departments';
-import Statuses from '../../pages/Statuses';
+
 import Users from '../../pages/Users';
-import ProductTypes from '../../pages/ProductTypes';
-import { closeModal as closeModalAction } from '../../redux/modal/actions';
+import Customers from '../../pages/Customers';
 
 const modalRoutes = [
   {
-    path: '/activityTypes',
+    path: '/customers',
     routes: [
       {
         path: '/create',
-        component: ActivityTypes.Create,
+        component: Customers.Create,
+        modalOptions: {
+          width: 755,
+        },
       },
       {
         path: '/edit',
-        component: ActivityTypes.Edit,
+        component: Customers.Edit,
+        modalOptions: {
+          width: 755,
+        },
       },
     ],
   },
 
-  {
-    path: '/titles',
-    routes: [
-      {
-        path: '/create',
-        component: Titles.Create,
-      },
-      {
-        path: '/edit',
-        component: Titles.Edit,
-      },
-    ],
-  },
-  {
-    path: '/departments',
-    routes: [
-      {
-        path: '/create',
-        component: Departments.Create,
-      },
-      {
-        path: '/edit',
-        component: Departments.Edit,
-      },
-    ],
-  },
-  {
-    path: '/statuses',
-    routes: [
-      {
-        path: '/create',
-        component: Statuses.Create,
-      },
-      {
-        path: '/edit',
-        component: Statuses.Edit,
-      },
-    ],
-  },
   {
     path: '/users',
     routes: [
       {
         path: '/create',
         component: Users.Create,
+        modalOptions: {
+          width: 755,
+        },
       },
       {
         path: '/edit',
         component: Users.Edit,
-      },
-    ],
-  },
-
-  {
-    path: '/productTypes',
-    routes: [
-      {
-        path: '/create',
-        component: ProductTypes.Create,
-      },
-      {
-        path: '/edit',
-        component: ProductTypes.Edit,
-      },
-    ],
-  },
-
-  {
-    path: '/productTypes',
-    routes: [
-      {
-        path: '/create',
-        component: ProductTypes.Create,
-      },
-      {
-        path: '/edit',
-        component: ProductTypes.Edit,
+        modalOptions: {
+          width: 755,
+        },
       },
     ],
   },
@@ -117,24 +59,38 @@ const getModalRoute = currentModal => {
 };
 
 class ModalRoute extends Component {
+  componentDidMount() {
+    const { location } = this.props;
+    if (location.hash && location.hash !== '#') {
+      const modelRoute = location.hash.replace('#', '/');
+      this.modal = getModalRoute(modelRoute);
+    }
+  }
+
   closeModal = () => {
-    const { closeModal } = this.props;
-    closeModal();
+    const { replaceRoute, location } = this.props;
+    replaceRoute(location.pathname);
   };
 
   render() {
-    const { location, currentModal } = this.props;
-    this.modal = getModalRoute(currentModal) || this.modal;
+    const { location } = this.props;
+    const modelRoute = location.hash.replace('#', '/');
+    this.modal = getModalRoute(modelRoute) || this.modal;
     const modalOptions = this.modal && this.modal.modalOptions ? this.modal.modalOptions : {};
     return (
       <Modal
         {...modalOptions}
-        visible={currentModal && currentModal !== ''}
+        visible={!!(location.hash && location.hash !== '#')}
         footer={null}
         onCancel={this.closeModal}
+        onClose={this.closeModal}
       >
         {this.modal && this.modal.component && (
-          <this.modal.component showModal location={location} />
+          <this.modal.component
+            showModal
+            visibleModal={!!(location.hash && location.hash !== '#')}
+            location={location}
+          />
         )}
       </Modal>
     );
@@ -145,15 +101,16 @@ ModalRoute.propTypes = {
   location: PropTypes.object,
   currentModal: PropTypes.string,
   closeModal: PropTypes.func,
+  showModal: PropTypes.func,
+  replaceRoute: PropTypes.func,
 };
 
 const mapStateToProps = state => ({
   location: state.router.location,
-  currentModal: state.modal.current,
 });
 
 const mapDispatchToProps = dispatch => ({
-  closeModal: () => dispatch(closeModalAction()),
+  replaceRoute: data => dispatch(replace(data)),
 });
 
 export default connect(

@@ -34,29 +34,33 @@ class RestListLayout extends Component {
     const { resourceFilter } = this.props;
     this.props.retrieveList({
       page,
-      limit: resourceFilter.limit || 10,
+      limit: resourceFilter.limit || 20,
       filter: resourceFilter.filter,
     });
   };
 
   renderListItem = record => {
     const { children } = this.props;
-    const actions = React.Children.map(
-      children.find(element => element.props.source === 'actionGroup').props.children,
-      item =>
-        React.cloneElement(item, {
-          record,
-          table: true,
-          list: true,
-          onChange: () => this.onChangeRecord(record, item),
-          ...getAction(this.props, item),
-        })
-    );
-    return (
+    const actionGroup =
+      Array.isArray(children) &&
+      children.find(element => element && element.props.source === 'actionGroup');
+    const actions =
+      Array.isArray(children) && actionGroup
+        ? React.Children.map(actionGroup.props.children, item =>
+            React.cloneElement(item, {
+              record,
+              table: true,
+              list: true,
+              onChange: () => this.onChangeRecord(record, item),
+              ...getAction(this.props, item),
+            })
+          )
+        : [];
+    return Array.isArray(children) ? (
       <Card className="item" actions={actions}>
         <Row>
           {React.Children.map(children, item => {
-            if (item.props.source === 'actionGroup') return null;
+            if (!item || item.props.source === 'actionGroup') return null;
             return (
               <Col span={24} key={item.props.header}>
                 <div className="title">{I18n.t(item.props.header)}</div>
@@ -72,6 +76,14 @@ class RestListLayout extends Component {
           })}
         </Row>
       </Card>
+    ) : (
+      React.cloneElement(children, {
+        record,
+        table: true,
+        list: true,
+        onChange: () => this.onChangeRecord(record),
+        ...getAction(this.props, { props: {} }),
+      })
     );
   };
 
@@ -84,19 +96,20 @@ class RestListLayout extends Component {
       responseRender,
       isList,
       resourceFilter,
+      grid,
     } = this.props;
     return (
       <List
-        grid={{ gutter: 16 }}
+        grid={grid || { gutter: 16 }}
         pagination={{
           position: 'none',
           onChange: this.onChangePage,
-          pageSize: resourceFilter.limit || 10,
+          pageSize: resourceFilter.limit || 20,
         }}
         style={{ marginTop: 20 }}
         dataSource={resourceData || []}
         renderItem={record => (
-          <List.Item key={record.id}>
+          <List.Item key={record && record.id}>
             {responseRender && !isList
               ? responseRender(record, {
                   gotoShowPage,
@@ -122,6 +135,7 @@ RestListLayout.propTypes = {
   deleteItem: PropTypes.func,
   children: PropTypes.any,
   isList: PropTypes.bool,
+  grid: PropTypes.object,
 };
 
 export default RestListLayout;

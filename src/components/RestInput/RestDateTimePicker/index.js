@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { get } from 'lodash';
 import moment from 'moment';
@@ -16,7 +16,11 @@ const RestFormDateTimePicker = props => (
       <FormDateTimePicker
         {...props}
         form={form}
-        defaultValue={getRecordData(record, props.source)}
+        defaultValue={
+          getRecordData(record, props.source) === null
+            ? undefined
+            : getRecordData(record, props.source)
+        }
       />
     )}
   </RestInputContext.Consumer>
@@ -28,14 +32,31 @@ export const dateFilterDropdown = (source, resourceFilter, handleReset) => ({
 }) => {
   const defaultValue = get(resourceFilter.filter, `${source}`);
   return (
+    <FilterUI
+      setSelectedKeys={setSelectedKeys}
+      confirm={confirm}
+      source={source}
+      resourceFilter={resourceFilter}
+      handleReset={handleReset}
+    />
+  );
+};
+
+const FilterUI = ({ source, resourceFilter, handleReset, setSelectedKeys, confirm }) => {
+  const defaultValue = get(resourceFilter.filter, `${source}`);
+  const [value, setValue] = useState(
+    defaultValue && [moment(defaultValue.$gte), moment(defaultValue.$lte)]
+  );
+  return (
     <div style={{ padding: 8 }}>
       <RangePicker
-        defaultValue={defaultValue && [moment(defaultValue.$gte), moment(defaultValue.$lte)]}
+        value={value}
         onChange={e => {
+          setValue(e);
           setSelectedKeys([
             {
-              $gte: e[0].toISOString(),
-              $lte: e[1].toISOString(),
+              $gte: e[0] && e[0].toISOString(),
+              $lte: e[1] && e[1].toISOString(),
             },
           ]);
         }}
@@ -52,6 +73,7 @@ export const dateFilterDropdown = (source, resourceFilter, handleReset) => ({
         </Button>
         <Button
           onClick={() => {
+            setValue(undefined);
             handleReset(source);
           }}
           size="small"

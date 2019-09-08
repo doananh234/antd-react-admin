@@ -16,4 +16,13 @@ export const FooterButtonRowWrapper = styled.div`
     width: 140px;
     border-color: ${({ theme }) => theme.palette.primary};
   }
+  &.showTotal {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    button {
+      width: 100%;
+      border-radius: 0px;
+      height: 60px;
+    }
+  }
 `;

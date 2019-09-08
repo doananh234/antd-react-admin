@@ -5,12 +5,6 @@ import ButtonRow from '../FooterButtonRow';
 import { RestInputContext } from '../../RestInput/RestInputContext';
 
 class FormComponent extends Component {
-  componentDidUpdate(prevProps) {
-    if (prevProps.loading && !this.props.loading && !this.props.error) {
-      this.props.form.resetFields();
-    }
-  }
-
   getData = () =>
     new Promise(resolve => {
       this.props.form.validateFields((err, values) => {
@@ -48,32 +42,32 @@ class FormComponent extends Component {
     } = this.props;
 
     return (
-      <Form>
-        <Row gutter={16}>
-          <Col md={positionOfSubmitButton === 'left' ? 20 : 24} xs={24}>
+      <Row className="drawerContainer" gutter={16}>
+        <Col className="content" md={positionOfSubmitButton === 'left' ? 20 : 24} xs={24}>
+          <Form>
             <RestInputContext.Provider value={{ form, record }}>
               {children}
             </RestInputContext.Provider>
-          </Col>
-          <Col md={positionOfSubmitButton === 'left' ? 4 : 24} xs={24}>
-            {customSubmitButton ? (
-              React.cloneElement(customSubmitButton, {
-                handleSubmit: this.handleSubmit,
-                onBack,
-                getData: this.getData,
-              })
-            ) : (
-              <ButtonRow
-                type="create"
-                loading={loading}
-                showModal={showModal}
-                handleSubmit={this.handleSubmit}
-                onBack={onBack}
-              />
-            )}
-          </Col>
-        </Row>
-      </Form>
+          </Form>
+        </Col>
+        <Col className="footer" md={positionOfSubmitButton === 'left' ? 4 : 24} xs={24}>
+          {customSubmitButton ? (
+            React.cloneElement(customSubmitButton, {
+              handleSubmit: this.handleSubmit,
+              onBack,
+              getData: this.getData,
+            })
+          ) : (
+            <ButtonRow
+              type="create"
+              loading={loading}
+              showModal={showModal}
+              handleSubmit={this.handleSubmit}
+              onBack={onBack}
+            />
+          )}
+        </Col>
+      </Row>
     );
   }
 }
@@ -92,7 +86,6 @@ FormComponent.propTypes = {
   record: PropTypes.object,
   showModal: PropTypes.bool,
   formatOnSubmit: PropTypes.func,
-  error: PropTypes.any,
 };
 
 FormComponent.defaultProps = {

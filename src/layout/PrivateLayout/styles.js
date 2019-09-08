@@ -9,7 +9,16 @@ const PrivateLayoutWrapper = styled.div`
     margin-left: 80px;
     overflow: hidden;
     transition: all 0.3s ease 0s;
-    background: #f4f6fc;
+    background: ${({ theme }) => theme.background.container};
+  }
+  .mainWithoutSidebar {
+    margin-left: 0px;
+    .content {
+      padding:0px;
+    }
+    .ant-layout {
+      height: 100%;
+    }
   }
   .container {
     overflow-y: auto;
@@ -18,7 +27,7 @@ const PrivateLayoutWrapper = styled.div`
     flex-direction: column;
   }
   .content {
-    padding: 40px 20px;
+    padding: 34px 20px;
     flex: 1;
     ${'' /* @media only screen and (max-width: 430px) {
       padding-top: 80px;
@@ -26,10 +35,10 @@ const PrivateLayoutWrapper = styled.div`
   }
   .trigger {
     font-size: 20px;
-    line-height: 64px;
+    padding: 5px;
     cursor: pointer;
     transition: color 0.3s;
-
+    margin-right: 10px;
     &:hover {
       color: ${({ theme }) => theme.palette.primary};
     }
@@ -58,9 +67,21 @@ const PrivateLayoutWrapper = styled.div`
   }
 
   .logo {
-    height: 32px;
-    background: rgba(0, 0, 0, 0.2);
-    margin: 16px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding-left: 25px;
+    position: relative;
+    img {
+      height: 40px;
+      width: auto;
+      object-fit: contain;
+    }
+    .fullLogo {
+      position: absolute;
+      opacity: 0;
+      transition: all 0.3s;
+    }
   }
 
   .sidebar {
@@ -68,18 +89,28 @@ const PrivateLayoutWrapper = styled.div`
     height: 100vh;
     position: fixed;
     left: 0;
-    background: #fff;
-    border-right: 1px solid #e8e8e8;
+    background: ${({ theme }) => theme.background.content};
+    border-right: 1px solid ${({ theme }) => theme.border.default};
 
     .ant-menu {
-      border-right: 1px solid #fff;
+      border-right: 1px solid ${({ theme }) => theme.border.default};
+    }
+    .ant-menu-item {
+      color: ${({ theme }) => theme.text.secondary};
+      &.ant-menu-item-selected {
+        color: ${({ theme }) => theme.text.highlight};
+        & > span {
+          color: ${({ theme }) => theme.text.highlight};
+          font-weight: ${({ theme }) => theme.fontWeight.bold};
+        }
+      }
     }
   }
 
   .header {
     position: 'fixed';
     z-index: 1;
-    background: #fff;
+    background: ${({ theme }) => theme.background.content};
     padding: 0 24px;
     display: flex;
     justify-content: space-between;
@@ -87,18 +118,7 @@ const PrivateLayoutWrapper = styled.div`
     @media only screen and (max-width: 430px) {
       display: inherit;
     }
-    .leftHeader {
-      @media only screen and (max-width: 430px) {
-        width: 100%;
-        display: inherit;
-        padding-right: 45px;
-      }
-    }
-    .rightHeader {
-      @media only screen and (max-width: 430px) {
-        display: none;
-      }
-    }
+
     .title {
       display: none;
       opacity: 0;
@@ -141,7 +161,21 @@ const PrivateLayoutWrapper = styled.div`
     height: 0px;
     position: absolute;
   }
+  .sidebar {
+    background: ${({ theme }) => theme.background.content};
+    border-right: 1px solid ${({ theme }) => theme.background.content};
+    .ant-menu {
+      background: ${({ theme }) => theme.background.content};
+      border-right:1px solid ${({ theme }) => theme.background.content};
+    }
+  }
+
   #collapsedTracker:checked ~ .sidebar {
+    .logo {
+      .fullLogo {
+        opacity: 1;
+      }
+    }
   }
 
   #collapsedTracker:checked ~ .mainView {
@@ -182,7 +216,10 @@ const PrivateLayoutWrapper = styled.div`
       pointer-events: auto;
     }
   }
-
+  .footer {
+    background: ${({ theme }) => theme.background.content};
+    color: ${({ theme }) => theme.text.primary};
+  }
   .footerMobile {
     position: fixed;
     height: 60px;
@@ -192,7 +229,7 @@ const PrivateLayoutWrapper = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #fff;
+    background: ${({ theme }) => theme.background.content};
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);
     transition: all 0.5s ease 0.2s;
     a {
@@ -206,6 +243,32 @@ const PrivateLayoutWrapper = styled.div`
       bottom: 0px;
     }
   }
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  div::-webkit-scrollbar-thumb {
+    border-radius: 3px !important;
+    background: ${({ theme }) => theme.scrollbar.thumb} !important;
+  }
+  div::-webkit-scrollbar-track {
+    background: ${({ theme }) => theme.scrollbar.track} !important;
+  }
+  div::-webkit-scrollbar-thumb:hover {
+    border-radius: 3px !important;
+    background: ${({ theme }) => theme.scrollbar.thumb} !important;
+  }
+  div::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background: ${({ theme }) => theme.scrollbar.track} !important;
+  }import default from '../../redux/config/sagas';
+
+  .ant-table-tbody {
+    background: ${({ theme }) => theme.background.content};
+  }
+
 `;
 
 export default PrivateLayoutWrapper;

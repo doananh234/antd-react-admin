@@ -1,22 +1,23 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Input } from 'antd';
 import MaterialInputWrapper from './styles';
 
-class MaterialInput extends PureComponent {
-  componentDidMount() {}
+const MaterialInput = ({ placeholder, prefix, suffix, disabled, ...params }) => (
+  <MaterialInputWrapper isPrefix={!!prefix} isSuffix={!!suffix}>
+    <Input {...params} disabled={disabled} />
+    {prefix}
+    <span className="suffix">{suffix}</span>
+    <label>{placeholder}</label>
+    <span className="bar" />
+  </MaterialInputWrapper>
+);
 
-  render() {
-    const { placeholder, prefix, suffix, ...params } = this.props;
-    return (
-      <MaterialInputWrapper isPrefix={!!prefix} isSuffix={!!suffix}>
-        <Input {...params} />
-        {prefix}
-        <span className="suffix">{suffix}</span>
-        <label>{placeholder}</label>
-        <span className="bar" />
-      </MaterialInputWrapper>
-    );
-  }
-}
+MaterialInput.propTypes = {
+  placeholder: PropTypes.string,
+  prefix: PropTypes.string,
+  suffix: PropTypes.string,
+  disabled: PropTypes.bool,
+};
 
 export default MaterialInput;

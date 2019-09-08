@@ -1,4 +1,5 @@
 import React from 'react';
+import { Input } from 'antd';
 import PropTypes from 'prop-types';
 import FormItem from '../../form/FormItem';
 import { getRecordData } from '../../../utils/tools';
@@ -13,7 +14,7 @@ const RestHiddenInput = props => (
           form={form}
           defaultValue={props.defaultValue || getRecordData(record, props.source)}
         >
-          <input />
+          <Input />
         </FormItem>
       )}
     </RestInputContext.Consumer>

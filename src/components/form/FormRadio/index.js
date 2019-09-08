@@ -1,4 +1,5 @@
 import React from 'react';
+import i18next from 'i18next';
 import PropTypes from 'prop-types';
 import { Form, Radio } from 'antd';
 
@@ -23,7 +24,7 @@ const FormRadio = props => {
   return (
     <FormItem label={header}>
       {form.getFieldDecorator(source, {
-        rules: [{ required, message: requiredMessage, ...rules }],
+        rules: [{ required, message: i18next.t(requiredMessage), ...rules }],
         initialValue: defaultValue,
       })(
         <RadioGroup placeholder={placeholder}>
@@ -61,7 +62,7 @@ FormRadio.propTypes = {
 
 FormRadio.defaultProps = {
   required: false,
-  requiredMessage: 'The field is required',
+  requiredMessage: 'error.required',
   rules: [],
 };
 export default FormRadio;

@@ -24,10 +24,12 @@ class Routes extends Component {
   render() {
     return (
       <RoutesWrapper>
-        <PrivateRoutes />
+        {/* <Switch> */}
         <PublicRoutes />
-        <ModalRoute {...this.props} />
+        <PrivateRoutes />
+        <ModalRoute />
         <Route component={NotFoundPage} />
+        {/* </Switch> */}
       </RoutesWrapper>
     );
   }

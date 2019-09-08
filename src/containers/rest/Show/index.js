@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import { Modal } from 'antd';
 import CRUDActions from '../../../redux/crudActions';
 import RestShowComponent from '../../../components/RestLayout/Show';
-import { getCurrentData } from '../../../redux/crudCreator/selectors';
+import crudSelectors from '../../../redux/crudSelectors';
 import { PRIMARY_KEY } from '../../../redux/crudCreator/actions';
-import { upperCaseFirstChart } from '../../../utils/tools';
+import { upperCaseFirstChart, getIdByUrl } from '../../../utils/tools';
 
 class RestShow extends Component {
   static propTypes = {
@@ -16,7 +16,7 @@ class RestShow extends Component {
   };
 
   componentDidMount() {
-    this.props.retrieveOneRecord();
+    this.props.retrieveOneRecord(getIdByUrl(this.props));
   }
 
   render() {
@@ -35,9 +35,8 @@ class RestShow extends Component {
 }
 
 const mapStateToProps = (state, props) => ({
-  loading: state.loading.isMainLoading,
-  errorRequest: state.rest.errorRequest,
-  record: getCurrentData(state, props.resource),
+  record: crudSelectors[props.resource].getCurrentData(state),
+  location: state.router.location,
 });
 
 const mapDispatchToProps = (dispatch, props) => ({

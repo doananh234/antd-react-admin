@@ -58,7 +58,7 @@ FormCascader.propTypes = {
 };
 FormCascader.defaultProps = {
   required: false,
-  requiredMessage: 'The field is required',
+  requiredMessage: 'error.required',
   rules: [],
   placeholder: 'placeholder.undefined',
 };

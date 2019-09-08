@@ -56,7 +56,7 @@ class RestReference extends Component {
 }
 
 RestReference.propTypes = {
-  resourceData: PropTypes.object,
+  resourceData: PropTypes.any,
   resource: PropTypes.string,
   record: PropTypes.object,
   retrieveList: PropTypes.func,

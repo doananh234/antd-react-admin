@@ -14,7 +14,7 @@ const addIds = (resource, ids) => {
   if (!debouncedIds[resource]) {
     debouncedIds[resource] = [];
   }
-  debouncedIds[resource] = _.union(debouncedIds[resource], ids);
+  debouncedIds[resource] = _.flatten(_.union(debouncedIds[resource], ids));
 };
 
 const addMappedBy = (resource, mappedBy) => {
@@ -55,11 +55,7 @@ export function* retrieveReferenceList(resource) {
     };
     const response = yield call(apiWrapper, { isShowProgress: false }, getAllApi, resource, params);
     const result = convertResponseData('GET_ALL', response);
-    yield put(
-      retrieveReferenceSuccess(resource, {
-        ...result,
-      })
-    );
+    yield put(retrieveReferenceSuccess(resource, result));
   } catch (error) {
     yield put(retrieveReferenceFailed(resource, error));
   }

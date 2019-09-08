@@ -7,13 +7,15 @@ import { SummaryCardWrapper } from './styles';
 
 const SummaryCard = ({ color, value, header, icon }) => (
   <SummaryCardWrapper style={{ background: color }}>
-    <div>
-      <Icon type={icon} theme="outlined" className="icon" />
-    </div>
     <div className="vInfo">
-      <Text type="h1SemiBold" className="value">
-        {value}
-      </Text>
+      <div className="row">
+        <Text type="h1SemiBold" className="value">
+          {value}
+        </Text>
+        <div>
+          <Icon type={icon} theme="outlined" className="icon" />
+        </div>
+      </div>
       <Text type="h5" className="title">
         {I18n.t(header)}
       </Text>

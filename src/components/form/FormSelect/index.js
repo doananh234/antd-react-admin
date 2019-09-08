@@ -49,10 +49,11 @@ class FormSelect extends Component {
     } = this.props;
     return (
       <FormItem
+        ruleType={Array.isArray(defaultValue) ? 'array' : 'string'}
         {...this.props}
         header={i18n.t(header)}
         required={required}
-        defaultValue={`${defaultValue}`}
+        defaultValue={defaultValue}
       >
         <SelectWrapper
           disabled={disabled}
@@ -83,7 +84,7 @@ class FormSelect extends Component {
                 key={valueProp ? getRecordData(data, valueProp) : data}
                 value={valueProp ? getRecordData(data, valueProp) : data}
               >
-                {formatText(titleProp ? getRecordData(data, titleProp) : data)}
+                {formatText(titleProp ? getRecordData(data, titleProp) : data, data)}
               </Option>
             )
           )}
@@ -120,6 +121,7 @@ FormSelect.propTypes = {
   loading: PropTypes.bool,
   selectProps: PropTypes.object,
   formatText: PropTypes.func,
+  record: PropTypes.object,
   // onEnter: PropTypes.func,
 };
 

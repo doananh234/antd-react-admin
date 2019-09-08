@@ -18,12 +18,17 @@ export const SummaryCardWrapper = styled.div`
     color: white;
     height: 36px;
   }
-  .header,
+  .title,
   .value {
     color: white;
+    background: transparent;
   }
   .vInfo {
     flex: 1;
     width: 100%;
+  }
+  .row {
+    display: flex;
+    justify-content: space-between;
   }
 `;

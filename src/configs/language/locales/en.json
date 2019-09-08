@@ -3,11 +3,40 @@
     "footer": "RAA ©2018 Created by Anh Doan",
     "name": "React Admin"
   },
+  "sideBar": {
+    "dashboard": "Dashboard",
+    "customers": "Customers",
+    "settings": "Settings",
+    "users": "Users",
+    "CMS": "CMS"
+  },
+  "header": {
+    "profile": "Profile",
+    "logout": "Logout"
+  },
   "input": {
     "username": {
       "placeholder": "Username",
       "validateMsg": {
         "required": "Please input your username!"
+      }
+    },
+    "fullName": {
+      "placeholder": "Full Name",
+      "validateMsg": {
+        "required": "Please input your full name!"
+      }
+    },
+    "firstName": {
+      "placeholder": "First Name",
+      "validateMsg": {
+        "required": "Please input your first name!"
+      }
+    },
+    "lastName": {
+      "placeholder": "Last Name",
+      "validateMsg": {
+        "required": "Please input your last name!"
       }
     },
     "password": {
@@ -74,6 +103,7 @@
   },
   "button": {
     "create": "Create",
+    "add": "Add",
     "edit": "Edit",
     "cancel": "Cancel",
     "delete": "Delete",
@@ -82,7 +112,11 @@
     "search": "Search",
     "reset": "Reset",
     "resetMyPassword": "Reset Password",
-    "submit": "Submit"
+    "submit": "Submit",
+    "call": "Call",
+    "loadMore": "Load More...",
+    "sentInvite": "Sent Invite",
+    "resendInvite": "Resend Invite"
   },
   "popup": {
     "alertDelete": "Delete Data",
@@ -96,20 +130,7 @@
     "title": "Successfully!",
     "description": "the update is successful!"
   },
-  "tabs": {
-    "projects": "Projects",
-    "productTypes": "Product Types",
-    "statuses": "Statuses",
-    "titles": "Titles",
-    "departments": "Departments",
-    "activityTypes": "Activity Types"
-  },
-  "productTypes": {
-    "name": "Name",
-    "isActive": "Status",
-    "createPage": "Create Product Types",
-    "editPage": "Edit Product Types"
-  },
+  "tabs": {},
   "statuses": {
     "name": "Name",
     "color": "Color",
@@ -117,29 +138,8 @@
     "createPage": "Create Status",
     "editPage": "Edit Status"
   },
-  "departments": {
-    "name": "Name",
-    "description": "Description",
-    "isActive": "Status",
-    "createPage": "Create Departments",
-    "editPage": "Edit Departments"
-  },
-  "titles": {
-    "name": "Name",
-    "description": "Description",
-    "isActive": "Status",
-    "createPage": "Create Titles",
-    "editPage": "Edit Titles"
-  },
-  "activityTypes": {
-    "activityType": "Name",
-    "note": "Note",
-    "pushMessage": "Push Message",
-    "isActive": "Status",
-    "createPage": "Create Activity Types",
-    "editPage": "Edit Activity Types"
-  },
-  "clients": {
+  "customers": {
+    "title": "Customers",
     "avatar": "Avatar",
     "fullName": "Full name",
     "firstName": "First name",
@@ -152,26 +152,53 @@
     "isActive": "Status",
     "createPage": "Create Client",
     "editPage": "Edit Client",
-    "createdAt": "Created time"
-  },
-  "companies": {
-    "title": "Companies",
-    "name": "Name",
-    "createPage": "Create Companies",
-    "editPage": "Edit Companies",
-    "thumbnail": "Thumbnail",
-    "description": "Description"
+    "createdAt": "Created time",
+
+    "detail": {
+      "about": "About",
+      "contact": {
+        "note": "New note",
+        "mail": "Send email",
+        "phone": "Call",
+        "emailTitle": "Subject",
+        "message": {
+          "success": "Send mail Successfully"
+        }
+      },
+      "activityLog": {
+        "activityLog": "Activity Logs",
+        "productAttended": "Product Attended",
+        "note": "Note Logs",
+        "email": "Email Logs",
+        "call": "Call Logs"
+      },
+      "popup": {
+        "addNoteSuccess": "The note sent successfully."
+      }
+    }
   },
   "gender": {
     "title": "Gender",
     "male": "Male",
-    "female": "Female"
+    "female": "Female",
+    "other": "Other"
   },
   "status": {
     "active": "Active",
-    "inactive": "Inactive"
+    "inactive": "Inactive",
+    "inprogress": "In Progress",
+    "pending": "Pending",
+    "completed": "Completed",
+    "developing": "Developing",
+    "approved": "Approved"
   },
   "placeholder": {
     "undefined": "select..."
+  },
+  "CMS": {
+    "title": "CMS"
+  },
+  "text": {
+    "or": "OR"
   }
 }

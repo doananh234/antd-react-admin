@@ -7,7 +7,7 @@ export default styled.div`
 
   label {
     position: absolute !important;
-    left: ${props => (props.isPrefix ? '30px' : '11px')};
+    left: ${props => (props.isPrefix ? '30px' : '0px')};
     line-height: 1.5;
     top: 4px;
     transition: 300ms ease all;
@@ -21,12 +21,17 @@ export default styled.div`
     border-right: none;
     border-radius: 0;
     display: block;
-    padding-left: ${props => (props.isPrefix ? '30px' : '11px')};
-    padding-right: ${props => (props.isSuffix ? '30px' : '11px')};
+    padding-left: ${props => (props.isPrefix ? '30px' : '0px')};
+    padding-right: ${props => (props.isSuffix ? '30px' : '0px')};
 
     &:focus {
       outline: none;
       box-shadow: none !important;
+    }
+    &:disabled {
+      background: ${theme.background.content};
+      color: ${theme.text.primary};
+      cursor: text !important;
     }
 
     &:focus,
@@ -36,7 +41,7 @@ export default styled.div`
     &:-webkit-autofill:focus {
       & ~ label {
         top: -20px;
-        left: 11px;
+        left: 0px;
         font-size: 90%;
         color: ${theme.palette.primary};
       }

@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form } from 'antd';
-
-const FormItem = Form.Item;
+import I18n from 'i18next';
+import { FormItemWrapper } from './styles';
 
 const FormItemUI = props => {
   const {
@@ -16,20 +15,31 @@ const FormItemUI = props => {
     rules,
     children,
     valuePropName,
-    errorMessageType,
+    className,
+    formOptions,
+    disabled,
   } = props;
   return (
-    <FormItem label={header}>
+    <FormItemWrapper className={className} label={I18n.t(header)}>
       {form.getFieldDecorator(source, {
         rules: [
-          { required, message: requiredMessage },
-          { type: ruleType, message: errorMessageType },
+          { required, message: I18n.t(requiredMessage) },
+          ruleType !== undefined && {
+            type: ruleType,
+            message: `${I18n.t('error.validateType')} ${I18n.t(ruleType || 'ruleType.string')}`,
+          },
           ...rules,
         ],
+        normalize: value => ruleType === 'number' && value === null ? 0 : value,
         valuePropName,
-        initialValue: defaultValue,
-      })(children)}
-    </FormItem>
+        initialValue: defaultValue && defaultValue !== 'undefined' ? defaultValue : undefined,
+        ...formOptions,
+      })(
+        React.cloneElement(children, {
+          disabled,
+        })
+      )}
+    </FormItemWrapper>
   );
 };
 
@@ -44,14 +54,17 @@ FormItemUI.propTypes = {
   valuePropName: PropTypes.string,
   ruleType: PropTypes.string,
   children: PropTypes.node,
-  errorMessageType: PropTypes.string,
+  className: PropTypes.string,
+  formOptions: PropTypes.object,
+  disabled: PropTypes.bool,
 };
 FormItemUI.defaultProps = {
   required: false,
-  requiredMessage: 'The field is required',
-  errorMessageType: 'The field is error format.',
+  requiredMessage: 'error.required',
   rules: [],
   valuePropName: 'value',
+  formOptions: {},
+  disabled: false,
 };
 
 export default FormItemUI;

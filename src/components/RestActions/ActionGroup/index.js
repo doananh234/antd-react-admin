@@ -10,11 +10,13 @@ const ActionGroup = ({
   gotoShowPage,
   deleteItem,
   record,
+  modelResource,
 }) => (
   <GroupWrapper {...elementProps}>
     <Popover
       content={React.Children.map(children, element =>
         React.cloneElement(element, {
+          resource: modelResource,
           gotoEditPage: element.props.gotoEditPage || gotoEditPage,
           gotoShowPage: element.props.gotoShowPage || gotoShowPage,
           deleteItem: element.props.deleteItem || deleteItem,
@@ -38,12 +40,13 @@ ActionGroup.propTypes = {
   source: PropTypes.string,
   fixed: PropTypes.string,
   width: PropTypes.number,
+  resource: PropTypes.string,
 };
 
 ActionGroup.defaultProps = {
   source: 'actionGroup',
   fixed: 'right',
-  width: 100,
+  width: 50,
 };
 
 export default ActionGroup;

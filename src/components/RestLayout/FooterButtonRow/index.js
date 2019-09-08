@@ -8,7 +8,7 @@ const ButtonRow = props => {
   const { loading, onBack, handleSubmit, type, showModal } = props;
   if (showModal) {
     return (
-      <FooterButtonRowWrapper>
+      <FooterButtonRowWrapper className="showTotal">
         <ButtonWrapper
           onClick={() => {
             handleSubmit();
@@ -18,7 +18,7 @@ const ButtonRow = props => {
         >
           {I18n.t(type === 'create' ? 'button.create' : 'button.save')}
         </ButtonWrapper>
-        <span style={{ width: 20 }} />
+        {!showModal && <span style={{ width: 20 }} />}
         <ButtonWrapper
           onClick={() => {
             onBack();
@@ -32,11 +32,12 @@ const ButtonRow = props => {
   return (
     <Row gutter={8} type="flex" justify="end" style={{ marginTop: 20 }}>
       <Col lg={12} md={0} sm={0} xs={24} />
-      <Col lg={showModal ? 6 : 3} md={3} sm={24} xs={24}>
+      <Col lg={showModal ? 12 : 3} md={3} sm={24} xs={24}>
         <ButtonWrapper
           onClick={() => {
             handleSubmit();
           }}
+          htmlType="submit"
           type="primary"
           loading={loading}
         >
@@ -44,7 +45,7 @@ const ButtonRow = props => {
         </ButtonWrapper>
       </Col>
       <Col md={0} sm={0} xs={24} />
-      <Col lg={showModal ? 6 : 3} md={3} sm={24} xs={24}>
+      <Col lg={showModal ? 12 : 3} md={3} sm={24} xs={24}>
         <ButtonWrapper
           onClick={() => {
             onBack();

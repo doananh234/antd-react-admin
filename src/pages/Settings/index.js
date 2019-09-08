@@ -1,63 +1,51 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
+import { connect } from 'react-redux';
 import i18next from 'i18next';
-import ProjectsTypesList from '../ProductTypes/List';
-import StatusesList from '../Statuses/List';
-import TitlesList from '../Titles/List';
-import DepartmentsList from '../Departments/List';
-import ActivityTypesList from '../ActivityTypes/List';
+import { push } from 'connected-react-router';
 
 const { TabPane } = Tabs;
 
 const TABS = [
-  {
-    key: 'productTypes',
-    text: 'tabs.productTypes',
-    url: '/productTypes',
-    component: ProjectsTypesList,
-  },
-  {
-    key: 'statuses',
-    text: 'tabs.statuses',
-    url: '/statuses',
-    component: StatusesList,
-  },
-  {
-    key: 'titles',
-    text: 'tabs.titles',
-    url: '/titles',
-    component: TitlesList,
-  },
-  {
-    key: 'departments',
-    text: 'tabs.departments',
-    url: '/departments',
-    component: DepartmentsList,
-  },
-  {
-    key: 'activityTypes',
-    text: 'tabs.activityTypes',
-    url: '/activityTypes',
-    component: ActivityTypesList,
-  },
+  // {
+  //   key: 'transactionTypes',
+  //   text: 'tabs.transactionTypes',
+  //   url: '/transactionTypes',
+  //   component: TransactionTypes,
+  // },
 ];
 
-class Settings extends PureComponent {
-  render() {
-    return (
-      <div>
-        <Tabs>
-          {TABS.map(tab => (
-            <TabPane tab={i18next.t(tab.text)} key={tab.key}>
-              <tab.component noCardWrapper layoutButtonCreate="no-inline" {...this.props} />
-            </TabPane>
-          ))}
-        </Tabs>
-      </div>
-    );
-  }
-}
+const Settings = ({ match, pushRoute, ...props }) => {
+  const onChange = key => {
+    pushRoute(`/settings/${key}`);
+  };
+  return (
+    <div>
+      <Tabs defaultActiveKey={match.params.model || 'rooms'} onChange={onChange}>
+        {TABS.map(tab => (
+          <TabPane tab={i18next.t(tab.text)} key={tab.key}>
+            <tab.component
+              rootPath="/settings"
+              noCardWrapper
+              layoutButtonCreate="no-inline"
+              {...props}
+            />
+          </TabPane>
+        ))}
+      </Tabs>
+    </div>
+  );
+};
 
-Settings.propTypes = {};
+Settings.propTypes = {
+  match: PropTypes.object,
+  pushRoute: PropTypes.func,
+};
 
-export default Settings;
+export default connect(
+  null,
+  dispatch => ({
+    pushRoute: data => dispatch(push(data)),
+  })
+)(Settings);

@@ -11,6 +11,7 @@ export const convertRequestParams = (
   const formatedParams = {
     ...params,
     page: undefined,
+    count: undefined,
   };
   const filter = getValidData(formatedParams.filter);
   switch (type) {
@@ -20,16 +21,19 @@ export const convertRequestParams = (
         filter: Object.keys(filter).length > 0 ? JSON.stringify(filter) : undefined,
       };
     case 'GET_BY_ID':
-      break;
+      return {
+        ...params,
+        [PRIMARY_KEY]: Number(params[PRIMARY_KEY]),
+      };
     case 'EDIT':
       delete formatedParams.id;
-      return formatedParams;
-    case 'DELETE':
+      return getValidData(formatedParams);
     case 'CREATE':
+      return getValidData(formatedParams);
+    case 'DELETE':
     default:
       return {};
   }
-  return {};
 };
 
 export const convertResponseData = (type, response, options = { primaryKey: PRIMARY_KEY }) => {
@@ -39,18 +43,18 @@ export const convertResponseData = (type, response, options = { primaryKey: PRIM
         data: keyBy(
           response.results.map(data => ({
             ...data,
-            [PRIMARY_KEY]: `${data[options.primaryKey || PRIMARY_KEY]}`,
+            [PRIMARY_KEY]: data[options.primaryKey || PRIMARY_KEY],
             backupId: data[PRIMARY_KEY],
           })),
           options.primaryKey || PRIMARY_KEY
         ),
-        ids: response.results.map(data => `${data[options.primaryKey || PRIMARY_KEY]}`),
+        ids: response.results.map(data => data[options.primaryKey || PRIMARY_KEY]),
         total: response.total,
       };
     case 'GET_BY_ID':
     case 'CREATE':
       return response && response.id
-        ? { ...response, [PRIMARY_KEY]: `${response[options.primaryKey || PRIMARY_KEY]}` }
+        ? { ...response, [PRIMARY_KEY]: response[options.primaryKey || PRIMARY_KEY] }
         : null;
     case 'EDIT':
       return response && response.id ? { ...response } : null;

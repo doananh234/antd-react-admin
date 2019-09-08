@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import CustomBreadcrumb from '../../common/Breadcrumb';
 import ButtonEdit from '../../RestActions/EditButton';
 import DeleteButton from '../../RestActions/DeleteButton';
-import BackButton from '../../RestActions/BackButton';
 import Layout from '../../common/Layout';
 import Box from '../../common/Box';
 import ActionView from '../ActionLayout';
@@ -17,7 +16,6 @@ class RestShowComponent extends Component {
     const {
       noCardWrapper,
       noActions,
-      onBack,
       deleteItem,
       gotoEditPage,
       record,
@@ -34,9 +32,20 @@ class RestShowComponent extends Component {
 
     const actions = (
       <div>
-        <BackButton resource={resource} record={record} onBack={onBack} />
-        {hasEdit && <ButtonEdit resource={resource} record={record} gotoEditPage={gotoEditPage} />}
-        {hasDel && <DeleteButton resource={resource} record={record} deleteItem={deleteItem} />}
+        {hasEdit && (
+          <ButtonEdit
+            resource={resource}
+            record={record}
+            gotoEditPage={gotoEditPage}
+          />
+        )}
+        {hasDel && (
+          <DeleteButton
+            resource={resource}
+            record={record}
+            deleteItem={deleteItem}
+          />
+        )}
       </div>
     );
 
@@ -69,7 +78,6 @@ RestShowComponent.propTypes = {
   children: PropTypes.node,
   record: PropTypes.object,
   noCardWrapper: PropTypes.bool,
-  onBack: PropTypes.func,
   deleteItem: PropTypes.func,
   gotoEditPage: PropTypes.func,
   resource: PropTypes.string,

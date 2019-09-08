@@ -1,5 +1,5 @@
 import { notification } from 'antd';
-import { call, put, fork, select } from 'redux-saga/effects';
+import { call, put, fork } from 'redux-saga/effects';
 import { push } from 'connected-react-router';
 import I18n from 'i18next';
 import _ from 'lodash';
@@ -39,7 +39,7 @@ export function* apiWrapper(
     config.isShowSuccessNoti &&
       notification.success({
         message: I18n.t('success.title'),
-        description: I18n.t('success.description'),
+        description: config.successDescription || I18n.t('success.description'),
       });
     return response;
   } catch (err) {
@@ -54,8 +54,8 @@ export function* apiWrapper(
 }
 
 export function* checkError(res) {
-  const auth = yield select(state => state.auth);
-  if (res.code === 401 && auth.isAuthenticated) {
+  // const auth = yield select(state => state.auth);
+  if (res.code === 401) {
     yield put(logout());
   }
   if (ERROR_CODE.indexOf(res.code) > -1) {

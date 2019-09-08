@@ -85,6 +85,7 @@ const ForgotPasswordStyleWrapper = styled.div`
 
       .buttonWrapper {
         display: flex;
+        flex-direction: column;
         justify-content: center;
       }
 

@@ -13,10 +13,10 @@ class EditButton extends Component {
   };
 
   handleDelete = () => {
-    const { record, source } = this.props;
+    const { record, source, resource } = this.props;
     confirm({
-      title: I18n.t('popup.alertDelete'),
-      content: I18n.t('popup.alertDeleteDes', { customMessage: `(#${record.id})` }),
+      title: `${I18n.t('popup.alertDelete')} ${I18n.t(`${resource}.title`)}`,
+      content: I18n.t('popup.alertDeleteDes', { customMessage: `${record.name}` }),
       okText: I18n.t('button.ok'),
       cancelText: I18n.t('button.cancel'),
       onOk: () => {
@@ -43,6 +43,7 @@ EditButton.propTypes = {
   deleteItem: PropTypes.func,
   record: PropTypes.object,
   source: PropTypes.string,
+  resource: PropTypes.string,
 };
 
 EditButton.defaultProps = {

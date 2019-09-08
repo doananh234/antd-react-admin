@@ -83,6 +83,7 @@ export default class AvatarCropper extends Component {
               onPositionChange={p => this.handlePositionChange(p)}
               // onImageChange={() => this.handleSave()}
               image={this.props.image}
+              accept="image/*"
             />
             <br />
             Zoom:

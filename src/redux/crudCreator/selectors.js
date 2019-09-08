@@ -1,66 +1,91 @@
 import { createSelector } from 'reselect';
 import { getFilterFromUrl } from '../../utils/tools';
 
-const getRestData = (state, props) => state[props.resource];
-const getDefaultValue = (state, props) => decodeURI(props.location.search.substring(1)).trim();
-
-export const getDataArr = createSelector(
-  [getRestData],
-  resources => {
-    const { data, ids } = resources;
-    return ids.map(id => data[id]);
+export default class CRUDSelectors {
+  constructor(resource) {
+    this.resource = resource;
   }
-);
 
-export const getTotal = createSelector(
-  [getRestData],
-  resources => {
-    const { total } = resources;
-    return total;
-  }
-);
+  getRestByResourceData = state => state[this.resource];
 
-export const getDefaultCreateData = createSelector(
-  [getDefaultValue],
-  defaultValue => (defaultValue !== '' ? getFilterFromUrl(defaultValue).filter : {})
-);
+  getRestData = state => state[this.resource];
 
-export const getCurrentData = createSelector(
-  [getRestData],
-  resources => {
-    const { currentId, data } = resources;
-    return (data && currentId && data[currentId]) || {};
-  }
-);
+  getDefaultValue = (state, props) =>
+    props.location && !props.location.hash && props.location.hash !== '#'
+      ? decodeURI(props.location.search.substring(1)).trim()
+      : props.location.hash.match(`#${this.resource}/create?(.*)`)[1];
 
-export const enabledLoadMore = createSelector(
-  [getRestData],
-  resources => {
-    const { page, loading, numberOfPages } = resources;
-    return !loading && page < numberOfPages;
-  }
-);
+  getDefaultFromProps = (state, props) => props.defaultValue;
 
-export const getLoading = createSelector(
-  [getRestData],
-  (resources = { loading: false }) => {
-    const { loading } = resources;
-    return loading;
-  }
-);
+  getDataArr = createSelector(
+    [this.getRestData],
+    resources => {
+      const { data, ids } = resources;
+      return ids.map(id => data[id]);
+    }
+  );
 
-export const getError = createSelector(
-  [getRestData],
-  resources => {
-    const { error } = resources;
-    return error;
-  }
-);
+  getTotal = createSelector(
+    [this.getRestData],
+    resources => {
+      const { total } = resources;
+      return total;
+    }
+  );
 
-export const getFilters = createSelector(
-  [getRestData],
-  resources => {
-    const { limit, page, filter, total } = resources;
-    return { limit, page, filter, count: total };
-  }
-);
+  getDefaultCreateData = createSelector(
+    [this.getDefaultValue, this.getDefaultFromProps],
+    (defaultValue, defaultValueFromProps) =>
+      defaultValue !== '' ? getFilterFromUrl(defaultValue).filter : defaultValueFromProps || {}
+  );
+
+  getCurrentData = createSelector(
+    [this.getRestData],
+    (resources = {}) => {
+      const { currentData } = resources;
+      return currentData || {};
+    }
+  );
+
+  enabledLoadMore = createSelector(
+    [this.getRestData],
+    resources => {
+      const { page, loading, numberOfPages } = resources;
+      return !loading && page < numberOfPages;
+    }
+  );
+
+  getLoading = createSelector(
+    [this.getRestData],
+    (resources = { loading: false }) => {
+      const { loading } = resources;
+      return loading;
+    }
+  );
+
+  getCreateLoading = createSelector(
+    [this.getRestData],
+    (resources = { createLoading: false }) => {
+      const { createLoading } = resources;
+      return createLoading;
+    }
+  );
+
+  getError = createSelector(
+    [this.getRestData],
+    resources => {
+      const { error } = resources;
+      return error;
+    }
+  );
+
+  getFilters = createSelector(
+    [this.getRestData],
+    resources => {
+      const { limit, page, filter, total, orderBy, q } = resources;
+      return { limit, page, filter, count: total, orderBy, q };
+    }
+  );
+}
+
+export const crudSelectors = new CRUDSelectors();

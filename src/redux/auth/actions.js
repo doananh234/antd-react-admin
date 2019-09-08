@@ -26,12 +26,19 @@ export const AuthTypes = makeConstantCreator(
   'RESET_PASSWORD_SUCCESS',
   'RESET_PASSWORD_FAILURE',
 
+  'GET_MY_TASKS',
+  'GET_MY_TASKS_SUCCESS',
+  'GET_MY_TASKS_FAILURE',
+
   'REGISTER',
+  'REGISTER_WITH_TOKEN',
   'REGISTER_SUCCESS',
   'REGISTER_FAILURE'
 );
 
 export const registerAction = params => makeActionCreator(AuthTypes.REGISTER, { params });
+export const registerWithTokenAction = params =>
+  makeActionCreator(AuthTypes.REGISTER_WITH_TOKEN, { params });
 export const registerSuccessAction = data =>
   makeActionCreator(AuthTypes.REGISTER_SUCCESS, { data });
 export const registerFailureAction = error =>

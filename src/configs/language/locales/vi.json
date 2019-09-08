@@ -1,3 +1,192 @@
 {
-  "title": "Tiêu đề"
+  "title": "Tiêu đề",
+  "appInfo": {
+    "footer": "RAA ©2018 Tạo bởi Anh Doan",
+    "name": "React Admin"
+  },
+  "sideBar": {
+    "dashboard": "Trang chủ",
+    "customers": "Khách Hàng",
+    "settings": "Cài đặt",
+    "users": "Người dùng",
+    "CMS": "CMS"
+  },
+  "input": {
+    "username": {
+      "placeholder": "Tên đăng nhập",
+      "validateMsg": {
+        "required": "Nhập tên đăng nhập!"
+      }
+    },
+    "fullName": {
+      "placeholder": "Tên đầy đủ",
+      "validateMsg": {
+        "required": "Nhập tên đầy đủ của bạn!"
+      }
+    },
+    "firstName": {
+      "placeholder": "Tên",
+      "validateMsg": {
+        "required": "Nhập tên của bạn!"
+      }
+    },
+    "lastName": {
+      "placeholder": "Họ",
+      "validateMsg": {
+        "required": "Nhập họ của bạn!"
+      }
+    },
+    "password": {
+      "placeholder": "Mật khẩu",
+      "validateMsg": {
+        "required": "Nhập mật khẩu của bạn!"
+      }
+    },
+    "confirmPassword": {
+      "placeholder": "Nhập lại mật  khẩu",
+      "validateMsg": {
+        "required": "Nhập lại mật khẩu xác nhận!"
+      }
+    },
+    "email": {
+      "placeholder": "Email",
+      "validateMsg": {
+        "required": "Nhập Email của bạn!"
+      }
+    }
+  },
+  "header": {
+    "profile": "Thông tin cá nhân",
+    "logout": "Đăng xuất"
+  },
+  "button": {
+    "create": "Tạo mới",
+    "add": "Thêm",
+    "edit": "Chỉnh sửa",
+    "cancel": "Thoát",
+    "delete": "Xoá",
+    "save": "Lưu",
+    "ok": "Đồng ý",
+    "search": "Tìm kiếm",
+    "reset": "Làm mới",
+    "resetMyPassword": "Làm mới mật khẩu",
+    "submit": "gởi",
+    "call": "Gọi",
+    "loadMore": "Thêm...",
+    "sentInvite": "Gởi lời mời",
+    "resendInvite": "Gởi lại lời mời"
+  },
+
+  "login": {
+    "title": "Đăng nhập",
+    "rememberMe": "Lưu",
+    "loginBtn": "Đăng nhập",
+    "yourEmail": "Email của bạn",
+    "resetPassword": "Làm mới mật khẩu",
+    "password": "Mật khẩu"
+  },
+
+  "register": {
+    "title": "Đăng ký",
+    "registerBtn": "Đăng ký"
+  },
+
+  "forgotPassword": {
+    "title": "Quên mật khẩu",
+    "success": {
+      "title": "Làm mới mật khẩu thành công!",
+      "description": "Bạn hãy kiểm tra email và tạo mật khẩu mới."
+    }
+  },
+  "popup": {
+    "alertDelete": "Xoá",
+    "alertDeleteDes": "Bạn có chắc chắn muốn xoá {{customMessage}}?"
+  },
+  "error": {
+    "title": "Oops!",
+    "description": "Có gì đó đã lỗi!",
+    "waitingUpdate": "Đang đợi cập nhập",
+    "required": "Bạn chưa nhập dữ liệu",
+    "email": "Dữ liệu không phải là email!",
+    "customerName": "Dữ liệu nhập không hợp lệ!(chỉ gồm a-z, 0-9, -, _ và 3->100 ký tự)"
+  },
+  "success": {
+    "title": "Thành Công!",
+    "description": "Cập nhập thành công!"
+  },
+  "customers": {
+    "title": "Khách hàng",
+    "avatar": "Avatar",
+    "name": "Tên",
+    "job": "Nghề Nghiệp",
+    "nationality": "Quốc tịch",
+    "fullName": "Tên đầy đủ",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "gender": "Giới tính",
+    "phoneNumber": "SĐT",
+    "address": "Địa chỉ",
+    "company": "Công ty",
+    "isActive": "Trạng thái",
+    "createPage": "Tạo khách hàng",
+    "editPage": "Chỉnh sửa khách hàng",
+    "createdAt": "Thời gian tạo",
+    "facebook": "Facebook",
+    "note": "Ghi chú",
+    "departDate": "Ngày rời đi",
+    "twitter": "twitter",
+    "linkedin": "Linkedin",
+    "howToKnowEnouvoSpace": "Làm sao bạn biết Enouvo Space",
+    "comment": "Bình luận",
+    "username": "tên đăng nhập",
+    "detail": {
+      "about": "Thông Tin",
+      "contact": {
+        "note": "New note",
+        "mail": "Send email",
+        "phone": "Call",
+        "emailTitle": "Subject",
+        "message": {
+          "success": "Send mail Successfully"
+        }
+      },
+      "activityLog": {
+        "activityLog": "Activity Logs",
+        "productAttended": "Product Attended",
+        "note": "Note Logs",
+        "email": "Email Logs",
+        "call": "Call Logs"
+      },
+      "popup": {
+        "addNoteSuccess": "The note sent successfully."
+      }
+    },
+    "role": {
+      "title": "Quyền hạn",
+      "admin": "admin",
+      "staff": "staff"
+    },
+    "summaries": {
+      "revenue": "Revenue",
+      "totalBookings": "Total Bookings",
+      "totalUsers": "Khách hàng hoạt động",
+      "totalUserOfDay": "Khách hàng hoạt động trong ngày",
+      "totalUserMonth": "Khách hàng hoạt động trong tháng",
+      "totalUserYear": "Khách hàng hoạt động trong năm"
+    }
+  },
+  "gender": {
+    "title": "Giới tính",
+    "male": "Nam",
+    "female": "Nữ",
+    "other": "Khác"
+  },
+
+  "CMS": {
+    "title": "CMS"
+  },
+  "text": {
+    "or": "Hoặc"
+  }
 }

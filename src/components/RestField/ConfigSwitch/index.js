@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 import { Switch } from 'antd';
 import { getRecordData } from '../../../utils/tools';
 
-const ConfigSwitch = props => (
+const ConfigSwitch = ({ record, loading, source, suffixQuery, customQuery }) => (
   <Switch
-    loading={props.loading}
-    checked={getRecordData(props.record, props.source)}
+    loading={loading}
+    checked={getRecordData(record, source)}
     onChange={e => {
-        props.customQuery(props.record.id, `${props.suffixQuery}/${e}`);
-        return e;
-      }}
+      customQuery(record.id, `${suffixQuery}/${e}`);
+      return e;
+    }}
   />
-  );
+);
 
 ConfigSwitch.propTypes = {
   source: PropTypes.string,

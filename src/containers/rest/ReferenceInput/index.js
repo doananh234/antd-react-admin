@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import { Form } from 'antd';
 import { connect } from 'react-redux';
 import CRUDActions from '../../../redux/crudActions';
 import { retrieveReference } from '../../../redux/referenceData/actions';
 import { getRecordData, upperCaseFirstChart } from '../../../utils/tools';
 import { getReferenceResource, getTotalReference } from '../../../redux/referenceData/selectors';
-import { getLoading } from '../../../redux/crudCreator/selectors';
+import crudSelectors from '../../../redux/crudSelectors';
 
-class RestReference extends Component {
+class ReferenceInput extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      limit: 10,
+      limit: 20,
     };
   }
 
@@ -20,16 +21,15 @@ class RestReference extends Component {
     const { record, source, initialFilter } = this.props;
     if (getRecordData(record, source)) {
       this.props.retrieveReference(getRecordData(record, source));
-    } else {
-      this.props.retrieveList(initialFilter || {}, { isRefresh: true });
     }
+    this.props.retrieveList(initialFilter || { page: 1 }, true);
     this.debouceSearch = _.debounce(this.onSearch, 300);
   }
 
   onSearch = value => {
     const { searchKey, retrieveList } = this.props;
     if (searchKey) {
-      retrieveList({ filter: { [searchKey]: { $like: value } } });
+      retrieveList({ filter: { [searchKey]: { $like: value } } }, true);
     }
   };
 
@@ -54,7 +54,9 @@ class RestReference extends Component {
       form,
       searchKey,
       loadingData,
+      resource,
     } = this.props;
+
     const newChildren = React.cloneElement(children, {
       onSearch: value => {
         this.debouceSearch(value);
@@ -68,11 +70,13 @@ class RestReference extends Component {
       getFieldDecorator,
       setFieldsValue,
       resourceData,
+      resource,
     });
     return newChildren;
   }
 }
-RestReference.propTypes = {
+ReferenceInput.propTypes = {
+  resource: PropTypes.string.isRequired,
   resourceData: PropTypes.array,
   record: PropTypes.object,
   retrieveList: PropTypes.func,
@@ -90,7 +94,7 @@ RestReference.propTypes = {
 
 const mapStateToProps = (state, props) => ({
   resourceData: getReferenceResource(state, props),
-  loadingData: getLoading(state, props),
+  loadingData: crudSelectors[props.resource].getLoading(state, props),
   count: getTotalReference(state, props),
 });
 
@@ -114,4 +118,4 @@ const mapDispatchToProps = (dispatch, props) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(RestReference);
+)(Form.create({})(ReferenceInput));

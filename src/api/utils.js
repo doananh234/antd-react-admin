@@ -70,7 +70,7 @@ export default customFetch;
 
 function requestWrapper(method) {
   const request = async (url, data = null, params = {}) => {
-    let convertUrl = process.env.REACT_APP_SERVER_URL + url;
+    let convertUrl = `${process.env.REACT_APP_SERVER_URL}/api/v1${url}`;
     let convertParams = params;
     let convertData = data;
     if (method === 'GET') {
@@ -89,6 +89,7 @@ function requestWrapper(method) {
     const defaults = {
       method,
       headers: {
+        businessId: 'fab0c2b4-d857-48e4-b50d-4110e2256302',
         'Content-Type': 'application/json; charset=UTF-8',
       },
     };

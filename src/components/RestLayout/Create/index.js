@@ -16,7 +16,7 @@ class RestCreateComponent extends Component {
 
   render() {
     const { onBack, showModal, header, location, noCardWrapper } = this.props;
-    const BREADCRUMB_LIST = makeBreadCrumbFromPath(location);
+    const BREADCRUMB_LIST = location ? makeBreadCrumbFromPath(location) : [];
     const actions = <BackButton onBack={onBack} />;
     const content = (
       <div style={{ width: '100%' }}>

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter, Redirect } from 'react-router-dom';
-import { Form, Icon, Button, Checkbox } from 'antd';
+import { withRouter, Redirect, Link } from 'react-router-dom';
+import { Form, Icon, Button } from 'antd';
 import i18n from 'i18next';
 import { loginAction } from '../../redux/auth/actions';
 import MaterialInput from '../../components/common/MaterialInput';
@@ -33,7 +33,10 @@ class Login extends Component {
         <Form layout="vertical" onSubmit={this.handleSubmit}>
           <FormItem>
             {getFieldDecorator('email', {
-              rules: [{ required: true, message: i18n.t('input.email.validateMsg.required') }],
+              rules: [
+                { required: true, message: i18n.t('input.email.validateMsg.required') },
+                { type: 'email', message: i18n.t('input.email.validateMsg.invalid') },
+              ],
             })(
               <MaterialInput
                 placeholder={i18n.t('input.email.placeholder')}
@@ -52,19 +55,15 @@ class Login extends Component {
               />
             )}
           </FormItem>
-          <div className="sub-action-div">
-            <Checkbox>{i18n.t('login.rememberMe')}</Checkbox>
-            <a className="login-form-forgot" href="/forgot-password">
-              {i18n.t('forgotPassword.title')}
-            </a>
-          </div>
           <div className="action-div">
             <Button type="primary" htmlType="submit" className="login-form-button">
               {i18n.t('login.loginBtn')}
             </Button>
-            <Button type="secondary" className="register-form-button">
-              <a href="/register">{i18n.t('register.registerBtn')}</a>
-            </Button>
+            <div style={{ marginTop: 20 }}>
+              <Link to="/forgot-password" href="/forgot-password">
+                {i18n.t('forgotPassword.title')}
+              </Link>
+            </div>
           </div>
         </Form>
       </div>

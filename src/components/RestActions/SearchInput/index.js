@@ -14,7 +14,7 @@ const SearchInput = ({ onTextSearch, defaultValue, placeholder }) => (
       className="input"
     />
   </SearchInputWrapper>
-);
+  );
 SearchInput.propTypes = {
   onTextSearch: PropTypes.func,
   defaultValue: PropTypes.string,

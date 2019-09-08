@@ -5,9 +5,11 @@ import { Table, Button, Input } from 'antd';
 import I18n from 'i18next';
 import Text from '../../common/Text';
 import { getRecordData } from '../../../utils/tools';
-import { HeaderTableWrapper, IconWrapper } from './styles';
+import { IconWrapper } from './styles';
 
 class RestTableLayout extends Component {
+  searchInput = {};
+
   onChangePagination = (e, filters, sorter) => {
     const { resourceFilter, retrieveList } = this.props;
     const formatFilter = {};
@@ -34,7 +36,7 @@ class RestTableLayout extends Component {
       page: e.current,
       limit: e.pageSize,
       filter: { ...resourceFilter.filter, ...formatFilter },
-      order: formatSort,
+      orderBy: formatSort,
     });
   };
 
@@ -84,7 +86,7 @@ class RestTableLayout extends Component {
               <div style={{ padding: 8 }}>
                 <Input
                   ref={node => {
-                    this.searchInput = node;
+                    this.searchInput[dataIndex] = node;
                   }}
                   placeholder={`Search ${I18n.t(header)}`}
                   onChange={e =>
@@ -106,9 +108,11 @@ class RestTableLayout extends Component {
                   {I18n.t('button.search')}
                 </Button>
                 <Button
-                  onClick={() => {
+                  onClick={e => {
                     // setSelectedKeys([...filters]);
+                    this.searchInput[dataIndex].setValue('', e);
                     this.handleReset(dataIndex, filters);
+                    confirm();
                   }}
                   size="small"
                   style={{ width: 90 }}
@@ -127,7 +131,7 @@ class RestTableLayout extends Component {
           ),
           onFilterDropdownVisibleChange: visible => {
             if (visible) {
-              setTimeout(() => this.searchInput.select());
+              setTimeout(() => this.searchInput[dataIndex].select());
             }
           },
         }
@@ -138,66 +142,71 @@ class RestTableLayout extends Component {
     const {
       resourceData,
       children,
+      resource,
       // gotoEditPage,
       loading,
       // onRow,
       customQuery,
       resourceFilter,
+      isScroll,
     } = this.props;
-    const columns = children.map((item, index) => ({
-      fixed: item.props.fixed,
-      title: item.props.isEditHeader ? (
-        <HeaderTableWrapper
-          onBlur={this.onBlur(index, item.props.source)}
-          onKeyPress={this.onKeyPress}
-          disabled={!item.props.isEditHeader}
-          defaultValue={item.props.header ? I18n.t(item.props.header) : ''}
-        />
-      ) : (
-        I18n.t(item.props.header) || ''
-      ),
-      dataIndex: `${item.props.source}`,
-      width: item.props.width,
-      align: item.props.align,
-      key: `${item.props.source}-col${index}`,
-      sorter: item.props.sorter
-        ? (a, b) => getRecordData(a, item.props.source) > getRecordData(b, item.props.source)
-        : undefined,
-      sortOrder: item.props.sortOrder,
-      filters: item.props.filters,
-      filteredValue: get(resourceFilter.filter || {}, `${item.props.source}.$in`) || undefined,
-      filterMultiple: item.props.filterMultiple !== false,
-      onFilter: (value, record) =>
-        `${getRecordData(record, item.props.source)}`.search(`${value}`) > -1,
-      render:
-        item.props.render ||
-        ((obj, record) => {
-          const RecordComponent = React.cloneElement(item, {
-            table: true,
-            record,
-            loading: resourceData.itemLoading && resourceData.itemLoading[record.id],
-            onChangeRecord: this.onChangeRecord(record, item),
-            customQuery,
-            ...getAction(this.props, item),
-          });
-          return RecordComponent;
-        }),
-      filterIcon: filtered => (
-        <IconWrapper
-          type="filter"
-          className={
-            filtered || get(resourceFilter.filter || {}, `${item.props.source}`)
-              ? 'highlightFilter'
-              : ''
-          }
-          // style={{ color: filtered || defaultValue ? '#1890ff' : undefined }}
-        />
-      ),
-      filterDropdown: item.props.filterDropdown
-        ? item.props.filterDropdown(item.props.source, resourceFilter, this.handleReset)
-        : undefined,
-      ...this.getColumnSearchProps(item.props.source, item.props.header, item.props.hasSearch),
-    }));
+    const columns = children
+      .filter(e => e)
+      .map((item, index) => ({
+        fixed: item.props.fixed,
+        title:
+          item.props.source === 'actionGroup'
+            ? null
+            : // <HeaderTableWrapper
+              //   onBlur={this.onBlur(index, item.props.source)}
+              //   onKeyPress={this.onKeyPress}
+              //   disabled={!item.props.isEditHeader}
+              //   defaultValue={item.props.header ? I18n.t(item.props.header) : ''}
+              // />
+              I18n.t(item.props.header || ''),
+        dataIndex: `${item.props.source}`,
+        width: item.props.width,
+        align: item.props.align,
+        key: `${item.props.source}-col${index}`,
+        sorter: item.props.sorter
+          ? (a, b) => getRecordData(a, item.props.source) - getRecordData(b, item.props.source)
+          : undefined,
+        sortOrder: getSorterOrder(resourceFilter.orderBy, item.props.source),
+        filters: item.props.filters,
+        filteredValue: get(resourceFilter.filter || {}, `${item.props.source}.$in`) || undefined,
+        filterMultiple: item.props.filterMultiple !== false,
+        // onFilter: (value, record) =>
+        //   `${getRecordData(record, item.props.source)}`.search(`${value}`) > -1,
+        render:
+          item.props.render ||
+          ((obj, record) => {
+            const RecordComponent = React.cloneElement(item, {
+              table: true,
+              record,
+              loading: resourceData.itemLoading && resourceData.itemLoading[record.id],
+              onChangeRecord: this.onChangeRecord(record, item),
+              customQuery,
+              modelResource: resource,
+              ...getAction(this.props, item),
+            });
+            return RecordComponent;
+          }),
+        filterIcon: filtered => (
+          <IconWrapper
+            type="filter"
+            className={
+              filtered || get(resourceFilter.filter || {}, `${item.props.source}`)
+                ? 'highlightFilter'
+                : ''
+            }
+            // style={{ color: filtered || defaultValue ? '#1890ff' : undefined }}
+          />
+        ),
+        filterDropdown: item.props.filterDropdown
+          ? item.props.filterDropdown(item.props.source, resourceFilter, this.handleReset)
+          : undefined,
+        ...this.getColumnSearchProps(item.props.source, item.props.header, item.props.hasSearch),
+      }));
 
     return (
       <Table
@@ -220,11 +229,17 @@ class RestTableLayout extends Component {
         loading={loading}
         dataSource={resourceData || []}
         rowKey="id"
-        // scroll={{ x: 1128 }}
+        scroll={isScroll ? { x: 1128 } : { x: '100%' }}
       />
     );
   }
 }
+
+const getSorterOrder = (orderBy, source) => {
+  if (orderBy === source) return 'ascend';
+  if (orderBy === `-${source}`) return 'descend';
+  return undefined;
+};
 
 export const showTotal = (total, range) => (
   <Text type="button" className="txtTotal">
@@ -241,14 +256,12 @@ export const getAction = (props, item) => {
     case 'show':
       return { gotoShowPage: item.props.gotoShowPage || props.gotoShowPage };
     case 'actionGroup':
+    default:
       return {
         gotoShowPage: props.gotoShowPage,
         deleteItem: props.deleteItem,
         gotoEditPage: props.gotoEditPage,
       };
-
-    default:
-      return {};
   }
 };
 
@@ -271,10 +284,13 @@ RestTableLayout.propTypes = {
   // onRow: PropTypes.func,
   customQuery: PropTypes.func,
   onEditHeaderSuccess: PropTypes.func,
+  isScroll: PropTypes.bool,
+  resource: PropTypes.string,
 };
 
 RestTableLayout.defaultProps = {
   onEditHeaderSuccess: () => {},
+  isScroll: true,
 };
 
 export default RestTableLayout;

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import i18next from 'i18next';
 import { getRecordData } from '../../../utils/tools';
 
 const RestFieldItem = ({
@@ -12,7 +13,11 @@ const RestFieldItem = ({
   onChangeRecord,
 }) => {
   const element = React.cloneElement(component, {
-    [valueProp]: format(getRecordData(record, source)),
+    record,
+    [valueProp]:
+      typeof format(getRecordData(record, source), record) === 'undefined'
+        ? i18next.t('error.waitingUpdate')
+        : format(getRecordData(record, source), record),
     onChange: value => {
       onChangeRecord(formatSubmitData(value));
     },
@@ -23,7 +28,7 @@ const RestFieldItem = ({
   return element;
 };
 RestFieldItem.propTypes = {
-  record: PropTypes.object,
+  record: PropTypes.any,
   source: PropTypes.string,
   format: PropTypes.func,
   formatSubmitData: PropTypes.func,

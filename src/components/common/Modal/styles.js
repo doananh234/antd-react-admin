@@ -1,9 +1,35 @@
 import styled from 'styled-components';
-import { Modal } from 'antd';
+import { Drawer } from 'antd';
 
-export const ModalWrapper = styled(Modal)`
-  max-height: 90%;
+export const ModalWrapper = styled(Drawer)`
+  ${'' /* max-height: 90%; */}
   min-height: 30%;
+
+  .drawerContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .content {
+    flex: 1;
+    overflow-y: auto;
+  }
+  .ant-drawer-content-wrapper {
+    min-width: 450px;
+    .ant-drawer-body {
+      padding: 0px;
+      padding-top: 80px;
+      height: 100%;
+      overflow: hidden;
+      & > div {
+        height: 100%;
+        overflow: hidden;
+      }
+    }
+    .ant-form {
+      padding: 24px;
+    }
+  }
   .ant-modal-header {
     background: ${({ theme }) => theme.background.content};
     border-bottom: 1px solid ${({ theme }) => theme.background.container};
@@ -69,7 +95,6 @@ export const ModalWrapper = styled(Modal)`
   .ant-tabs-bar {
     border-bottom: none;
     padding-bottom: 10px;
-    margin-bottom: 30px;
     border-bottom: 1px solid ${({ theme }) => theme.background.container};
   }
   .ant-tabs-tab {
@@ -83,7 +108,6 @@ export const ModalWrapper = styled(Modal)`
   div::-webkit-scrollbar-thumb {
     border-radius: 3px !important;
     background: ${({ theme }) => theme.scrollbar.thumb} !important;
-    box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.5) !important;
   }
   div::-webkit-scrollbar-track {
     border-radius: 3px !important;
@@ -92,7 +116,6 @@ export const ModalWrapper = styled(Modal)`
   div::-webkit-scrollbar-thumb:hover {
     border-radius: 3px !important;
     background: ${({ theme }) => theme.scrollbar.thumb} !important;
-    box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.5) !important;
   }
   div::-webkit-scrollbar {
     width: 6px;
@@ -106,7 +129,7 @@ export const ModalWrapper = styled(Modal)`
   .ant-list-empty-text {
     color: ${({ theme }) => theme.text.empty};
   }
-  .modalTitle {
+  .modalTitleContent {
     background: ${({ theme }) => theme.palette.primary};
     text-align: center;
     position: absolute;
@@ -117,6 +140,15 @@ export const ModalWrapper = styled(Modal)`
     display: flex;
     justify-content: center;
     align-items: center;
+    display: flex;
+    .modalBtnBack {
+      padding: 0px 20px;
+      width: 50px;
+    }
+    .modalTitle {
+      flex: 1;
+      padding-right: 50px;
+    }
   }
 
   .ant-form-item {
@@ -130,5 +162,12 @@ export const ModalWrapper = styled(Modal)`
   .ant-form-item-label {
     line-height: 1.5em;
     padding-bottom: 5px;
+  }
+  .ant-input-number {
+    width: 100%;
+  }
+  .txtTitleForm {
+    color: ${({ theme }) => theme.text.formLabel};
+    font-size: 12px;
   }
 `;

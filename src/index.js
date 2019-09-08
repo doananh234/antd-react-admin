@@ -8,16 +8,20 @@ import store, { history } from './redux/store';
 import theme from './configs/theme';
 import Routes from './routes';
 import './configs/language';
+import 'react-quill/dist/quill.snow.css';
 import * as serviceWorker from './serviceWorker';
+import AppWrapper from './appStyle';
 
 ReactDOM.render(
   <Provider store={store}>
     <ThemeProvider theme={theme}>
-      <ConnectedRouter history={history}>
-        <ConfigProvider renderEmpty={() => <Empty />}>
-          <Routes />
-        </ConfigProvider>
-      </ConnectedRouter>
+      <AppWrapper>
+        <ConnectedRouter history={history}>
+          <ConfigProvider renderEmpty={() => <Empty />}>
+            <Routes />
+          </ConfigProvider>
+        </ConnectedRouter>
+      </AppWrapper>
     </ThemeProvider>
   </Provider>,
   document.getElementById('root')

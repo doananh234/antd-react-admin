@@ -1,14 +1,20 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import Login from '../../pages/Login';
 import ResetPassword from '../../pages/ResetPassword';
 import ForgotPassword from '../../pages/ForgotPassword';
 import Register from '../../pages/Register';
+import Invite from '../../pages/Invite';
 
-const routes = [
+export const PUBLIC_ROUTES = [
   {
     path: '/login',
     component: Login,
+    exact: true,
+  },
+  {
+    path: '/invite',
+    component: Invite,
     exact: true,
   },
   {
@@ -22,18 +28,12 @@ const routes = [
     exact: true,
   },
   {
-    path: '/reset-password',
+    path: '/resetPassword',
     component: ResetPassword,
     exact: true,
   },
 ];
 
-const PublicRoutes = () => (
-  <Switch>
-    {routes.map(route => (
-      <Route {...route} key={route.path} />
-    ))}
-  </Switch>
-);
+const PublicRoutes = () => PUBLIC_ROUTES.map(route => <Route {...route} key={route.path} />);
 
 export default PublicRoutes;

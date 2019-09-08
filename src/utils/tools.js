@@ -79,10 +79,16 @@ export const getSearch = filter => {
   const params = {
     limit: filter.limit,
     page: filter.page,
+    q: filter.q,
+    orderBy: filter.orderBy,
     ...getValidData(filter.filter),
   };
 
-  return Object.keys(params)
+  return convertObjToSearchStr(params);
+};
+
+export const convertObjToSearchStr = params =>
+  Object.keys(params)
     .map(key =>
       params[key]
         ? `${encodeURIComponent(key)}=${encodeURIComponent(JSON.stringify(params[key]))}`
@@ -90,12 +96,12 @@ export const getSearch = filter => {
     )
     .filter(data => data !== '')
     .join('&');
-};
 
 export const getValidData = filter =>
   omitBy(filter, item => {
-    const sources = item ? Object.keys(item) : [];
-    let isInvalid = false;
+    const sources = typeof item === 'object' ? Object.keys(item) : [];
+    let isInvalid = isEmpty(item);
+    isInvalid = typeof item === 'boolean' ? false : isInvalid;
     sources.forEach(data => {
       if (typeof item === 'object' && isEmpty(getRecordData(item, data))) {
         isInvalid = true;
@@ -106,7 +112,7 @@ export const getValidData = filter =>
 
 export const getFilterFromUrl = searchStr => {
   const parsed = {};
-  if (searchStr.trim() === '') return null;
+  if (!searchStr || searchStr.trim() === '') return {};
   decodeURIComponent(searchStr)
     .trim()
     .substring(1)
@@ -120,9 +126,11 @@ export const getFilterFromUrl = searchStr => {
         parsed[keyValue[0]] = parsed[keyValue[0]];
       }
     });
-  const filter = { limit: parsed.limit, page: parsed.page };
+  const filter = { q: parsed.q, orderBy: parsed.orderBy, limit: parsed.limit, page: parsed.page };
   delete parsed.limit;
   delete parsed.page;
+  delete parsed.orderBy;
+  delete parsed.q;
   filter.filter = parsed;
   return filter;
 };
@@ -160,16 +168,19 @@ export const replaceAll = function(str, search, replacement) {
 };
 
 export const formattedRESTData = data => ({
-  data: keyBy(data),
+  data: keyBy(data, 'id'),
   ids: data.map(item => item.id),
 });
 
-export const getIdByUrl = props =>
-  props.route
-    ? props.route
-        .substring(props.route.indexOf(`${props.resource}/`), props.route.lastIndexOf('/edit'))
-        .replace(`${props.resource}/`, '')
-    : props.match.params.id;
+export const getIdByUrl = props => {
+  const idFromPath =
+    props.location.pathname.match(`${props.resource}/(.*)/edit`) ||
+    props.location.pathname.match(`${props.resource}/(.*)/show`);
+  const idFromHash =
+    props.location.hash.match(`#${props.resource}/(.*)/edit`) ||
+    props.location.hash.match(`#${props.resource}/(.*)`);
+  return (idFromPath && idFromPath[1]) || (idFromHash && idFromHash[1]);
+};
 
 export const getPrefixPath = (props, action) =>
   `${
@@ -199,4 +210,42 @@ export const makeBreadCrumbFromPath = location => {
     });
   });
   return BREADCRUMB_LIST;
+};
+
+export const reorderOffset = (
+  boards,
+  prevOrder,
+  { sourceId, destinationId, sourceIndex, destinationIndex }
+) => {
+  const newBoards = { ...boards };
+  if (sourceId === destinationId) {
+    newBoards[sourceId] = reorder(boards[sourceId], sourceIndex, destinationIndex);
+  } else {
+    const moveResults = move(boards, sourceId, destinationId, sourceIndex, destinationIndex);
+    newBoards[sourceId] = moveResults[sourceId];
+    newBoards[destinationId] = moveResults[destinationId];
+  }
+  return { boards: newBoards, prevOrder: {} };
+};
+
+const reorder = (list, startIndex, endIndex) => {
+  const result = [...list];
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
+
+const move = (boards, sourceId, destinationId, sourceIndex, destinationIndex) => {
+  const sourceClone = Array.from(boards[sourceId]);
+  const destClone = Array.from(boards[destinationId]);
+  const [removed] = sourceClone.splice(sourceIndex, 1);
+
+  destClone.splice(destinationIndex, 0, removed);
+
+  const result = {};
+  result[sourceId] = sourceClone;
+  result[destinationId] = destClone;
+
+  return result;
 };

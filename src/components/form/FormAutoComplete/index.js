@@ -52,9 +52,6 @@ FormAutoComplete.propTypes = {
 };
 
 FormAutoComplete.defaultProps = {
-  required: false,
-  requiredMessage: 'This field is required',
-  rules: [],
   placeholder: '',
   onChange: () => {},
   onSearch: () => {},
