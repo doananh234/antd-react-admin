@@ -1,6 +1,7 @@
+// eslint-disable-next-line
 const plopInit = require('plopfile-generate');
 
-const plopConfig = (plop) => {
+const plopConfig = plop => {
   plopInit(plop);
 };
 

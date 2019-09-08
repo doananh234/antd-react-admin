@@ -4,7 +4,7 @@
 
 `registerOnceForAllComponentEvents(): void`
 
-[source](https://github.com/wix/react-native-navigation/blob/v2/lib/src/events/ComponentEventsObserver.ts#L25)
+[source](https://github.com/doananh234/antd-react-admin/blob/v2/lib/src/events/ComponentEventsObserver.ts#L25)
 
 ---
 
@@ -12,7 +12,7 @@
 
 `bindComponent(component: Component<any>): EventSubscription`
 
-[source](https://github.com/wix/react-native-navigation/blob/v2/lib/src/events/ComponentEventsObserver.ts#L35)
+[source](https://github.com/doananh234/antd-react-admin/blob/v2/lib/src/events/ComponentEventsObserver.ts#L35)
 
 ---
 
@@ -20,7 +20,7 @@
 
 `unmounted(componentId: string): void`
 
-[source](https://github.com/wix/react-native-navigation/blob/v2/lib/src/events/ComponentEventsObserver.ts#L49)
+[source](https://github.com/doananh234/antd-react-admin/blob/v2/lib/src/events/ComponentEventsObserver.ts#L49)
 
 ---
 
@@ -28,7 +28,7 @@
 
 `notifyComponentDidAppear(event: ComponentDidAppearEvent): void`
 
-[source](https://github.com/wix/react-native-navigation/blob/v2/lib/src/events/ComponentEventsObserver.ts#L53)
+[source](https://github.com/doananh234/antd-react-admin/blob/v2/lib/src/events/ComponentEventsObserver.ts#L53)
 
 ---
 
@@ -36,7 +36,7 @@
 
 `notifyComponentDidDisappear(event: ComponentDidDisappearEvent): void`
 
-[source](https://github.com/wix/react-native-navigation/blob/v2/lib/src/events/ComponentEventsObserver.ts#L57)
+[source](https://github.com/doananh234/antd-react-admin/blob/v2/lib/src/events/ComponentEventsObserver.ts#L57)
 
 ---
 
@@ -44,7 +44,7 @@
 
 `notifyNavigationButtonPressed(event: NavigationButtonPressedEvent): void`
 
-[source](https://github.com/wix/react-native-navigation/blob/v2/lib/src/events/ComponentEventsObserver.ts#L61)
+[source](https://github.com/doananh234/antd-react-admin/blob/v2/lib/src/events/ComponentEventsObserver.ts#L61)
 
 ---
 
@@ -52,7 +52,7 @@
 
 `notifySearchBarUpdated(event: SearchBarUpdatedEvent): void`
 
-[source](https://github.com/wix/react-native-navigation/blob/v2/lib/src/events/ComponentEventsObserver.ts#L65)
+[source](https://github.com/doananh234/antd-react-admin/blob/v2/lib/src/events/ComponentEventsObserver.ts#L65)
 
 ---
 
@@ -60,7 +60,7 @@
 
 `notifySearchBarCancelPressed(event: SearchBarCancelPressedEvent): void`
 
-[source](https://github.com/wix/react-native-navigation/blob/v2/lib/src/events/ComponentEventsObserver.ts#L69)
+[source](https://github.com/doananh234/antd-react-admin/blob/v2/lib/src/events/ComponentEventsObserver.ts#L69)
 
 ---
 

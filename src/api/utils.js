@@ -89,7 +89,6 @@ function requestWrapper(method) {
     const defaults = {
       method,
       headers: {
-        businessId: 'fab0c2b4-d857-48e4-b50d-4110e2256302',
         'Content-Type': 'application/json; charset=UTF-8',
       },
     };

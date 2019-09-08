@@ -4,7 +4,7 @@
 
 `generate(prefix: string): string`
 
-[source](https://github.com/wix/react-native-navigation/blob/v2/lib/src/adapters/UniqueIdProvider.ts#L4)
+[source](https://github.com/doananh234/antd-react-admin/blob/v2/lib/src/adapters/UniqueIdProvider.ts#L4)
 
 ---
 

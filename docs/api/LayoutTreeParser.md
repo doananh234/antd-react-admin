@@ -4,7 +4,7 @@
 
 `parse(api: any): LayoutNode`
 
-[source](https://github.com/wix/react-native-navigation/blob/v2/lib/src/commands/LayoutTreeParser.ts#L10)
+[source](https://github.com/doananh234/antd-react-admin/blob/v2/lib/src/commands/LayoutTreeParser.ts#L10)
 
 ---
 
@@ -12,7 +12,7 @@
 
 `_topTabs(api: any): LayoutNode`
 
-[source](https://github.com/wix/react-native-navigation/blob/v2/lib/src/commands/LayoutTreeParser.ts#L29)
+[source](https://github.com/doananh234/antd-react-admin/blob/v2/lib/src/commands/LayoutTreeParser.ts#L29)
 
 ---
 
@@ -20,7 +20,7 @@
 
 `_sideMenu(api: any): LayoutNode`
 
-[source](https://github.com/wix/react-native-navigation/blob/v2/lib/src/commands/LayoutTreeParser.ts#L38)
+[source](https://github.com/doananh234/antd-react-admin/blob/v2/lib/src/commands/LayoutTreeParser.ts#L38)
 
 ---
 
@@ -28,7 +28,7 @@
 
 `_sideMenuChildren(api: any): LayoutNode[]`
 
-[source](https://github.com/wix/react-native-navigation/blob/v2/lib/src/commands/LayoutTreeParser.ts#L47)
+[source](https://github.com/doananh234/antd-react-admin/blob/v2/lib/src/commands/LayoutTreeParser.ts#L47)
 
 ---
 
@@ -36,7 +36,7 @@
 
 `_bottomTabs(api: any): LayoutNode`
 
-[source](https://github.com/wix/react-native-navigation/blob/v2/lib/src/commands/LayoutTreeParser.ts#L77)
+[source](https://github.com/doananh234/antd-react-admin/blob/v2/lib/src/commands/LayoutTreeParser.ts#L77)
 
 ---
 
@@ -44,7 +44,7 @@
 
 `_stack(api: any): LayoutNode`
 
-[source](https://github.com/wix/react-native-navigation/blob/v2/lib/src/commands/LayoutTreeParser.ts#L86)
+[source](https://github.com/doananh234/antd-react-admin/blob/v2/lib/src/commands/LayoutTreeParser.ts#L86)
 
 ---
 
@@ -52,7 +52,7 @@
 
 `_component(api: any): LayoutNode`
 
-[source](https://github.com/wix/react-native-navigation/blob/v2/lib/src/commands/LayoutTreeParser.ts#L95)
+[source](https://github.com/doananh234/antd-react-admin/blob/v2/lib/src/commands/LayoutTreeParser.ts#L95)
 
 ---
 
@@ -60,7 +60,7 @@
 
 `_externalComponent(api: any): LayoutNode`
 
-[source](https://github.com/wix/react-native-navigation/blob/v2/lib/src/commands/LayoutTreeParser.ts#L104)
+[source](https://github.com/doananh234/antd-react-admin/blob/v2/lib/src/commands/LayoutTreeParser.ts#L104)
 
 ---
 
@@ -68,7 +68,7 @@
 
 `_splitView(api: any): LayoutNode`
 
-[source](https://github.com/wix/react-native-navigation/blob/v2/lib/src/commands/LayoutTreeParser.ts#L113)
+[source](https://github.com/doananh234/antd-react-admin/blob/v2/lib/src/commands/LayoutTreeParser.ts#L113)
 
 ---
 

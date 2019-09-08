@@ -15,7 +15,7 @@
 
 `processOptions(options: any): void`
 
-[source](https://github.com/wix/react-native-navigation/blob/v2/lib/src/commands/OptionsProcessor.ts#L8)
+[source](https://github.com/doananh234/antd-react-admin/blob/v2/lib/src/commands/OptionsProcessor.ts#L8)
 
 ---
 

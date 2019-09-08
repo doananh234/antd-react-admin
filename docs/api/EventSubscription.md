@@ -4,7 +4,7 @@
 
 `remove(): any`
 
-[source](https://github.com/wix/react-native-navigation/blob/v2/lib/src/interfaces/EventSubscription.ts#L2)
+[source](https://github.com/doananh234/antd-react-admin/blob/v2/lib/src/interfaces/EventSubscription.ts#L2)
 
 ---
 
