@@ -37,7 +37,7 @@ export const changeAlias = alias => {
   str = str.replace(/đ/g, 'd');
   str = str.replace(
     /!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'| |\"|\&|\#|\[|\]|~|$|_/g,
-    '-'
+    '-',
   );
   str = str.replace(/-+-/g, '-');
   str = str.replace(/^\-+|\-+$/g, '');
@@ -92,23 +92,41 @@ export const convertObjToSearchStr = params =>
     .map(key =>
       params[key]
         ? `${encodeURIComponent(key)}=${encodeURIComponent(JSON.stringify(params[key]))}`
-        : ''
+        : '',
     )
     .filter(data => data !== '')
     .join('&');
 
-export const getValidData = filter =>
-  omitBy(filter, item => {
-    const sources = typeof item === 'object' ? Object.keys(item) : [];
-    let isInvalid = isEmpty(item);
-    isInvalid = typeof item === 'boolean' ? false : isInvalid;
-    sources.forEach(data => {
-      if (typeof item === 'object' && isEmpty(getRecordData(item, data))) {
-        isInvalid = true;
+const getValidDataOfObj = (obj, isFilter) => {
+  const validData = reduce(
+    obj,
+    (result, value, key) => {
+      if (Array.isArray(value)) {
+        return value.length > 0 ? { ...result, [key]: value } : result;
       }
-    });
-    return isInvalid;
-  });
+      if (typeof value === 'object' && !isEmpty(value)) {
+        const formatChildValue = getValidDataOfObj(value);
+        return !isEmpty(formatChildValue) ? { ...result, [key]: formatChildValue } : result;
+      }
+
+      if (value || value === false || value === 0) {
+        // eslint-disable-next-line
+        result[key] = value;
+        return { ...result, [key]: value };
+      }
+
+      if (value === '' && !isFilter) {
+        // eslint-disable-next-line
+        result[key] = ' ';
+      }
+      return result;
+    },
+    {},
+  );
+  return validData;
+};
+
+export const getValidData = (filter, isFilter) => getValidDataOfObj(filter, isFilter);
 
 export const getFilterFromUrl = searchStr => {
   const parsed = {};
@@ -215,7 +233,7 @@ export const makeBreadCrumbFromPath = location => {
 export const reorderOffset = (
   boards,
   prevOrder,
-  { sourceId, destinationId, sourceIndex, destinationIndex }
+  { sourceId, destinationId, sourceIndex, destinationIndex },
 ) => {
   const newBoards = { ...boards };
   if (sourceId === destinationId) {

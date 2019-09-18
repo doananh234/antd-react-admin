@@ -56,3 +56,11 @@ export const getTotalReference = createSelector(
     return total;
   }
 );
+
+export const getEnabledLoadMoreReference = createSelector(
+  [getRawReferenceResource],
+  (resources = { total: 0 }) => {
+    const { page, loading, numberOfPages } = resources;
+    return !loading && page < numberOfPages;
+  }
+);

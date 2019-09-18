@@ -6,17 +6,14 @@ import { connect } from 'react-redux';
 import CRUDActions from '../../../redux/crudActions';
 import { retrieveReference } from '../../../redux/referenceData/actions';
 import { getRecordData, upperCaseFirstChart } from '../../../utils/tools';
-import { getReferenceResource, getTotalReference } from '../../../redux/referenceData/selectors';
+import {
+  getReferenceResource,
+  getTotalReference,
+  getEnabledLoadMoreReference,
+} from '../../../redux/referenceData/selectors';
 import crudSelectors from '../../../redux/crudSelectors';
 
 class ReferenceInput extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      limit: 20,
-    };
-  }
-
   componentDidMount() {
     const { record, source, initialFilter } = this.props;
     if (getRecordData(record, source)) {
@@ -34,12 +31,9 @@ class ReferenceInput extends Component {
   };
 
   retrieveListWaypoint = () => {
-    const { count, retrieveList } = this.props;
-    const { limit } = this.state;
-    if (limit < count) {
-      const newLimit = limit + 10;
-      this.setState({ limit: newLimit });
-      retrieveList({ limit: newLimit });
+    const { enabledLoadMore, retrieveList } = this.props;
+    if (enabledLoadMore) {
+      retrieveList();
     }
   };
 
@@ -87,7 +81,7 @@ ReferenceInput.propTypes = {
   setFieldsValue: PropTypes.func,
   form: PropTypes.object,
   searchKey: PropTypes.string,
-  count: PropTypes.number,
+  enabledLoadMore: PropTypes.bool,
   loadingData: PropTypes.bool,
   initialFilter: PropTypes.object,
 };
@@ -96,6 +90,7 @@ const mapStateToProps = (state, props) => ({
   resourceData: getReferenceResource(state, props),
   loadingData: crudSelectors[props.resource].getLoading(state, props),
   count: getTotalReference(state, props),
+  enabledLoadMore: getEnabledLoadMoreReference(state, props),
 });
 
 const mapDispatchToProps = (dispatch, props) => ({

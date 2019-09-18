@@ -4,7 +4,7 @@ import { getValidData } from '../../utils/tools';
 
 export const convertRequestParams = (
   type,
-  params
+  params,
   // resource
   // options = { primaryKey: PRIMARY_KEY }
 ) => {
@@ -13,7 +13,7 @@ export const convertRequestParams = (
     page: undefined,
     count: undefined,
   };
-  const filter = getValidData(formatedParams.filter);
+  const filter = getValidData(formatedParams.filter, true);
   switch (type) {
     case 'GET_ALL':
       return {
@@ -46,7 +46,7 @@ export const convertResponseData = (type, response, options = { primaryKey: PRIM
             [PRIMARY_KEY]: data[options.primaryKey || PRIMARY_KEY],
             backupId: data[PRIMARY_KEY],
           })),
-          options.primaryKey || PRIMARY_KEY
+          options.primaryKey || PRIMARY_KEY,
         ),
         ids: response.results.map(data => data[options.primaryKey || PRIMARY_KEY]),
         total: response.total,
