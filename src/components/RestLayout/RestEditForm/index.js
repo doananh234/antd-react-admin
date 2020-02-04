@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Row, Col, Input } from 'antd';
 import ButtonRow from '../FooterButtonRow';
@@ -12,7 +12,9 @@ class FormComponent extends Component {
     new Promise(resolve => {
       this.props.form.validateFields((err, values) => {
         if (!err) {
-          const submitData = this.props.formatOnSubmit ? this.props.formatOnSubmit(values) : values;
+          const submitData = this.props.formatOnSubmit
+            ? this.props.formatOnSubmit(values)
+            : values;
           resolve(submitData);
         }
         resolve({});
@@ -22,7 +24,9 @@ class FormComponent extends Component {
   handleSubmit = () => {
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        const submitData = this.props.formatOnSubmit ? this.props.formatOnSubmit(values) : values;
+        const submitData = this.props.formatOnSubmit
+          ? this.props.formatOnSubmit(values)
+          : values;
         this.props.onSubmit(submitData);
       }
     });
@@ -36,7 +40,7 @@ class FormComponent extends Component {
       onBack,
       children,
       showModal,
-      customEditButton,
+      customSubmitButton,
       positionOfSubmitButton,
     } = this.props;
 
@@ -55,15 +59,15 @@ class FormComponent extends Component {
           >
             <Input />
           </RestInputItem>
-        )
+        ),
       );
 
       return (
-        <Fragment>
+        <>
           <Form>{components}</Form>
-          {customEditButton !== undefined ? (
-            customEditButton &&
-            React.cloneElement(customEditButton, {
+          {customSubmitButton !== undefined ? (
+            customSubmitButton &&
+            React.cloneElement(customSubmitButton, {
               loading,
               handleSubmit: this.handleSubmit,
               onBack,
@@ -77,24 +81,33 @@ class FormComponent extends Component {
               onBack={onBack}
             />
           )}
-        </Fragment>
+        </>
       );
     }
     return (
       <Row className="drawerContainer" gutter={16}>
-        <Col className="content" md={positionOfSubmitButton === 'left' ? 20 : 24} xs={24}>
+        <Col
+          className="content"
+          md={positionOfSubmitButton === 'left' ? 20 : 24}
+          xs={24}
+        >
           <Form style={{ width: '100%' }}>
             <RestInputContext.Provider
-              value={{ form, record, getData: this.getData, handleSubmit: this.handleSubmit }}
+              value={{
+                form,
+                record,
+                getData: this.getData,
+                handleSubmit: this.handleSubmit,
+              }}
             >
               {children}
             </RestInputContext.Provider>
           </Form>
         </Col>
         <Col md={positionOfSubmitButton === 'left' ? 4 : 24} xs={24}>
-          {customEditButton !== undefined ? (
-            customEditButton &&
-            React.cloneElement(customEditButton, {
+          {customSubmitButton !== undefined ? (
+            customSubmitButton &&
+            React.cloneElement(customSubmitButton, {
               loading,
               handleSubmit: this.handleSubmit,
               onBack,
@@ -125,7 +138,7 @@ FormComponent.propTypes = {
   onSubmit: PropTypes.func,
   children: PropTypes.node,
   positionOfSubmitButton: PropTypes.string,
-  customEditButton: PropTypes.node,
+  customSubmitButton: PropTypes.node,
   record: PropTypes.object,
   formatOnSubmit: PropTypes.func,
 };

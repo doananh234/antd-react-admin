@@ -34,7 +34,7 @@ const FormCascader = props => {
           placeholder={placeholder}
           loadData={loadData}
           style={{ width: '100%' }}
-        />
+        />,
       )}
     </FormItem>
   );

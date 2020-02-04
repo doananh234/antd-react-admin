@@ -9,10 +9,10 @@ const { TabPane } = Tabs;
 
 const TABS = [
   // {
-  //   key: 'transactionTypes',
-  //   text: 'tabs.transactionTypes',
-  //   url: '/transactionTypes',
-  //   component: TransactionTypes,
+  //   key: 'department',
+  //   text: 'tabs.department',
+  //   url: '/department',
+  //   component: DepartmentList,
   // },
 ];
 
@@ -22,7 +22,10 @@ const Settings = ({ match, pushRoute, ...props }) => {
   };
   return (
     <div>
-      <Tabs defaultActiveKey={match.params.model || 'rooms'} onChange={onChange}>
+      <Tabs
+        defaultActiveKey={match.params.model || 'rooms'}
+        onChange={onChange}
+      >
         {TABS.map(tab => (
           <TabPane tab={i18next.t(tab.text)} key={tab.key}>
             <tab.component
@@ -43,9 +46,6 @@ Settings.propTypes = {
   pushRoute: PropTypes.func,
 };
 
-export default connect(
-  null,
-  dispatch => ({
-    pushRoute: data => dispatch(push(data)),
-  })
-)(Settings);
+export default connect(null, dispatch => ({
+  pushRoute: data => dispatch(push(data)),
+}))(Settings);

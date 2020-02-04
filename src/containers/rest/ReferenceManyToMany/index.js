@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { retrieveReference } from '../../../redux/referenceData/actions';
+import { retrieveReference } from '../../../redux/referenceData/slice';
 import { getRecordData } from '../../../utils/tools';
-import { getReferenceLoading, getReferenceData } from '../../../redux/referenceData/selectors';
+import {
+  getReferenceLoading,
+  getReferenceData,
+} from '../../../redux/referenceData/selectors';
 
 class RestReferenceManyToMany extends Component {
   componentDidMount() {
@@ -51,7 +54,7 @@ class RestReferenceManyToMany extends Component {
                   record: data,
                   retrieveList,
                 })
-              )
+              ),
             )
           : React.cloneElement(children, {
               resourceData: {
@@ -73,7 +76,8 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = (dispatch, props) => ({
-  retrieveReference: ids => dispatch(retrieveReference(props.resource, ids, props.mappedBy)),
+  retrieveReference: ids =>
+    dispatch(retrieveReference(props.resource, ids, props.mappedBy)),
   gotoShowPage: id => props.history.push(`/auth/${props.resource}/${id}/show`),
 });
 
@@ -98,5 +102,5 @@ RestReferenceManyToMany.defaultProps = {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(RestReferenceManyToMany);

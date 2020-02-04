@@ -9,7 +9,11 @@
     "customers": "Khách Hàng",
     "settings": "Cài đặt",
     "users": "Người dùng",
-    "CMS": "CMS"
+    "CMS": "CMS",
+    "teachers": "Giáo viên",
+    "attendances": "Điểm danh",
+    "finances": "Tài chính",
+    "notifications": "Thông báo"
   },
   "input": {
     "username": {
@@ -114,6 +118,45 @@
     "title": "Thành Công!",
     "description": "Cập nhập thành công!"
   },
+  "tabs": {
+    "classes": "Lớp học",
+    "schools": "Trường",
+    "department": "Bộ phận"
+  },
+  "users": {
+    "title": "Users",
+    "header": "Nhân viên",
+    "generalInfo": "General Info",
+    "privateInfo": "Private Info",
+    "id": "Id",
+    "familyName": "Family name",
+    "middleName": "Middle name",
+    "gender": "Gender",
+    "birthday": "Birthday",
+    "nationality": "Nationality",
+    "departmentID": "Department",
+    "avatar": "Avatar",
+    "level": "Level",
+    "qualification": "Qualification",
+    "subject": "Subject",
+    "joinDate": "Join Date",
+    "experience": "Experience",
+    "currentAddress": "Current Address",
+    "permanentAddress": "Permanent Address",
+    "phoneNumber": "Phone Number",
+    "email": "Email",
+    "userType": "User Type",
+    "createdAt": "Created At",
+    "updatedAt": "Update At",
+    "status": "Status",
+    "createPage": "Create User",
+    "editPage": "Edit User",
+    "mainClassIds": "Main class",
+    "note": "Note",
+    "contract": "Contract",
+    "userInfo": "User Information",
+    "contractType": "Contract type"
+  },
   "customers": {
     "title": "Khách hàng",
     "avatar": "Avatar",
@@ -188,5 +231,16 @@
   },
   "text": {
     "or": "Hoặc"
+  },
+  "departments": {
+    "id": "Id",
+    "code": "Mã Số",
+    "name": "Tên",
+    "userManagerID": "Mã số quản lý người dùng",
+    "userLeaderID": "Mã số lãnh đạo",
+    "userAnotherID": "Mã số người dùng khác",
+    "status": "Trạng thái",
+    "editPage": "Chỉnh sửa Bộ Phận",
+    "createPage": "Tạo Bộ Phận"
   }
 }

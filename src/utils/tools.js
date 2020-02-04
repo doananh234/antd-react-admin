@@ -1,5 +1,6 @@
 /* eslint-disable */
-import { omitBy, reduce, isEmpty, keyBy } from 'lodash';
+import { omitBy, reduce, isEmpty, keyBy, get } from 'lodash';
+import { uploadMediaImgur } from 'api/uploadMedia';
 
 export const validateEmail = email => {
   const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -23,7 +24,8 @@ export const sortByProps = (list, props) => {
   return newList;
 };
 
-export const upperCaseFirstChart = str => str[0].toUpperCase() + str.substring(1);
+export const upperCaseFirstChart = str =>
+  str[0].toUpperCase() + str.substring(1);
 
 export const changeAlias = alias => {
   let str = alias;
@@ -49,7 +51,8 @@ export const validateName = name => {
   return re.test(name);
 };
 
-export const getResourceTitle = string => string.charAt(0).toUpperCase() + string.slice(1);
+export const getResourceTitle = string =>
+  string.charAt(0).toUpperCase() + string.slice(1);
 
 export const formatFormData = (originalData, data) => {
   const newData = {};
@@ -91,7 +94,9 @@ export const convertObjToSearchStr = params =>
   Object.keys(params)
     .map(key =>
       params[key]
-        ? `${encodeURIComponent(key)}=${encodeURIComponent(JSON.stringify(params[key]))}`
+        ? `${encodeURIComponent(key)}=${encodeURIComponent(
+            JSON.stringify(params[key]),
+          )}`
         : '',
     )
     .filter(data => data !== '')
@@ -106,7 +111,9 @@ const getValidDataOfObj = (obj, isFilter) => {
       }
       if (typeof value === 'object' && !isEmpty(value)) {
         const formatChildValue = getValidDataOfObj(value);
-        return !isEmpty(formatChildValue) ? { ...result, [key]: formatChildValue } : result;
+        return !isEmpty(formatChildValue)
+          ? { ...result, [key]: formatChildValue }
+          : result;
       }
 
       if (value || value === false || value === 0) {
@@ -126,7 +133,8 @@ const getValidDataOfObj = (obj, isFilter) => {
   return validData;
 };
 
-export const getValidData = (filter, isFilter) => getValidDataOfObj(filter, isFilter);
+export const getValidData = (filter, isFilter) =>
+  getValidDataOfObj(filter, isFilter);
 
 export const getFilterFromUrl = searchStr => {
   const parsed = {};
@@ -144,7 +152,12 @@ export const getFilterFromUrl = searchStr => {
         parsed[keyValue[0]] = parsed[keyValue[0]];
       }
     });
-  const filter = { q: parsed.q, orderBy: parsed.orderBy, limit: parsed.limit, page: parsed.page };
+  const filter = {
+    q: parsed.q,
+    orderBy: parsed.orderBy,
+    limit: parsed.limit,
+    page: parsed.page,
+  };
   delete parsed.limit;
   delete parsed.page;
   delete parsed.orderBy;
@@ -154,12 +167,12 @@ export const getFilterFromUrl = searchStr => {
 };
 
 export const getRecordData = (record, source) => {
-  const arrKeys = source ? replaceAll(replaceAll(source, '\\[', '.'), '\\]', '').split('.') : [];
-  let data = record;
-  arrKeys.forEach(key => {
-    data = data ? data[key] : data;
-  });
-  return data;
+  // const arrKeys = source ? replaceAll(replaceAll(source, '\\[', '.'), '\\]', '').split('.') : [];
+  // let data = record;
+  // arrKeys.forEach(key => {
+  //   data = data ? data[key] : data;
+  // });
+  return get(record, source);
 };
 
 export const convertDataToObj = (formatOnSubmit, record) => {
@@ -223,7 +236,9 @@ export const makeBreadCrumbFromPath = location => {
     BREADCRUMB_LIST.push({
       title: data,
       path: `${
-        BREADCRUMB_LIST.length ? BREADCRUMB_LIST[BREADCRUMB_LIST.length - 1].path : ''
+        BREADCRUMB_LIST.length
+          ? BREADCRUMB_LIST[BREADCRUMB_LIST.length - 1].path
+          : ''
       }/${data}`,
     });
   });
@@ -237,9 +252,19 @@ export const reorderOffset = (
 ) => {
   const newBoards = { ...boards };
   if (sourceId === destinationId) {
-    newBoards[sourceId] = reorder(boards[sourceId], sourceIndex, destinationIndex);
+    newBoards[sourceId] = reorder(
+      boards[sourceId],
+      sourceIndex,
+      destinationIndex,
+    );
   } else {
-    const moveResults = move(boards, sourceId, destinationId, sourceIndex, destinationIndex);
+    const moveResults = move(
+      boards,
+      sourceId,
+      destinationId,
+      sourceIndex,
+      destinationIndex,
+    );
     newBoards[sourceId] = moveResults[sourceId];
     newBoards[destinationId] = moveResults[destinationId];
   }
@@ -254,7 +279,13 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-const move = (boards, sourceId, destinationId, sourceIndex, destinationIndex) => {
+const move = (
+  boards,
+  sourceId,
+  destinationId,
+  sourceIndex,
+  destinationIndex,
+) => {
   const sourceClone = Array.from(boards[sourceId]);
   const destClone = Array.from(boards[destinationId]);
   const [removed] = sourceClone.splice(sourceIndex, 1);
@@ -266,4 +297,35 @@ const move = (boards, sourceId, destinationId, sourceIndex, destinationIndex) =>
   result[destinationId] = destClone;
 
   return result;
+};
+
+export const getAllIconName = async () => {
+  const iconsFile = await fetch('/styles.css');
+  const fileData = await iconsFile.text();
+  const icons = fileData
+    .match(/.icon-ic-(.*):before/gm)
+    .map(e => e.match('.(.*):before')[1]);
+  return icons;
+};
+
+export const imageUploadHandler = async (blobInfo, success, failure) => {
+  var xhr, formData;
+
+  xhr = new XMLHttpRequest();
+  xhr.withCredentials = false;
+  // xhr.open('POST', 'postAcceptor.php');
+
+  formData = new FormData();
+  formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+  const response = await uploadMediaImgur(blobInfo.blob());
+  if (!response.data || response.data.error) {
+    notification.error({
+      message: I18n.t('error.title'),
+      description: I18n.t('error.uploadSize'),
+    });
+    failure();
+  } else {
+    success(response.data.link);
+  }
 };

@@ -6,9 +6,12 @@ import { getRecordData } from '../../../utils/tools';
 import { SelectFieldWrapper } from './style';
 
 class SelectField extends Component {
-  state = {
-    visible: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      visible: false,
+    };
+  }
 
   render() {
     const { onChange, resourceData, valueProps, textProps, value, record, source } = this.props;
@@ -39,7 +42,6 @@ class SelectField extends Component {
         <SelectFieldWrapper>
           <span role="presentation">
             <div>{value || getRecordData(record, source)}</div>
-            {' '}
             <div className={`icon ${this.state.visible && 'openDropdown'}`}>
               <Icon type="right" />
             </div>

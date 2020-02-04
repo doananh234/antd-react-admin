@@ -9,7 +9,13 @@ const HeaderWrapper = styled(Layout.Header)`
   }
   .trigger {
     color: ${({ theme }) => theme.text.primary};
+    font-size: 24px;
+    transition: 300ms ease all;
   }
+  .reverse-trigger {
+    transform: rotate(180deg);
+  }
+
   .leftHeader {
     display: flex;
     align-items: center;
@@ -33,7 +39,7 @@ const HeaderWrapper = styled(Layout.Header)`
     font-weight: bold;
     cursor: pointer;
     color: ${({ theme }) => theme.text.disabled};
-    &.active {
+    &.actife {
       color: ${({ theme }) => theme.palette.primary};
     }
   }

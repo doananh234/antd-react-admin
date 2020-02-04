@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Upload, Modal, Icon } from 'antd';
 import { xor } from 'lodash';
@@ -46,14 +46,17 @@ export const RestUpload = ({ defaultSourceKey, ...props }) => {
     setDisabled(false);
   };
 
-  const onSetDefault = item => {
-    defaultSourceKey && setDefaultImage(item.url || item.response);
-    defaultSourceKey &&
-      props.form &&
-      props.form.setFieldsValue({
-        [defaultSourceKey]: item.url || item.response,
-      });
-  };
+  const onSetDefault = useCallback(
+    item => {
+      defaultSourceKey && setDefaultImage(item.url || item.response);
+      defaultSourceKey &&
+        props.form &&
+        props.form.setFieldsValue({
+          [defaultSourceKey]: item.url || item.response,
+        });
+    },
+    [defaultSourceKey, props.form],
+  );
 
   const handleChange = e => setFileList(e.fileList);
   const uploadButton =
@@ -61,8 +64,7 @@ export const RestUpload = ({ defaultSourceKey, ...props }) => {
       <div className="uploadArea">
         <Icon type="plus" />
         <div className="ant-upload-text">
-          Upload 
-          {' '}
+          {'Upload '}
           {props.placeholder && i18next.t(props.placeholder)}
         </div>
       </div>
@@ -71,12 +73,26 @@ export const RestUpload = ({ defaultSourceKey, ...props }) => {
   useEffect(() => {
     setFileList(
       props.defaultValue || getRecordData(props.record, props.source)
-        ? makeFileList(props.defaultValue || getRecordData(props.record, props.source))
-        : []
+        ? makeFileList(
+            props.defaultValue || getRecordData(props.record, props.source),
+          )
+        : [],
     );
-    defaultSourceKey && onSetDefault({ url: getRecordData(props.record, defaultSourceKey) });
-    setPreviewImage(makeFileList(props.defaultValue || getRecordData(props.record, props.source)));
-  }, [defaultSourceKey, props.defaultValue, props.record, props.record.id, props.source]);
+    defaultSourceKey &&
+      onSetDefault({ url: getRecordData(props.record, defaultSourceKey) });
+    setPreviewImage(
+      makeFileList(
+        props.defaultValue || getRecordData(props.record, props.source),
+      ),
+    );
+  }, [
+    defaultSourceKey,
+    onSetDefault,
+    props.defaultValue,
+    props.record,
+    props.record.id,
+    props.source,
+  ]);
 
   const customRequest = async ({ onSuccess, file }) => {
     const responseS3 = await getUrl(file.name, file.type);
@@ -91,7 +107,9 @@ export const RestUpload = ({ defaultSourceKey, ...props }) => {
       onSetDefault(e.fileList[0]);
     }
     handleChange({ fileList: e.fileList });
-    const formattedData = e.fileList.map(data => (data && data.response) || data.url);
+    const formattedData = e.fileList.map(
+      data => (data && data.response) || data.url,
+    );
     setPreviewImage(formattedData);
     props.onChange && props.onChange(formattedData);
     props.form &&
@@ -104,13 +122,15 @@ export const RestUpload = ({ defaultSourceKey, ...props }) => {
   };
 
   return (
-    <Fragment>
+    <>
       {props.form && defaultSourceKey && (
         <FormItem
           {...props}
           required={false}
           source={defaultSourceKey}
-          defaultValue={props.defaultValue || getRecordData(props.record, defaultSourceKey)}
+          defaultValue={
+            props.defaultValue || getRecordData(props.record, defaultSourceKey)
+          }
         >
           <input style={{ display: 'none' }} />
         </FormItem>
@@ -121,7 +141,9 @@ export const RestUpload = ({ defaultSourceKey, ...props }) => {
             {...props}
             required={false}
             ruleType="array"
-            defaultValue={props.defaultValue || getRecordData(props.record, props.source)}
+            defaultValue={
+              props.defaultValue || getRecordData(props.record, props.source)
+            }
           >
             <input style={{ display: 'none' }} />
           </FormItem>
@@ -143,8 +165,9 @@ export const RestUpload = ({ defaultSourceKey, ...props }) => {
           onChange={onChangeUpload}
         >
           <div className="selectedImage">
-            {fileList.map(img => (
+            {fileList.map((img, index) => (
               <UploadImageItem
+                key={String(index)}
                 defaultSourceKey={defaultSourceKey}
                 onSetDefault={onSetDefault}
                 onMouseEnter={onMouseEnter}
@@ -154,7 +177,8 @@ export const RestUpload = ({ defaultSourceKey, ...props }) => {
                 item={img}
                 alt="upload.png"
                 isDefault={
-                  defaultImage && (defaultImage === img.url || img.response === defaultImage)
+                  defaultImage &&
+                  (defaultImage === img.url || img.response === defaultImage)
                 }
               />
             ))}
@@ -168,7 +192,7 @@ export const RestUpload = ({ defaultSourceKey, ...props }) => {
           <img alt="example" style={{ width: '100%' }} src={previewImage} />
         </Modal>
       </FormMultiUploadWrapper>
-    </Fragment>
+    </>
   );
 };
 
@@ -182,7 +206,7 @@ const makeFileList = values =>
               name: value,
               status: 'done',
               url: value,
-            }
+            },
       )
     : [];
 

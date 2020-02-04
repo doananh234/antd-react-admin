@@ -1,19 +1,19 @@
 @charset "UTF-8";
 
 @font-face {
-  font-family: "csm-web";
-  src:url("fonts/csm-web.eot");
-  src:url("fonts/csm-web.eot?#iefix") format("embedded-opentype"),
-    url("fonts/csm-web.woff") format("woff"),
-    url("fonts/csm-web.ttf") format("truetype"),
-    url("fonts/csm-web.svg#csm-web") format("svg");
+  font-family: "duc-tri-dashboard";
+  src:url("fonts/duc-tri-dashboard.eot");
+  src:url("fonts/duc-tri-dashboard.eot?#iefix") format("embedded-opentype"),
+    url("fonts/duc-tri-dashboard.woff") format("woff"),
+    url("fonts/duc-tri-dashboard.ttf") format("truetype"),
+    url("fonts/duc-tri-dashboard.svg#duc-tri-dashboard") format("svg");
   font-weight: normal;
   font-style: normal;
 
 }
 
 [data-icon]:before {
-  font-family: "csm-web" !important;
+  font-family: "duc-tri-dashboard" !important;
   content: attr(data-icon);
   font-style: normal !important;
   font-weight: normal !important;
@@ -27,7 +27,7 @@
 
 [class^="anticon-"]:before,
 [class*=" anticon-"]:before {
-  font-family: "csm-web" !important;
+  font-family: "duc-tri-dashboard" !important;
   font-style: normal !important;
   font-weight: normal !important;
   font-variant: normal !important;
@@ -38,54 +38,105 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.anticon-ic-arrow-dropdown:before {
+.anticon-ic-attendance:before {
   content: "\61";
 }
-.anticon-ic-detail:before {
+.anticon-ic-calendar:before {
   content: "\62";
 }
-.anticon-ic-home:before {
+.anticon-ic-check:before {
   content: "\63";
 }
-.anticon-ic-logout:before {
+.anticon-ic-class:before {
   content: "\64";
 }
-.anticon-ic-payment:before {
+.anticon-ic-close:before {
   content: "\65";
 }
-.anticon-ic-search:before {
+.anticon-ic-config:before {
   content: "\66";
 }
-.anticon-ic-seat:before {
+.anticon-ic-dashboard:before {
   content: "\67";
 }
-.anticon-ic-service:before {
+.anticon-ic-edit:before {
   content: "\68";
 }
-.anticon-ic-setting:before {
+.anticon-ic-excel:before {
   content: "\69";
 }
-.anticon-usd:before {
+.anticon-ic-filter:before {
   content: "\6a";
 }
-.anticon-male:before {
-  content: "\e030";
+.anticon-ic-filter-1:before {
+  content: "\6b";
 }
-.anticon-female:before {
-  content: "\e031";
+.anticon-ic-finance:before {
+  content: "\6c";
 }
-.anticon-ic-date:before {
-  content: "\e032";
+.anticon-ic-high-school:before {
+  content: "\6d";
 }
-.anticon-ic-check-out:before {
-  content: "\e033";
+.anticon-ic-search-2:before {
+  content: "\6e";
 }
-.anticon-ic-check-in:before {
-  content: "\e034";
+.anticon-ic-search-1:before {
+  content: "\6f";
+}
+.anticon-ic-primary-school:before {
+  content: "\70";
+}
+.anticon-ic-people:before {
+  content: "\71";
+}
+.anticon-ic-outcome:before {
+  content: "\72";
+}
+.anticon-ic-notification:before {
+  content: "\73";
+}
+.anticon-ic-note:before {
+  content: "\74";
 }
 .anticon-ic-more:before {
-  content: "\e035";
+  content: "\75";
 }
-.anticon-check-circle:before {
-  content: "\6b";
+.anticon-ic-menu:before {
+  content: "\76";
+}
+.anticon-ic-location:before {
+  content: "\77";
+}
+.anticon-ic-kingdergarten:before {
+  content: "\78";
+}
+.anticon-ic-junior-highschool:before {
+  content: "\79";
+}
+.anticon-ic-income:before {
+  content: "\7a";
+}
+.anticon-ic-select:before {
+  content: "\43";
+}
+.anticon-ic-sort:before {
+  content: "\46";
+}
+.anticon-ic-student:before {
+  content: "\45";
+}
+.anticon-ic-subject:before {
+  content: "\47";
+}
+.anticon-ic-teacher:before {
+  content: "\48";
+}
+.anticon-ic-uncheck:before {
+  content: "\49";
+}
+.anticon-ic-next:before {
+  content: "\41";
+}
+.anticon-ic-previous:before {
+  content: "\42";
 }

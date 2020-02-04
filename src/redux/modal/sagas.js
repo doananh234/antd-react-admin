@@ -1,14 +1,14 @@
 import { takeEvery, put, select } from 'redux-saga/effects';
 import { replace } from 'connected-react-router';
-import { ModalTypes } from './actions';
+import { closeModal } from './slice';
 
 function* closeModelSaga() {
   try {
     const location = yield select(state => state.router.location);
-    yield put(replace(location.pathname));
+    yield put(replace(`${location.pathname}${location.search}`));
   } catch (error) {
     //
   }
 }
 
-export default [takeEvery(ModalTypes.CLOSE_MODAL, closeModelSaga)];
+export default [takeEvery([closeModal.type], closeModelSaga)];

@@ -13,8 +13,11 @@ class AddReferenceForm extends Component {
     if (prevState.resourceData !== nextProps.resourceData) {
       return {
         resourceData: nextProps.resourceData,
+        // eslint-disable-next-line react/prop-types
         data: nextProps.resourceFilter.filter(
-          data => data[nextProps.filterProp].toLowerCase().search(searchText) > -1
+          data =>
+            // eslint-disable-next-line react/prop-types
+            data[nextProps.filterProp].toLowerCase().search(searchText) > -1,
         ),
       };
     }
@@ -53,7 +56,9 @@ class AddReferenceForm extends Component {
   addReference = () => {
     const { resourceData, addReference } = this.props;
     const { value } = this.state;
-    addReference(_.intersectionWith(resourceData, value, (a, b) => a.id === b.key));
+    addReference(
+      _.intersectionWith(resourceData, value, (a, b) => a.id === b.key),
+    );
     this.setState({
       value: [],
       data: [],

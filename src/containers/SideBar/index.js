@@ -2,11 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import I18n from 'i18next';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Icon } from 'antd';
 import { history } from '../../redux/store';
-import Logo from '../../assets/images/logo.svg';
-import FullLogo from '../../assets/images/fullLogo.svg';
-import SVGIcon from '../../components/common/SVGIcon';
+import Logo from '../../assets/images/logo.png';
+// import FullLogo from '../../assets/images/logo.png';
 
 const getCurrentTab = str => {
   const paths = str && str.split('/');
@@ -17,42 +16,60 @@ const sidebarMenu = [
   {
     key: 'dashboard',
     text: 'sideBar.dashboard',
-    icon: 'ic-home',
+    icon: 'ic-dashboard',
     url: '/',
   },
   {
-    key: 'customers',
-    text: 'sideBar.customers',
-    icon: 'team',
-    url: '/customers',
+    key: 'teachers',
+    text: 'sideBar.teachers',
+    icon: 'ic-student',
+    url: '/teachers',
   },
   {
-    key: 'users',
+    key: 'staff',
     text: 'sideBar.users',
-    icon: 'user',
-    url: '/users',
+    icon: 'ic-teacher',
+    url: '/staff',
+  },
+  {
+    key: 'attendances',
+    text: 'sideBar.attendances',
+    icon: 'ic-attendance',
+    url: '/attendances',
+  },
+  {
+    key: 'finances',
+    text: 'sideBar.finances',
+    icon: 'ic-finance',
+    url: '/finances',
+  },
+  {
+    key: 'notifications',
+    text: 'sideBar.notifications',
+    icon: 'ic-notification',
+    url: '/notifications',
   },
   {
     key: 'settings',
     text: 'sideBar.settings',
-    icon: 'ic-setting',
-    url: '/settings/rooms',
-  },
-  {
-    key: 'cms',
-    text: 'sideBar.cms',
-    icon: 'ic-user-checkin',
-    url: '/cms-pages',
+    icon: 'ic-config',
+    url: '/settings/classes',
   },
 ];
 
 const SideBar = ({ location, collapsed }) => {
   const url = getCurrentTab(location.pathname);
   return (
-    <Layout.Sider trigger={null} collapsible collapsed={collapsed} className="sidebar">
+    <Layout.Sider
+      trigger={null}
+      collapsible
+      collapsed={collapsed}
+      className="sidebar"
+      collapsedWidth={64}
+    >
       <div className="logo">
         <img alt="" src={Logo} />
-        <img alt="" src={FullLogo} className="fullLogo" />
+        <img alt="" src={Logo} className="fullLogo" />
       </div>
       <Menu
         mode="inline"
@@ -65,7 +82,7 @@ const SideBar = ({ location, collapsed }) => {
             title={I18n.t(menu.text)}
             onClick={() => history.push(menu.url)}
           >
-            <SVGIcon type={menu.icon} />
+            <Icon type={menu.icon} />
             {!collapsed && <span>{I18n.t(menu.text)}</span>}
           </Menu.Item>
         ))}

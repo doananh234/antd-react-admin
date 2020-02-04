@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import I18n from 'i18next';
-import { Form, Input, Icon, Button, Row, Col } from 'antd';
+import { Form, Input, Icon, Button, Collapse } from 'antd';
 import { getRecordData } from '../../../utils/tools';
 import { InputAdditionWrapper } from './InputAdditionWrapper';
+import { RestInputContext } from '../RestInputContext';
 
 const FormItem = Form.Item;
+const { Panel } = Collapse;
 
 class InputAddition extends Component {
   static getDerivedStateFromProps = (nextProps, prevState) => {
@@ -21,37 +23,39 @@ class InputAddition extends Component {
     const { record, source } = props;
     const data = getRecordData(record, source);
     this.state = {
+      // eslint-disable-next-line
       data,
       formDatas: data || [{ vi: '', en: '' }],
     };
   }
 
-  remove = k => {
+  remove = index => {
     const { form, source } = this.props;
+    const { formDatas } = this.state;
     // can use data-binding to get
-    const keys = form.getFieldValue(source);
     // We need at least one passenger
-    if (keys.length === 1) {
+    if (formDatas.length === 1) {
       return;
     }
-    const formDatas = keys.filter((key, index) => index !== k);
-    this.setState({ formDatas });
+    const tempContents = [...formDatas];
+    tempContents.splice(index, 1);
+    this.setState({ formDatas: tempContents });
     // can use data-binding to set
     form.setFieldsValue({
-      [source]: [...formDatas],
+      [source]: [...tempContents],
     });
   };
 
   add = () => {
     const { form, source } = this.props;
+    const { formDatas } = this.state;
     // can use data-binding to get
-    const keys = form.getFieldValue(source);
-    const formDatas = [...keys, { vi: '', en: '' }];
-    this.setState({ formDatas });
+    const tempContents = [...formDatas, {}];
+    this.setState({ formDatas: tempContents });
     // can use data-binding to set
     // important! notify form to detect changes
     form.setFieldsValue({
-      [source]: formDatas,
+      [source]: tempContents,
     });
   };
 
@@ -89,56 +93,40 @@ class InputAddition extends Component {
 
   render() {
     const { formDatas } = this.state;
-    const { form, source, children, numberOfCols, record, header } = this.props;
+    const { form, source, children, record, header } = this.props;
+    const extraAction = index => <Icon onClick={e => this.remove(e, index)} type="delete" />;
     const formItems = formDatas ? (
-      formDatas.map((k, index) => {
-        const key = index;
-        return (
-          <Row gutter={16} key={key}>
-            <Col xs={24}>
-              <h3>
-                {I18n.t(header)}
-                {' '}
-(
-                {index + 1}
-)
-                <span style={{ width: 40, paddingLeft: 10 }}>
-                  {formDatas.length > 1 ? (
-                    <Icon
-                      type="minus-circle-o"
-                      disabled={formDatas.length === 1}
-                      onClick={() => this.remove(index)}
-                    />
-                  ) : null}
-                </span>
-              </h3>
-            </Col>
-            {React.Children.map(children, (node, index2) => {
-              const key2 = index2;
-              return (
-                <Col key={key2} sm={24 / numberOfCols} xs={24}>
-                  {React.cloneElement(node, {
-                    form,
-                    record,
-                    key: `${source}[${key}].${node.props.source}`,
-                    source: `${source}[${index}].${node.props.source}`,
-                  })}
-                </Col>
-              );
-            })}
-          </Row>
-        );
-      })
+      formDatas.map((k, index) => (
+        <Panel
+          forceRender
+          header={`${I18n.t(header)} (${index + 1})`}
+          key={String(index)}
+          extra={formDatas.length === 1 ? null : extraAction(index)}
+        >
+          {React.Children.map(children, node =>
+            React.cloneElement(node, {
+              form,
+              record,
+              key: `${source}[${String(index)}].${node.props.source}`,
+              source: `${source}[${index}].${node.props.source}`,
+            }),
+          )}
+        </Panel>
+      ))
     ) : (
       <span />
     );
     return (
       <InputAdditionWrapper>
-        {formItems}
-        <Button type="dashed" onClick={this.add}>
+        <Collapse
+          expandIconPosition="right"
+          defaultActiveKey={formDatas.map((data, index) => `${index}`)}
+        >
+          {formItems}
+        </Collapse>
+        <Button className="btnAdd" type="dashed" onClick={this.add}>
           <Icon type="plus" />
-          {I18n.t('button.add')} 
-          {' '}
+          {`${I18n.t('button.add')} `}
           {I18n.t(header)}
         </Button>
       </InputAdditionWrapper>
@@ -150,12 +138,17 @@ InputAddition.propTypes = {
   record: PropTypes.object,
   source: PropTypes.string,
   children: PropTypes.any,
-  numberOfCols: PropTypes.number,
   header: PropTypes.any,
 };
 
-InputAddition.defaultProps = {
-  numberOfCols: 1,
-};
+InputAddition.defaultProps = {};
 
-export default InputAddition;
+const RestInputAddition = props => (
+  <RestInputContext.Consumer>
+    {({ record, form, handleSubmit }) => (
+      <InputAddition {...props} {...{ record, form, handleSubmit }} />
+    )}
+  </RestInputContext.Consumer>
+);
+
+export default RestInputAddition;

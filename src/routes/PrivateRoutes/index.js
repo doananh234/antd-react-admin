@@ -1,60 +1,50 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
 import { flatMap, map } from 'lodash';
 import { withNamespaces } from 'react-i18next';
 import PrivateLayout from '../../layout/PrivateLayout';
-import Customers from '../../pages/Customers';
-
-import Users from '../../pages/Users';
+import UserTypes from '../../pages/UserTypes';
+import Staff from '../../pages/Users';
 import Home from '../../pages/Dashboard';
 import Settings from '../../pages/Settings';
-import CMS from '../../containers/CMS';
 
 const routes = [
   {
-    path: '/customers',
+    path: '/userTypes',
     routes: [
       {
         path: '/',
-        component: Customers.List,
+        component: UserTypes.List,
       },
       {
         path: '/create',
-        component: Customers.Create,
+        component: UserTypes.Create,
       },
       {
         path: '/:id/edit',
-        component: Customers.Edit,
+        component: UserTypes.Edit,
       },
     ],
-    hasPrivateLayoutWrapper: true,
   },
-
   {
-    path: '/users',
+    path: '/staff',
     routes: [
       {
         path: '/',
-        component: Users.List,
+        component: Staff.List,
       },
       {
         path: '/create',
-        component: Users.Create,
+        component: Staff.Create,
       },
       {
         path: '/:id/edit',
-        component: Users.Edit,
+        component: Staff.Edit,
       },
     ],
     hasPrivateLayoutWrapper: true,
-  },
-  {
-    path: '/cms-pages',
-    component: CMS,
-    exact: true,
-    title: 'CMS.title',
   },
   {
     path: '/',
@@ -85,31 +75,48 @@ const wrappedRoutes = map(
     }
     return route;
   }),
-  route => <PrivateRoute {...route} key={route.path} />
+  route => <PrivateRoute {...route} key={route.path} />,
 );
 
-function PrivateRoute({ component: Component, title, hasPrivateLayoutWrapper, ...rest }) {
+function PrivateRoute({
+  component: Component,
+  title,
+  hasPrivateLayoutWrapper,
+  ...rest
+}) {
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
   return (
     <Route
       {...rest}
-      render={props =>
-        isAuthenticated ? (
-          <PrivateLayout title={title} hasPrivateLayoutWrapper={hasPrivateLayoutWrapper}>
-            <Component {...props} />
-          </PrivateLayout>
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/login',
-              state: { from: props.location },
-            }}
-          />
-        )
+      render={
+        props =>
+          isAuthenticated ? (
+            <PrivateLayout
+              title={title}
+              hasPrivateLayoutWrapper={hasPrivateLayoutWrapper}
+            >
+              <Component {...props} />
+            </PrivateLayout>
+          ) : (
+            <Redirect
+              to={{
+                pathname: '/login',
+                // eslint-disable-next-line
+                state: { from: props.location },
+              }}
+            />
+          )
+        // eslint-disable-next-line react/jsx-curly-newline
       }
     />
   );
 }
+
+PrivateRoute.propTypes = {
+  component: PropTypes.any,
+  title: PropTypes.string,
+  hasPrivateLayoutWrapper: PropTypes.bool,
+};
 
 const PrivateRoutes = () => wrappedRoutes;
 

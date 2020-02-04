@@ -6,4 +6,8 @@ export const DateTimePickerWrapper = styled.div`
   .viewDatePicker {
     width: 100%;
   }
+
+  .ant-calendar-picker-icon {
+    color: ${({ theme }) => theme.text.formIcon};
+  }
 `;

@@ -18,7 +18,7 @@ export const ModalWrapper = styled(Drawer)`
     min-width: 450px;
     .ant-drawer-body {
       padding: 0px;
-      padding-top: 80px;
+      padding-top: 60px;
       height: 100%;
       overflow: hidden;
       & > div {
@@ -27,7 +27,7 @@ export const ModalWrapper = styled(Drawer)`
       }
     }
     .ant-form {
-      padding: 24px;
+      padding: 10px 24px;
     }
   }
   .ant-modal-header {
@@ -55,8 +55,8 @@ export const ModalWrapper = styled(Drawer)`
   .ant-select-dropdown,
   .ant-select-clear-icon,
   .ant-select-dropdown-menu-vertical {
-    background: ${({ theme }) => theme.background.content};
-    border: 1px solid ${({ theme }) => theme.border.default};
+    background: ${({ theme }) => theme.background.gray};
+    border: 1px solid transparent;
     &:hover,
     &:focus,
     &:active {
@@ -93,11 +93,15 @@ export const ModalWrapper = styled(Drawer)`
   }
 
   .ant-tabs-bar {
-    border-bottom: none;
-    padding-bottom: 10px;
-    border-bottom: 1px solid ${({ theme }) => theme.background.container};
+    font-weight: 500;
+  }
+  .ant-tabs-nav {
+    .ant-tabs-tab {
+      padding-bottom: 5px;
+    }
   }
   .ant-tabs-tab {
+    font-family: Roboto;
     color: ${({ theme }) => theme.text.tabTitle};
   }
   .ant-list {
@@ -110,6 +114,7 @@ export const ModalWrapper = styled(Drawer)`
     background: ${({ theme }) => theme.scrollbar.thumb} !important;
   }
   div::-webkit-scrollbar-track {
+    position: absolute;
     border-radius: 3px !important;
     background: ${({ theme }) => theme.scrollbar.track} !important;
   }
@@ -130,24 +135,26 @@ export const ModalWrapper = styled(Drawer)`
     color: ${({ theme }) => theme.text.empty};
   }
   .modalTitleContent {
-    background: ${({ theme }) => theme.palette.primary};
-    text-align: center;
+    background: ${({ theme }) => theme.background.gray};
     position: absolute;
     left: 0;
     right: 0;
     top: 0;
-    height: 60px;
+    height: 64px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     display: flex;
+    border-bottom: 1px solid ${({ theme }) => theme.border.default};
     .modalBtnBack {
-      padding: 0px 20px;
-      width: 50px;
+      margin: 0px 24px;
+      color: ${({ theme }) => theme.drawer.closeIcon};
     }
     .modalTitle {
       flex: 1;
-      padding-right: 50px;
+      padding-left: 24px;
+      font-size: 24px;
+      color: ${({ theme }) => theme.drawer.headerTitle};
     }
   }
 

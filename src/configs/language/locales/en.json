@@ -1,14 +1,18 @@
 {
   "appInfo": {
     "footer": "RAA ©2018 Created by Anh Doan",
-    "name": "React Admin"
+    "name": "Anh Doan"
   },
   "sideBar": {
     "dashboard": "Dashboard",
     "customers": "Customers",
     "settings": "Settings",
     "users": "Users",
-    "CMS": "CMS"
+    "CMS": "CMS",
+    "teachers": "Teachers",
+    "attendances": "Attendances",
+    "finances": "Finances",
+    "notifications": "Notifications"
   },
   "header": {
     "profile": "Profile",
@@ -67,7 +71,8 @@
   },
 
   "login": {
-    "title": "Login",
+    "title": "We Are",
+    "subTitle": "The innovative mobile apps and webs for Schools and Parent to take care our kids",
     "rememberMe": "Remember me",
     "loginBtn": "Log in",
     "yourEmail": "Your Email",
@@ -95,9 +100,39 @@
     "title": "Settings"
   },
   "users": {
-    "title": "Users"
+    "title": "Users",
+    "header": "Staff",
+    "generalInfo": "General Info",
+    "privateInfo": "Private Info",
+    "id": "Id",
+    "familyName": "Family name",
+    "middleName": "Middle name",
+    "gender": "Gender",
+    "birthday": "Birthday",
+    "nationality": "Nationality",
+    "departmentID": "Department",
+    "avatar": "Avatar",
+    "level": "Level",
+    "qualification": "Qualification",
+    "subject": "Subject",
+    "joinDate": "Join Date",
+    "experience": "Experience",
+    "currentAddress": "Current Address",
+    "permanentAddress": "Permanent Address",
+    "phoneNumber": "Phone Number",
+    "email": "Email",
+    "userType": "User Type",
+    "createdAt": "Created At",
+    "updatedAt": "Update At",
+    "status": "Status",
+    "createPage": "Create User",
+    "editPage": "Edit User",
+    "mainClassIds": "Main class",
+    "note": "Note",
+    "contract": "Contract",
+    "userInfo": "User Information",
+    "contractType": "Contract type"
   },
-
   "posts": {
     "title": "Posts"
   },
@@ -130,7 +165,11 @@
     "title": "Successfully!",
     "description": "the update is successful!"
   },
-  "tabs": {},
+  "tabs": {
+    "classes": "Classes",
+    "schools": "Schools",
+    "department": "Department"
+  },
   "statuses": {
     "name": "Name",
     "color": "Color",
@@ -200,5 +239,61 @@
   },
   "text": {
     "or": "OR"
+  },
+  "schools": {
+    "title": "Schools",
+    "header": "Schools",
+    "id": "Id",
+    "schoolName": "School name",
+    "email": "Email",
+    "landlinesNumber": "Landlines Number",
+    "phoneNumber": "Phone number",
+    "address": "Address",
+    "faxNumber": "Fax Number",
+    "isActive": "Status",
+    "ward": "Ward",
+    "city": "City",
+    "international": "International",
+    "logo": "Logo",
+    "status": "Status",
+    "createPage": "Create School",
+    "editPage": "Edit School"
+  },
+  "classes": {
+    "title": "Classes",
+    "header": "Classes",
+    "id": "Id",
+    "name": "Class name",
+    "code": "Code",
+    "subjectName": "Subject Name",
+    "note": "Note",
+    "classTypeID": "Class Type",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "addressRoom": "Address Room",
+    "status": "Status",
+    "createdAt": "Created At",
+    "updatedAt": "Update At",
+    "createPage": "Create Class",
+    "editPage": "Edit Class"
+  },
+  "contractTypes": {
+    "official": "Official",
+    "partTime": "Part Time"
+  },
+  "qualifications": {
+    "university": "University",
+    "colleges": "Colleges"
+  },
+  "departments": {
+    "id": "Id",
+    "code": "Code",
+    "name": "Name",
+    "userManagerID": "User Manager Id",
+    "userLeaderID": "User Leader Id",
+    "userAnotherID": "User Another Id",
+    "status": "Status",
+    "editPage": "Edit Departments",
+    "createPage": "Tạo Bộ Phận"
   }
 }

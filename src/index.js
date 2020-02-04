@@ -8,14 +8,14 @@ import store, { history } from './redux/store';
 import theme from './configs/theme';
 import Routes from './routes';
 import './configs/language';
-import 'react-quill/dist/quill.snow.css';
 import * as serviceWorker from './serviceWorker';
-import AppWrapper from './appStyle';
+import AppWrapper, { GlobalStyle } from './appStyle';
 
 ReactDOM.render(
   <Provider store={store}>
     <ThemeProvider theme={theme}>
       <AppWrapper>
+        <GlobalStyle />
         <ConnectedRouter history={history}>
           <ConfigProvider renderEmpty={() => <Empty />}>
             <Routes />
@@ -24,7 +24,7 @@ ReactDOM.render(
       </AppWrapper>
     </ThemeProvider>
   </Provider>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
 
 // If you want your app to work offline and load faster, you can change

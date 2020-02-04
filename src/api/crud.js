@@ -1,10 +1,10 @@
 import { get, post, put, del, getQueryString } from './utils';
 
 export async function getAllApi(resource, data) {
-  return get(`/${resource}`, data);
+  return get(`/${resource}/list`, data);
 }
 
-export async function getDataByIdApi(resource, id, data) {
+export async function getByIdApi(resource, id, data) {
   return get(`/${resource}/${id}`, data);
 }
 
@@ -31,9 +31,14 @@ export const exportExcel = (resource, query) => {
   const request = new XMLHttpRequest();
   request.open(
     'GET',
-    `${process.env.REACT_APP_SERVER_URL}api/v1/${resource}/exportExcel?${getQueryString(query)}`
+    `${
+      process.env.REACT_APP_SERVER_URL
+    }api/v1/${resource}/exportExcel?${getQueryString(query)}`,
   );
-  request.setRequestHeader('Authorization', localStorage.getItem('sessionToken'));
+  request.setRequestHeader(
+    'Authorization',
+    localStorage.getItem('sessionToken'),
+  );
   request.responseType = 'arraybuffer';
   request.onload = () => {
     if (request.status === 200) {
@@ -41,9 +46,10 @@ export const exportExcel = (resource, query) => {
       const disposition = request.getResponseHeader('Content-Disposition');
       const matches = disposition.substring(
         disposition.indexOf('filename=') + 9,
-        disposition.length
+        disposition.length,
       );
-      const filename = matches != null && matches !== '' ? matches : `${resource}.xlsx`;
+      const filename =
+        matches != null && matches !== '' ? matches : `${resource}.xlsx`;
       // The actual download
       const blob = new Blob([request.response], {
         type: request.getResponseHeader('content-type'),

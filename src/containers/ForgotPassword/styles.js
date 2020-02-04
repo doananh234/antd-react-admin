@@ -5,16 +5,13 @@ const ForgotPasswordStyleWrapper = styled.div`
   height: 100%;
   display: flex;
   justify-content: flex-end;
-  align-items: center;
   position: relative;
-  background-size: cover;
 
   &:before {
     content: '';
     width: 100%;
     height: 100%;
     display: flex;
-    background-color: rgba(0, 0, 0, 0.6);
     position: absolute;
     z-index: 1;
     top: 0;
@@ -36,7 +33,7 @@ const ForgotPasswordStyleWrapper = styled.div`
     flex-direction: column;
     padding: 70px 50px;
     position: relative;
-    background-color: ${({ theme }) => theme.background.content};
+    background-color: transparent;
 
     @media only screen and (max-width: 767px) {
       width: 100%;

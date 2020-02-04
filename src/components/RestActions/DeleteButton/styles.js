@@ -19,5 +19,6 @@ export const ButtonWrapper = styled(Button)`
   }
   .anticon {
     font-size: 20px;
+    color: red;
   }
 `;

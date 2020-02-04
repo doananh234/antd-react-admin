@@ -11,24 +11,55 @@ const ActionGroup = ({
   deleteItem,
   record,
   modelResource,
-}) => (
-  <GroupWrapper {...elementProps}>
-    <Popover
-      content={React.Children.map(children, element =>
-        React.cloneElement(element, {
-          resource: modelResource,
-          gotoEditPage: element.props.gotoEditPage || gotoEditPage,
-          gotoShowPage: element.props.gotoShowPage || gotoShowPage,
-          deleteItem: element.props.deleteItem || deleteItem,
-          record,
-        })
-      )}
-      trigger="hover"
-    >
-      <Icon className="iconSetting" type="setting" />
-    </Popover>
-  </GroupWrapper>
-);
+  icon,
+  placement,
+  hasCustomize,
+}) => {
+  if (hasCustomize) {
+    if (!record.isDefault) {
+      return (
+        <GroupWrapper {...elementProps}>
+          <Popover
+            content={React.Children.map(children, element =>
+              React.cloneElement(element, {
+                resource: modelResource,
+                gotoEditPage: element.props.gotoEditPage || gotoEditPage,
+                gotoShowPage: element.props.gotoShowPage || gotoShowPage,
+                deleteItem: element.props.deleteItem || deleteItem,
+                record,
+                key: element.props.source,
+              }),
+            )}
+            trigger="click"
+            placement={placement}
+          >
+            <Icon className="iconSetting" type={icon} />
+          </Popover>
+        </GroupWrapper>
+      );
+    }
+    return null;
+  }
+  return (
+    <GroupWrapper {...elementProps}>
+      <Popover
+        content={React.Children.map(children, element =>
+          React.cloneElement(element, {
+            resource: modelResource,
+            gotoEditPage: element.props.gotoEditPage || gotoEditPage,
+            gotoShowPage: element.props.gotoShowPage || gotoShowPage,
+            deleteItem: element.props.deleteItem || deleteItem,
+            record,
+          }),
+        )}
+        trigger="hover"
+        placement={placement}
+      >
+        <Icon className="iconSetting" type={icon} />
+      </Popover>
+    </GroupWrapper>
+  );
+};
 
 ActionGroup.propTypes = {
   children: PropTypes.node,
@@ -41,12 +72,17 @@ ActionGroup.propTypes = {
   fixed: PropTypes.string,
   width: PropTypes.number,
   resource: PropTypes.string,
+  icon: PropTypes.string,
+  placement: PropTypes.string,
+  modelResource: PropTypes.string,
+  hasCustomize: PropTypes.bool,
 };
 
 ActionGroup.defaultProps = {
   source: 'actionGroup',
   fixed: 'right',
-  width: 50,
+  width: 100,
+  placement: 'bottomRight',
 };
 
 export default ActionGroup;

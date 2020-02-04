@@ -15,7 +15,7 @@ export const ListWrapper = styled.div`
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    margin-top: 35px;
+    margin-top: 24px;
   }
   .ant-pagination-total-text {
     display: flex;
@@ -37,7 +37,7 @@ export const ListWrapper = styled.div`
     padding: 0px;
     border: 0px;
     border-radius: 5.5px;
-    margin-bottom: 20px;
+    margin-bottom: 0;
   }
   .txtTotal {
     font-weight: normal;
@@ -55,8 +55,7 @@ export const ListWrapper = styled.div`
   }
   .vActions {
     display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
+    margin-bottom: 28px;
   }
   .title {
     font-size: 18px;

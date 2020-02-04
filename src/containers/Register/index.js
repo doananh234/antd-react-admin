@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Form, Icon, Button } from 'antd';
 import { withRouter, Redirect, Link } from 'react-router-dom';
 import i18n from 'i18next';
-import { registerAction } from '../../redux/auth/actions';
+import { register as registerAction } from 'redux/auth/slice';
 import MaterialInput from '../../components/common/MaterialInput';
 import { validateRegex } from '../../utils/validateUtils';
 
@@ -50,7 +50,10 @@ class Register extends Component {
           <FormItem>
             {getFieldDecorator('fullName', {
               rules: [
-                { required: true, message: i18n.t('input.fullName.validateMsg.required') },
+                {
+                  required: true,
+                  message: i18n.t('input.fullName.validateMsg.required'),
+                },
                 {
                   pattern: validateRegex.fullName,
                   message: i18n.t('error.fullname'),
@@ -59,27 +62,40 @@ class Register extends Component {
             })(
               <MaterialInput
                 placeholder={i18n.t('input.fullName.placeholder')}
-                prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              />
+                prefix={
+                  <Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />
+                }
+              />,
             )}
           </FormItem>
           <FormItem>
             {getFieldDecorator('email', {
               rules: [
-                { required: true, message: i18n.t('input.email.validateMsg.required') },
-                { type: 'email', message: i18n.t('input.email.validateMsg.invalid') },
+                {
+                  required: true,
+                  message: i18n.t('input.email.validateMsg.required'),
+                },
+                {
+                  type: 'email',
+                  message: i18n.t('input.email.validateMsg.invalid'),
+                },
               ],
             })(
               <MaterialInput
                 placeholder={i18n.t('input.email.placeholder')}
-                prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              />
+                prefix={
+                  <Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />
+                }
+              />,
             )}
           </FormItem>
           <FormItem>
             {getFieldDecorator('password', {
               rules: [
-                { required: true, message: i18n.t('input.password.validateMsg.required') },
+                {
+                  required: true,
+                  message: i18n.t('input.password.validateMsg.required'),
+                },
                 {
                   pattern: validateRegex.password,
                   message: i18n.t('error.password'),
@@ -88,27 +104,38 @@ class Register extends Component {
             })(
               <MaterialInput
                 placeholder={i18n.t('input.password.placeholder')}
-                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                prefix={
+                  <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
+                }
                 type="password"
-              />
+              />,
             )}
           </FormItem>
           <FormItem hasFeedback>
             {getFieldDecorator('comfirm', {
               rules: [
-                { required: true, message: i18n.t('input.confirmPassword.validateMsg.required') },
+                {
+                  required: true,
+                  message: i18n.t('input.confirmPassword.validateMsg.required'),
+                },
                 { validator: this.compareToFirstPassword },
               ],
             })(
               <MaterialInput
                 placeholder={i18n.t('input.confirmPassword.placeholder')}
-                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                prefix={
+                  <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
+                }
                 type="password"
-              />
+              />,
             )}
           </FormItem>
           <div className="action-div">
-            <Button onClick={this.handleSubmit} type="primary" className="login-form-button">
+            <Button
+              onClick={this.handleSubmit}
+              type="primary"
+              className="login-form-button"
+            >
               {i18n.t('button.submit')}
             </Button>
             <div style={{ marginTop: 30 }}>
@@ -135,6 +162,6 @@ export default withRouter(
     }),
     dispatch => ({
       register: params => dispatch(registerAction(params)),
-    })
-  )(Form.create()(Register))
+    }),
+  )(Form.create()(Register)),
 );

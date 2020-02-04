@@ -3,31 +3,24 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { replace } from 'connected-react-router';
 import Modal from '../../components/common/Modal';
+import UserTypes from '../../pages/UserTypes';
 
 import Users from '../../pages/Users';
-import Customers from '../../pages/Customers';
 
 const modalRoutes = [
   {
-    path: '/customers',
+    path: '/userTypes',
     routes: [
       {
         path: '/create',
-        component: Customers.Create,
-        modalOptions: {
-          width: 755,
-        },
+        component: UserTypes.Create,
       },
       {
         path: '/edit',
-        component: Customers.Edit,
-        modalOptions: {
-          width: 755,
-        },
+        component: UserTypes.Edit,
       },
     ],
   },
-
   {
     path: '/users',
     routes: [
@@ -35,14 +28,14 @@ const modalRoutes = [
         path: '/create',
         component: Users.Create,
         modalOptions: {
-          width: 755,
+          width: 480,
         },
       },
       {
         path: '/edit',
         component: Users.Edit,
         modalOptions: {
-          width: 755,
+          width: 480,
         },
       },
     ],
@@ -51,9 +44,12 @@ const modalRoutes = [
 
 const getModalRoute = currentModal => {
   const modalRoute =
-    currentModal && modalRoutes.find(route => currentModal.search(route.path) > -1);
+    currentModal &&
+    modalRoutes.find(route => currentModal.search(route.path) > -1);
   if (modalRoute) {
-    return modalRoute.routes.find(route => currentModal.indexOf(route.path) > -1);
+    return modalRoute.routes.find(
+      route => currentModal.indexOf(route.path) > -1,
+    );
   }
   return modalRoute;
 };
@@ -69,14 +65,15 @@ class ModalRoute extends Component {
 
   closeModal = () => {
     const { replaceRoute, location } = this.props;
-    replaceRoute(location.pathname);
+    replaceRoute(`${location.pathname}${location.search}`);
   };
 
   render() {
     const { location } = this.props;
     const modelRoute = location.hash.replace('#', '/');
     this.modal = getModalRoute(modelRoute) || this.modal;
-    const modalOptions = this.modal && this.modal.modalOptions ? this.modal.modalOptions : {};
+    const modalOptions =
+      this.modal && this.modal.modalOptions ? this.modal.modalOptions : {};
     return (
       <Modal
         {...modalOptions}
@@ -113,7 +110,4 @@ const mapDispatchToProps = dispatch => ({
   replaceRoute: data => dispatch(replace(data)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ModalRoute);
+export default connect(mapStateToProps, mapDispatchToProps)(ModalRoute);

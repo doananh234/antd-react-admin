@@ -5,7 +5,12 @@ import FormItem from '../../form/FormItem';
 import { getRecordData } from '../../../utils/tools';
 import { RestInputContext } from '../RestInputContext';
 
-const RestInputItem = ({ ContentComponent, isReference, children, ...props }) => (
+const RestInputItem = ({
+  ContentComponent,
+  isReference,
+  children,
+  ...props
+}) => (
   <RestInputContext.Consumer>
     {({ record, form, handleSubmit }) =>
       isReference ? (
@@ -16,11 +21,18 @@ const RestInputItem = ({ ContentComponent, isReference, children, ...props }) =>
         <FormItem
           {...props}
           form={form}
-          defaultValue={props.defaultValue || getRecordData(record, props.source)}
+          defaultValue={
+            props.defaultValue || getRecordData(record, props.source)
+          }
         >
-          <ContentComponent {...props} record={record} handleSubmit={handleSubmit} />
+          <ContentComponent
+            {...props}
+            record={record}
+            handleSubmit={handleSubmit}
+          />
         </FormItem>
       )
+    // eslint-disable-next-line react/jsx-curly-newline
     }
   </RestInputContext.Consumer>
 );

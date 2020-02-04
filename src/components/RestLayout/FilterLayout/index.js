@@ -28,7 +28,7 @@ class FormComponent extends Component {
         record: resourceFilter.filter || {},
         retrieveList,
         required: false,
-      })
+      }),
     );
     return (
       <Box>
@@ -38,12 +38,19 @@ class FormComponent extends Component {
             <div className="filterActions">
               <Row gutter={10}>
                 <Col span={12}>
-                  <Button type="primary" onClick={this.onFilter} className="filterButton">
+                  <Button
+                    type="primary"
+                    onClick={this.onFilter}
+                    className="filterButton"
+                  >
                     {I18n.t('button.filter')}
                   </Button>
                 </Col>
                 <Col span={12}>
-                  <Button onClick={this.onClear} className="filterButton clearButton">
+                  <Button
+                    onClick={this.onClear}
+                    className="filterButton clearButton"
+                  >
                     {I18n.t('button.clearFilter')}
                   </Button>
                 </Col>

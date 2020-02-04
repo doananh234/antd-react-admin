@@ -40,7 +40,4 @@ Home.propTypes = {};
 const mapStateToProps = () => ({});
 
 const mapDispatchToProps = () => ({});
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

@@ -1,14 +1,17 @@
+/* eslint-disable react/jsx-closing-tag-location */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import I18n from 'i18next';
 import { Menu, Dropdown, Avatar, PageHeader } from 'antd';
 import { goBack } from 'connected-react-router';
-import { logout as logoutAction } from '../../redux/auth/actions';
+import { logout as logoutAction } from '../../redux/auth/slice';
 import HeaderWrapper from './styles';
 
 const HeaderWithoutSideBar = ({ logout, back, title }) => {
-  const [locale, setLocale] = useState(localStorage.getItem('locale') || I18n.language);
+  const [locale, setLocale] = useState(
+    localStorage.getItem('locale') || I18n.language,
+  );
   const profileMenu = [
     {
       key: 'profile',
@@ -50,19 +53,17 @@ const HeaderWithoutSideBar = ({ logout, back, title }) => {
           EN
         </div>
         <Dropdown
-          overlay={(
-            <Menu style={{ minWidth: '120px' }}>
-              {profileMenu.map(menu => (
-                <Menu.Item key={menu.key}>
-                  <a href={menu.url}>{I18n.t(menu.text)}</a>
-                </Menu.Item>
-              ))}
-              <Menu.Divider />
-              <Menu.Item onClick={logout} key="logout">
-                {I18n.t('header.logout')}
+          overlay=<Menu style={{ minWidth: '120px' }}>
+            {profileMenu.map(menu => (
+              <Menu.Item key={menu.key}>
+                <a href={menu.url}>{I18n.t(menu.text)}</a>
               </Menu.Item>
-            </Menu>
-)}
+            ))}
+            <Menu.Divider />
+            <Menu.Item onClick={logout} key="logout">
+              {I18n.t('header.logout')}
+            </Menu.Item>
+          </Menu>
           trigger={['click']}
         >
           <Avatar size="large" icon="user" />
@@ -77,10 +78,7 @@ HeaderWithoutSideBar.propTypes = {
   title: PropTypes.string,
 };
 
-export default connect(
-  null,
-  dispatch => ({
-    logout: () => dispatch(logoutAction()),
-    back: data => dispatch(goBack(data)),
-  })
-)(HeaderWithoutSideBar);
+export default connect(null, dispatch => ({
+  logout: () => dispatch(logoutAction()),
+  back: data => dispatch(goBack(data)),
+}))(HeaderWithoutSideBar);

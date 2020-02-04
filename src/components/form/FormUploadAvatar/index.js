@@ -1,48 +1,64 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Upload, Avatar, Progress, Form, Input, Icon, notification } from 'antd';
+import { get } from 'lodash';
+import {
+  Upload,
+  Avatar,
+  Progress,
+  Form,
+  Input,
+  Icon,
+  notification,
+} from 'antd';
+import I18n from 'i18next';
 import AvatarCropperModal from './AvatarCropperModal';
 import UploadImageWrapper from './style';
-import { getRecordData } from '../../../utils/tools';
 import { del } from '../../../api/utils';
 import user from '../../../assets/images/user.png';
 import { getUrl, uploadMedia } from '../../../api/uploadMedia';
 
-const uploadUrl = `${process.env.REACT_APP_SERVER_URL}/uploadFile`;
+const uploadUrl = `${process.env.REACT_APP_SERVER_URL}/api/v1/upload`;
 const FormItem = Form.Item;
 
 // const confirm = Modal.confirm;
 
 class UploadImage extends Component {
   static getDerivedStateFromProps = (nextProps, prevState) => {
-    if (getRecordData(nextProps.record, nextProps.source) !== prevState.prevRecordImgSource) {
+    if (
+      get(nextProps.record, nextProps.source) !== prevState.prevRecordImgSource
+    ) {
       return {
-        prevRecordImgSource: getRecordData(nextProps.record, nextProps.source),
-        imgDisplay: getRecordData(nextProps.record, nextProps.source),
+        prevRecordImgSource: get(nextProps.record, nextProps.source),
+        imgDisplay:
+          get(nextProps.record, nextProps.source) || nextProps.defaultValue,
       };
     }
     return {};
   };
 
-  state = {
-    file: null,
-    prevRecordImgSource: getRecordData(this.props.record, this.props.source) || undefined,
-    imgDisplay: getRecordData(this.props.record, this.props.source) || undefined,
-    loading: false,
-    loadingProgress: 0,
-    isShowCropperModal: false,
-    hasErr: false,
-  };
-
-  componentDidMount() {
-    window.addEventListener('beforeunload', this.onUnload);
-    // this.onLoad();
+  constructor(props) {
+    super(props);
+    this.state = {
+      file: null,
+      // eslint-disable-next-line
+      prevRecordImgSource:
+        get(this.props.record, this.props.source) || undefined,
+      imgDisplay: get(this.props.record, this.props.source) || undefined,
+      loading: false,
+      loadingProgress: 0,
+      isShowCropperModal: false,
+      hasErr: false,
+    };
   }
 
-  componentWillUnmount() {
-    window.removeEventListener('beforeunload', this.onUnload);
-  }
+  // componentDidMount() {
+  //   window.addEventListener('beforeunload', this.onUnload);
+  //   // this.onLoad();
+  // }
+
+  // componentWillUnmount() {
+  //   window.removeEventListener('beforeunload', this.onUnload);
+  // }
 
   // onLoad = () => {
   //   const getUrl = localStorage.getItem('url');
@@ -54,6 +70,7 @@ class UploadImage extends Component {
   onUnload = e => {
     if (this.state.imgDisplay && this.props.form) {
       localStorage.setItem('url', this.state.imgDisplay);
+      // eslint-disable-next-line
       e.returnValue = '';
     }
   };
@@ -66,6 +83,7 @@ class UploadImage extends Component {
 
   onChangePreview = async ({ croppedFile }) => {
     try {
+      const { onChange, source, form } = this.props;
       if (this.state.imgDisplay) {
         this.onRemove(this.state.imgDisplay);
       }
@@ -75,17 +93,25 @@ class UploadImage extends Component {
       });
 
       const responseS3 = await getUrl(croppedFile.name, croppedFile.type);
-      await uploadMedia(responseS3.uploadUrl, croppedFile);
+      const response = await uploadMedia(responseS3.uploadUrl, croppedFile);
       this.setState({
-        imgDisplay: responseS3.url,
+        imgDisplay: response.url,
         loading: false,
         hasErr: false,
       });
+      onChange && onChange(source, response.url);
+      form &&
+        form.setFieldsValue({
+          [source]: response.url,
+        });
+      return response;
     } catch (error) {
       notification.error({
         title: 'Error',
         message:
-          error && error.message ? error.message : 'Server Internall Error. Please try later !!!!',
+          error && error.message
+            ? error.message
+            : 'Server Internall Error. Please try later !!!!',
         position: 'tr',
         autoDismiss: 15,
       });
@@ -96,56 +122,8 @@ class UploadImage extends Component {
         hasErr: true,
         loadingProgress: 0,
       });
+      return error;
     }
-    // const xhr = new XMLHttpRequest();
-    // const fd = new FormData();
-    // xhr.open('POST', uploadUrl);
-
-    // xhr.upload.addEventListener('progress', e => {
-    //   this.setState({
-    //     loadingProgress: Math.round((e.loaded * 100) / e.total),
-    //   });
-    // });
-
-    // xhr.onreadystatechange = () => {
-    //   if (xhr.readyState === 4 && xhr.status === 200) {
-    //     // File uploaded successfully
-    //     const response = JSON.parse(xhr.responseText);
-    //     if (response.Location) {
-    //       this.setState({
-    //         imgDisplay: response.Location,
-    //         loading: false,
-    //         hasErr: false,
-    //       });
-    //       this.props.form
-    //         ? this.props.form.setFieldsValue({ [this.props.source]: response.Location })
-    //         : this.props.onUploadImage(response.Location);
-    //     }
-    //   }
-    //   if (xhr.readyState === 4 && xhr.status > 200) {
-    //     // File uploaded fail
-    //     const response = JSON.parse(xhr.responseText);
-    //     this.props.showErrorMsg(response);
-    //     notification.error({
-    //       title: 'Error',
-    //       message:
-    //         response && response.message
-    //           ? response.message
-    //           : 'Server Internall Error. Please try later !!!!',
-    //       position: 'tr',
-    //       autoDismiss: 15,
-    //     });
-    //     this.setState({
-    //       file: null,
-    //       imgDisplay: null,
-    //       loading: false,
-    //       hasErr: true,
-    //       loadingProgress: 0,
-    //     });
-    //   }
-    // };
-    // fd.append('file', croppedFile, croppedFile.name);
-    // xhr.send(fd);
   };
 
   onRemove = url => {
@@ -160,7 +138,7 @@ class UploadImage extends Component {
   };
 
   renderImage() {
-    const { style, defaultText, defaultIcon } = this.props;
+    const { style, defaultText, defaultIcon, defaultValue } = this.props;
     const { loading, imgDisplay, hasErr } = this.state;
     if (loading) {
       return (
@@ -172,7 +150,11 @@ class UploadImage extends Component {
     }
     if (!imgDisplay) {
       return (
-        <Avatar icon={defaultIcon} src={!defaultText && user} style={style}>
+        <Avatar
+          icon={defaultIcon}
+          src={(!defaultText && user) || defaultValue}
+          style={style}
+        >
           <span className="default-image">{defaultText}</span>
         </Avatar>
       );
@@ -184,14 +166,28 @@ class UploadImage extends Component {
 
     return (
       <Avatar src={imgDisplay} style={style}>
-        <Progress percent={this.state.loadingProgress} showInfo={false} status="exception" />
+        <Progress
+          percent={this.state.loadingProgress}
+          showInfo={false}
+          status="exception"
+        />
         <div className="ant-upload-text">Upload Failed</div>
       </Avatar>
     );
   }
 
   render() {
-    const { form, source, style, className } = this.props;
+    const {
+      hasCrop,
+      form,
+      source,
+      style,
+      className,
+      label,
+      defaultValue,
+      cropDimension,
+      header,
+    } = this.props;
     const { imgDisplay } = this.state;
     const props = {
       showUploadList: false,
@@ -199,18 +195,21 @@ class UploadImage extends Component {
       beforeUpload: file => {
         this.setState(() => ({
           file,
-          isShowCropperModal: true,
+          isShowCropperModal: hasCrop,
         }));
+        if (!hasCrop) {
+          this.onChangePreview({ croppedFile: file });
+        }
         return false;
       },
     };
 
     return (
-      <UploadImageWrapper className={className} style={style}>
-        <FormItem>
+      <UploadImageWrapper className={className}>
+        <FormItem label={label}>
           {form &&
             form.getFieldDecorator(source, {
-              initialValue: imgDisplay,
+              initialValue: imgDisplay || defaultValue,
             })(<Input style={{ display: 'none' }} />)}
           <Upload {...props} accept="image/*">
             <div className="image-uploader">
@@ -221,12 +220,14 @@ class UploadImage extends Component {
             </div>
           </Upload>
           <AvatarCropperModal
+            cropDimension={cropDimension}
             isShowModal={this.state.isShowCropperModal}
             onHideModal={this.onHideCropperModal}
             onChangePreview={this.onChangePreview}
             image={this.state.file}
           />
         </FormItem>
+        {header && <div className="header">{I18n.t(header)}</div>}
       </UploadImageWrapper>
     );
   }
@@ -242,9 +243,16 @@ UploadImage.propTypes = {
   defaultIcon: PropTypes.string,
   onUploadImage: PropTypes.func,
   className: PropTypes.string,
+  cropDimension: PropTypes.object,
+  hasCrop: PropTypes.bool,
+  label: PropTypes.string,
+  defaultValue: PropTypes.any,
+  onChange: PropTypes.func,
+  header: PropTypes.string,
 };
 
-export default connect(
-  () => ({}),
-  {}
-)(UploadImage);
+UploadImage.defaultProps = {
+  hasCrop: true,
+};
+
+export default UploadImage;

@@ -20,6 +20,7 @@ const ButtonRow = props => {
         </ButtonWrapper>
         {!showModal && <span style={{ width: 20 }} />}
         <ButtonWrapper
+          className="btn-back"
           onClick={() => {
             onBack();
           }}

@@ -10,21 +10,19 @@ import { ReactComponent as Users } from '../../../assets/icons/ic-user.svg';
 import { ReactComponent as Bookings } from '../../../assets/icons/group-3.svg';
 import { ReactComponent as Chekins } from '../../../assets/icons/ic-user-checkin.svg';
 
-import { ReactComponent as Logo } from '../../../assets/images/logo.svg';
-
 const SVG_ICONS = {
-  'team': ICCustomer,
+  team: ICCustomer,
   'ic-home': Dashboard,
   'ic-setting': Settings,
   'ic-date': Reservations,
   'ic-payment': Transactions,
-  'user': Users,
+  user: Users,
   'ic-seat': Bookings,
-  'check': Chekins,
+  check: Chekins,
 };
 
 function SVGIcon({ type, className, ...props }) {
-  const Icon = SVG_ICONS[type] || Logo;
+  const Icon = SVG_ICONS[type] || Dashboard;
   return (
     <SVGIconWrapper {...props} className={`svgIcon ${className || ''}`}>
       <Icon />

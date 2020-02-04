@@ -1,10 +1,15 @@
 {
   "parser": "babel-eslint",
-  "extends": ["airbnb", "prettier"],
+  "extends": ["eslint:recommended", "airbnb", "prettier"],
   "env": {
     "browser": true
   },
-  "plugins": ["react"],
+  "plugins": ["react", "react-hooks"],
+  "settings": {
+    "import/resolver": {
+      "node": {} // placed above other resolver configs
+    }
+  },
   "globals": {
     "describe": true,
     "it": true,
@@ -27,8 +32,25 @@
     "react/forbid-prop-types": 0,
     "no-mixed-operators": [
       "error",
-      { "groups": [["&", "|", "^", "~", "<<", ">>", ">>>"], ["&&", "||"]] }
+      {
+        "groups": [
+          ["&", "|", "^", "~", "<<", ">>", ">>>"],
+          ["&&", "||"]
+        ]
+      }
     ],
-    "no-unused-expressions": ["error", { "allowShortCircuit": true, "allowTernary": true }]
+    "no-unused-expressions": [
+      "error",
+      { "allowShortCircuit": true, "allowTernary": true }
+    ],
+    "react/jsx-props-no-spreading": 0,
+    "jsx-a11y/control-has-associated-label": 0,
+    "react/no-danger": 0,
+    "import/no-unresolved": 0,
+    "no-shadow": 0,
+    "no-param-reassign": [
+      "error",
+      { "props": true, "ignorePropertyModificationsFor": ["state"] }
+    ]
   }
 }

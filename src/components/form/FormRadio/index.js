@@ -37,9 +37,9 @@ const FormRadio = props => {
               <Radio key={data[valuePops]} value={data[valuePops]}>
                 {data[titleProps]}
               </Radio>
-            )
+            ),
           )}
-        </RadioGroup>
+        </RadioGroup>,
       )}
     </FormItem>
   );

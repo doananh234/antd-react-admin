@@ -6,7 +6,7 @@ const PrivateLayoutWrapper = styled.div`
   }
   .mainView {
     height: 100vh;
-    margin-left: 80px;
+    margin-left: 64px;
     overflow: hidden;
     transition: all 0.3s ease 0s;
     background: ${({ theme }) => theme.background.container};
@@ -14,7 +14,7 @@ const PrivateLayoutWrapper = styled.div`
   .mainWithoutSidebar {
     margin-left: 0px;
     .content {
-      padding:0px;
+      padding: 0px;
     }
     .ant-layout {
       height: 100%;
@@ -27,7 +27,7 @@ const PrivateLayoutWrapper = styled.div`
     flex-direction: column;
   }
   .content {
-    padding: 34px 20px;
+    padding: 36px 24px;
     flex: 1;
     ${'' /* @media only screen and (max-width: 430px) {
       padding-top: 80px;
@@ -70,8 +70,9 @@ const PrivateLayoutWrapper = styled.div`
     height: 60px;
     display: flex;
     align-items: center;
-    padding-left: 25px;
     position: relative;
+    align-items: center;
+    justify-content: center;
     img {
       height: 40px;
       width: auto;
@@ -97,12 +98,29 @@ const PrivateLayoutWrapper = styled.div`
     }
     .ant-menu-item {
       color: ${({ theme }) => theme.text.secondary};
+      display: flex;
+      align-items: center;
+      height: 56px;
+      & > span {
+        padding-left: 30px;
+      }
       &.ant-menu-item-selected {
-        color: ${({ theme }) => theme.text.highlight};
+        background: ${({ theme }) => theme.sidebar.activeBG};
+        color: ${({ theme }) => theme.sidebar.activeText};
         & > span {
-          color: ${({ theme }) => theme.text.highlight};
+          color: ${({ theme }) => theme.sidebar.activeText};
           font-weight: ${({ theme }) => theme.fontWeight.bold};
         }
+
+        .anticon {
+          color: ${({ theme }) => theme.sidebar.activeText};
+        }
+      }
+      .anticon {
+        font-size: 24px;
+        width: 64px;
+        left: 0px;
+        position: absolute;
       }
     }
   }
@@ -166,7 +184,7 @@ const PrivateLayoutWrapper = styled.div`
     border-right: 1px solid ${({ theme }) => theme.background.content};
     .ant-menu {
       background: ${({ theme }) => theme.background.content};
-      border-right:1px solid ${({ theme }) => theme.background.content};
+      border-right: 1px solid ${({ theme }) => theme.background.content};
     }
   }
 
@@ -263,12 +281,11 @@ const PrivateLayoutWrapper = styled.div`
     width: 6px;
     height: 6px;
     background: ${({ theme }) => theme.scrollbar.track} !important;
-  }import default from '../../redux/config/sagas';
+  }
 
   .ant-table-tbody {
     background: ${({ theme }) => theme.background.content};
   }
-
 `;
 
 export default PrivateLayoutWrapper;

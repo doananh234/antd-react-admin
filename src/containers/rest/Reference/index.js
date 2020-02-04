@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { retrieveReference } from '../../../redux/referenceData/actions';
+import { retrieveReference } from '../../../redux/referenceData/slice';
 import { getRecordData } from '../../../utils/tools';
-import { getReferenceData, getReferenceLoading } from '../../../redux/referenceData/selectors';
+import {
+  getReferenceData,
+  getReferenceLoading,
+} from '../../../redux/referenceData/selectors';
 
 class RestReference extends Component {
   componentDidMount() {
@@ -39,7 +42,7 @@ class RestReference extends Component {
             resource,
             retrieveList,
             loading,
-          })
+          }),
         )}
       </Link>
     ) : (
@@ -49,7 +52,7 @@ class RestReference extends Component {
           resource,
           retrieveList,
           loading,
-        })
+        }),
       )
     );
   }
@@ -82,7 +85,4 @@ const mapDispatchToProps = (dispatch, props) => ({
     dispatch(retrieveReference(props.resource, id ? [id] : [], props.mappedBy)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RestReference);
+export default connect(mapStateToProps, mapDispatchToProps)(RestReference);

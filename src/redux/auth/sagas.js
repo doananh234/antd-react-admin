@@ -1,22 +1,6 @@
 import { takeEvery, put, call } from 'redux-saga/effects';
 import { push } from 'connected-react-router';
-import { apiWrapper } from '../../utils/reduxUtils';
-import {
-  AuthTypes,
-  loginSuccessAction,
-  getCurentUser,
-  loginFailureAction,
-  updateUserSuccess,
-  updateUserFailure,
-  getCurentUserFailure,
-  getCurentUserSuccess,
-  forgotPasswordFailure,
-  forgotPasswordSuccess,
-  resetPasswordSuccess,
-  resetPasswordFailure,
-  registerSuccessAction,
-  registerFailureAction,
-} from './actions';
+import { apiWrapper } from 'utils/reduxUtils';
 import {
   loginApi,
   deleteInstallationApi,
@@ -27,9 +11,31 @@ import {
   forgotPasswordApi,
   registerApi,
   registerWithTokenApi,
-} from '../../api/user';
+} from 'api/user';
+import {
+  loginSuccess,
+  loginFail,
+  getCurentUserSuccess,
+  getCurentUserFailure,
+  updateUserSuccess,
+  updateUserFailure,
+  forgotPasswordSuccess,
+  forgotPasswordFailure,
+  resetPasswordSuccess,
+  resetPasswordFailure,
+  updateUser,
+  forgotPassword,
+  getCurentUser,
+  login,
+  logout,
+  resetPassword,
+  register,
+  registerWithToken,
+  registerFail,
+  registerSuccess,
+} from './slice';
 
-function* loginSaga({ params }) {
+function* loginSaga({ payload }) {
   try {
     const response = yield call(
       apiWrapper,
@@ -38,17 +44,17 @@ function* loginSaga({ params }) {
         isShowSuccessNoti: false,
       },
       loginApi,
-      params
+      payload,
     );
-    if (response.token) {
-      localStorage.setItem('sessionToken', response.token);
-      yield put(loginSuccessAction(response));
+    if (response.data) {
+      localStorage.setItem('sessionToken', response.data);
+      yield put(loginSuccess(response));
       yield put(getCurentUser());
     } else {
-      yield put(loginFailureAction(response));
+      yield put(loginFail(response));
     }
   } catch (error) {
-    yield put(loginFailureAction(error));
+    yield put(loginFail(error));
   }
 }
 
@@ -64,7 +70,7 @@ function* logoutSaga() {
         isShowLoading: false,
         isShowSuccessNoti: false,
       },
-      logoutApi
+      logoutApi,
     );
     if (installationId) {
       yield call(
@@ -74,7 +80,7 @@ function* logoutSaga() {
           isShowLoading: false,
           isShowSuccessNoti: false,
         },
-        installationId
+        installationId,
       );
       localStorage.removeItem('installationId');
     }
@@ -94,7 +100,7 @@ function* getCurrentUserSaga() {
       getCurrentUserApi,
       {
         includes: ['role'],
-      }
+      },
     );
     if (response.id) {
       localStorage.setItem('fullName', response.fullName);
@@ -117,7 +123,7 @@ function* updateUserSaga({ params }) {
         isShowSuccessNoti: true,
       },
       updateCurrentUserApi,
-      params
+      params,
     );
     if (response.id) {
       yield put(updateUserSuccess(response));
@@ -138,7 +144,7 @@ function* forgotPasswordSaga({ email }) {
         isShowSuccessNoti: true,
       },
       forgotPasswordApi,
-      { email }
+      { email },
     );
     yield put(forgotPasswordSuccess(response));
   } catch (error) {
@@ -158,7 +164,7 @@ function* resetPasswordSaga({ password, resetPasswordToken }) {
       {
         password,
         resetPasswordToken,
-      }
+      },
     );
     yield put(resetPasswordSuccess(response));
     yield put(push('/login'));
@@ -176,17 +182,17 @@ function* registerSaga({ params }) {
         isShowSuccessNoti: false,
       },
       registerApi,
-      params
+      params,
     );
     if (response.token) {
       localStorage.setItem('sessionToken', response.token);
-      yield put(registerSuccessAction(response));
+      yield put(registerSuccess(response));
       yield put(getCurentUser());
     } else {
-      yield put(registerFailureAction(response));
+      yield put(registerFail(response));
     }
   } catch (error) {
-    yield put(registerFailureAction(error));
+    yield put(registerFail(error));
   }
 }
 
@@ -199,27 +205,27 @@ function* registerWithTokenSaga({ params }) {
         isShowSuccessNoti: false,
       },
       registerWithTokenApi,
-      params
+      params,
     );
     if (response.token) {
       localStorage.setItem('sessionToken', response.token);
-      yield put(registerSuccessAction(response));
+      yield put(registerSuccess(response));
       yield put(getCurentUser());
     } else {
-      yield put(registerFailureAction(response));
+      yield put(registerFail(response));
     }
   } catch (error) {
-    yield put(registerFailureAction(error));
+    yield put(registerFail(error));
   }
 }
 
 export default [
-  takeEvery(AuthTypes.LOGIN, loginSaga),
-  takeEvery(AuthTypes.LOGOUT, logoutSaga),
-  takeEvery(AuthTypes.GET_CURRENT_USER, getCurrentUserSaga),
-  takeEvery(AuthTypes.UPDATE_USER, updateUserSaga),
-  takeEvery(AuthTypes.FORGOT_PASSWORD, forgotPasswordSaga),
-  takeEvery(AuthTypes.RESET_PASSWORD, resetPasswordSaga),
-  takeEvery(AuthTypes.REGISTER, registerSaga),
-  takeEvery(AuthTypes.REGISTER_WITH_TOKEN, registerWithTokenSaga),
+  takeEvery([login.type], loginSaga),
+  takeEvery([logout.type], logoutSaga),
+  takeEvery([getCurentUser.type], getCurrentUserSaga),
+  takeEvery([updateUser.type], updateUserSaga),
+  takeEvery([forgotPassword.type], forgotPasswordSaga),
+  takeEvery([resetPassword.type], resetPasswordSaga),
+  takeEvery([register.type], registerSaga),
+  takeEvery([registerWithToken.type], registerWithTokenSaga),
 ];

@@ -1,13 +1,12 @@
 import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
-import { auth } from './auth/reducer';
-import modal from './modal/reducer';
+import auth from './auth/slice';
+import modal from './modal/slice';
 // import here
-import customers from './customers/reducer';
-
-import users from './users/reducer';
-import reference from './referenceData/reducer';
-import config from './config/reducer';
+import userTypes from './userTypes/slice';
+import users from './users/slice';
+import reference from './referenceData/slice';
+import config from './config/slice';
 
 export default history =>
   combineReducers({
@@ -18,5 +17,5 @@ export default history =>
     reference,
     users,
     // add reducer here
-    customers,
+    userTypes,
   });

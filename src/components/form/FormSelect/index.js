@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import i18n from 'i18next';
-import { Select } from 'antd';
+import { Select, Spin } from 'antd';
+import { Waypoint } from 'react-waypoint';
 import { map, isObject } from 'lodash';
 import FormItem from '../FormItem';
 import { getRecordData, onSearch as onChangeSearch } from '../../../utils/tools';
-import LoadingComponent from '../../common/Loading';
 import { SelectWrapper } from './style';
 
 const { Option } = Select;
@@ -16,10 +16,10 @@ class FormSelect extends Component {
         isObject(option.props.children)
           ? getRecordData(
               option.props.children.props && option.props.children.props.record,
-              this.props.searchKey
+              this.props.searchKey,
             )
           : option.props.children,
-        inputValue
+        inputValue,
       )
     ) {
       return option.props.value;
@@ -45,12 +45,13 @@ class FormSelect extends Component {
       loading,
       selectProps,
       formatText,
-      // onEnter,
+      onEnter,
     } = this.props;
     return (
       <FormItem
         ruleType={Array.isArray(defaultValue) ? 'array' : 'string'}
         {...this.props}
+        placeholder={i18n.t(placeholder)}
         header={i18n.t(header)}
         required={required}
         defaultValue={defaultValue}
@@ -86,11 +87,15 @@ class FormSelect extends Component {
               >
                 {formatText(titleProp ? getRecordData(data, titleProp) : data, data)}
               </Option>
-            )
+            ),
           )}
           <Option key="loading" disabled value="loadingTracking">
-            {loading && <LoadingComponent />}
-            {/* <WayPoint onEnter={onEnter} /> */}
+            <Waypoint onEnter={onEnter} />
+            {loading && (
+              <div className="loading">
+                <Spin />
+              </div>
+            )}
           </Option>
         </SelectWrapper>
       </FormItem>
@@ -122,7 +127,7 @@ FormSelect.propTypes = {
   selectProps: PropTypes.object,
   formatText: PropTypes.func,
   record: PropTypes.object,
-  // onEnter: PropTypes.func,
+  onEnter: PropTypes.func,
 };
 
 FormSelect.defaultProps = {
@@ -134,6 +139,8 @@ FormSelect.defaultProps = {
   onSearch: () => {},
   formatText: data => data,
   selectProps: {},
+  valueProp: 'value',
+  titleProp: 'text',
 };
 
 export default FormSelect;

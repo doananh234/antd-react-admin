@@ -12,4 +12,8 @@ export const InputAdditionWrapper = styled.div`
     flex: 1;
     margin-right: 10px;
   }
+  .btnAdd {
+    margin-top: 20px;
+    width: 100%;
+  }
 `;

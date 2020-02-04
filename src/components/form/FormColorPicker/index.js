@@ -19,8 +19,8 @@ class RestColorPicker extends React.Component {
           placement="bottom"
           trigger="click"
         >
-          <Button block style={{ textAlign: 'left', color: colorStr || '#ddd' }}>
-            <div>{colorStr || '#ddd'}</div>
+          <Button block style={{ textAlign: 'left', color: colorStr || '#000' }}>
+            <div>{colorStr || '#000'}</div>
           </Button>
         </Popover>
       </FormItemUI>

@@ -22,7 +22,7 @@ class RestListLayout extends Component {
           {
             [item.props.source]: !record[item.props.source],
           },
-          true
+          true,
         );
 
       default:
@@ -43,7 +43,9 @@ class RestListLayout extends Component {
     const { children } = this.props;
     const actionGroup =
       Array.isArray(children) &&
-      children.find(element => element && element.props.source === 'actionGroup');
+      children.find(
+        element => element && element.props.source === 'actionGroup',
+      );
     const actions =
       Array.isArray(children) && actionGroup
         ? React.Children.map(actionGroup.props.children, item =>
@@ -53,7 +55,7 @@ class RestListLayout extends Component {
               list: true,
               onChange: () => this.onChangeRecord(record, item),
               ...getAction(this.props, item),
-            })
+            }),
           )
         : [];
     return Array.isArray(children) ? (

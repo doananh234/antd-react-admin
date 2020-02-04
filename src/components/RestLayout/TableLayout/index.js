@@ -14,22 +14,28 @@ class RestTableLayout extends Component {
     const { resourceFilter, retrieveList } = this.props;
     const formatFilter = {};
     const formatSort =
-      sorter && sorter.field ? `${sorter.order === 'descend' ? '-' : ''}${sorter.field}` : null;
+      sorter && sorter.field && sorter.order
+        ? `${sorter.order === 'descend' ? '-' : ''}${sorter.field}`
+        : null;
 
     Object.keys(filters).forEach(filter => {
-      const filterKey = filter.substring(0, filter.indexOf('-col'));
-      const $in = filters[filter].filter(data => typeof data === 'string');
-      const searchFilter = filters[filter].find(data => typeof data !== 'string');
-      update(formatFilter, filterKey, () => ({}));
+      const filterKey = filter;
+      const $in = Array.isArray(filters[filter])
+        ? filters[filter].filter(data => typeof data !== 'object')
+        : filters[filter];
+
+      const searchFilter = Array.isArray(filters[filter])
+        ? filters[filter].find(data => typeof data === 'object')
+        : '';
+
+      update(formatFilter, filterKey, () => undefined);
       if ($in.length) {
-        update(formatFilter, filterKey, () => ({ $in }));
+        update(formatFilter, filterKey, () => $in);
       }
       if (searchFilter) {
-        update(formatFilter, filterKey, () =>
-          $in.length > 0 ? { $in, ...searchFilter } : { ...searchFilter }
-        );
+        update(formatFilter, filterKey, () => searchFilter);
       } else {
-        update(formatFilter, filterKey, () => ({ $in }));
+        update(formatFilter, filterKey, () => $in);
       }
     });
     retrieveList({
@@ -46,7 +52,7 @@ class RestTableLayout extends Component {
       {
         [item.props.source]: value,
       },
-      true
+      true,
     );
   };
 
@@ -81,7 +87,8 @@ class RestTableLayout extends Component {
     return hasSearch
       ? {
           filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => {
-            const filters = selectedKeys.filter(data => typeof data === 'string');
+            const filters =
+              selectedKeys?.filter?.(data => typeof data === 'string') || [];
             return (
               <div style={{ padding: 8 }}>
                 <Input
@@ -91,7 +98,9 @@ class RestTableLayout extends Component {
                   placeholder={`Search ${I18n.t(header)}`}
                   onChange={e =>
                     setSelectedKeys(
-                      e.target.value ? [...filters, { $like: e.target.value }] : filters
+                      e.target.value
+                        ? [...filters, { $like: e.target.value }]
+                        : filters,
                     )
                   }
                   onPressEnter={() => this.handleSearch(confirm)}
@@ -108,11 +117,12 @@ class RestTableLayout extends Component {
                   {I18n.t('button.search')}
                 </Button>
                 <Button
-                  onClick={e => {
+                  onClick={() => {
                     // setSelectedKeys([...filters]);
-                    this.searchInput[dataIndex].setValue('', e);
-                    this.handleReset(dataIndex, filters);
-                    confirm();
+                    this.searchInput[dataIndex].setValue('', () => {
+                      this.handleReset(dataIndex, filters);
+                      confirm();
+                    });
                   }}
                   size="small"
                   style={{ width: 90 }}
@@ -148,11 +158,11 @@ class RestTableLayout extends Component {
       // onRow,
       customQuery,
       resourceFilter,
-      isScroll,
+      // isScroll,
     } = this.props;
     const columns = children
       .filter(e => e)
-      .map((item, index) => ({
+      .map(item => ({
         fixed: item.props.fixed,
         title:
           item.props.source === 'actionGroup'
@@ -167,13 +177,19 @@ class RestTableLayout extends Component {
         dataIndex: `${item.props.source}`,
         width: item.props.width,
         align: item.props.align,
-        key: `${item.props.source}-col${index}`,
+        key: getFilterKey(item),
         sorter: item.props.sorter
-          ? (a, b) => getRecordData(a, item.props.source) - getRecordData(b, item.props.source)
+          ? (a, b) =>
+              getRecordData(a, item.props.source) -
+              getRecordData(b, item.props.source)
           : undefined,
-        sortOrder: getSorterOrder(resourceFilter.orderBy, item.props.source),
+        defaultSortOrder: getSorterOrder(
+          resourceFilter.orderBy,
+          item.props.source,
+        ),
         filters: item.props.filters,
-        filteredValue: get(resourceFilter.filter || {}, `${item.props.source}.$in`) || undefined,
+        filteredValue: (() =>
+          get(resourceFilter.filter || {}, getFilterKey(item)) || [])(),
         filterMultiple: item.props.filterMultiple !== false,
         // onFilter: (value, record) =>
         //   `${getRecordData(record, item.props.source)}`.search(`${value}`) > -1,
@@ -183,19 +199,25 @@ class RestTableLayout extends Component {
             const RecordComponent = React.cloneElement(item, {
               table: true,
               record,
-              loading: resourceData.itemLoading && resourceData.itemLoading[record.id],
+              loading:
+                resourceData.itemLoading && resourceData.itemLoading[record.id],
               onChangeRecord: this.onChangeRecord(record, item),
               customQuery,
               modelResource: resource,
               ...getAction(this.props, item),
             });
-            return RecordComponent;
+            return (
+              <div style={item.props.width && { width: item.props.width }}>
+                {RecordComponent}
+              </div>
+            );
           }),
         filterIcon: filtered => (
           <IconWrapper
             type="filter"
             className={
-              filtered || get(resourceFilter.filter || {}, `${item.props.source}`)
+              filtered ||
+              get(resourceFilter.filter || {}, `${item.props.source}`)
                 ? 'highlightFilter'
                 : ''
             }
@@ -203,9 +225,17 @@ class RestTableLayout extends Component {
           />
         ),
         filterDropdown: item.props.filterDropdown
-          ? item.props.filterDropdown(item.props.source, resourceFilter, this.handleReset)
+          ? item.props.filterDropdown(
+              getFilterKey(item),
+              resourceFilter,
+              this.handleReset,
+            )
           : undefined,
-        ...this.getColumnSearchProps(item.props.source, item.props.header, item.props.hasSearch),
+        ...this.getColumnSearchProps(
+          item.props.source,
+          item.props.header,
+          item.props.hasSearch,
+        ),
       }));
 
     return (
@@ -218,7 +248,7 @@ class RestTableLayout extends Component {
         onChange={this.onChangePagination}
         pagination={{
           position: 'none',
-          total: resourceFilter.count,
+          // total: resourceFilter.count,
           current: resourceFilter.page,
           showTotal,
           pageSize: resourceFilter.limit,
@@ -229,11 +259,17 @@ class RestTableLayout extends Component {
         loading={loading}
         dataSource={resourceData || []}
         rowKey="id"
-        scroll={isScroll ? { x: 1128 } : { x: '100%' }}
+        // scroll={isScroll ? { x: '500px' } : { x: '100%' }}
       />
     );
   }
 }
+
+const getFilterKey = item => {
+  return item && item.props && item.props.hasSearch
+    ? item.props.source
+    : item.props.filterKey || `${item.props.source}.$in`;
+};
 
 const getSorterOrder = (orderBy, source) => {
   if (orderBy === source) return 'ascend';
@@ -284,13 +320,13 @@ RestTableLayout.propTypes = {
   // onRow: PropTypes.func,
   customQuery: PropTypes.func,
   onEditHeaderSuccess: PropTypes.func,
-  isScroll: PropTypes.bool,
+  // isScroll: PropTypes.bool,
   resource: PropTypes.string,
 };
 
 RestTableLayout.defaultProps = {
   onEditHeaderSuccess: () => {},
-  isScroll: true,
+  // isScroll: true,
 };
 
 export default RestTableLayout;

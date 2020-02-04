@@ -1,15 +1,15 @@
-import React from 'react';
-import _ from 'lodash';
-import { ButtonWrapper } from './styles';
-import { RestInputContext } from '../../RestInput/RestInputContext';
+import React from "react";
+import _ from "lodash";
+import { ButtonWrapper } from "./styles";
+import { RestInputContext } from "../../RestInput/RestInputContext";
 
 const SaveButton = props => (
   <RestInputContext.Consumer>
     {({ handleSubmit }) => (
       <ButtonWrapper
         {...props}
-        icon="save"
-        onClick={results => handleSubmit(_.omit(results, 'email'))}
+        icon="ic-save"
+        onClick={results => handleSubmit(_.omit(results, "email"))}
       />
     )}
   </RestInputContext.Consumer>

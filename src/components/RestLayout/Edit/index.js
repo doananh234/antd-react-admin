@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import CustomBreadcrumb from '../../common/Breadcrumb';
 import RestEditForm from '../RestEditForm';
@@ -7,9 +7,7 @@ import Box from '../../common/Box';
 import PageTitle from '../../common/PageTitle';
 import { makeBreadCrumbFromPath } from '../../../utils/tools';
 
-class RestEditComponent extends Component {
-  state = {};
-
+class RestEditComponent extends PureComponent {
   render() {
     const { showModal, header, noCardWrapper, location } = this.props;
     const BREADCRUMB_LIST = makeBreadCrumbFromPath(location);

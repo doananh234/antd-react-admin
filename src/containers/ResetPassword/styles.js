@@ -28,17 +28,13 @@ const ResetPasswordStyleWrapper = styled.div`
     overflow-y: auto;
     z-index: 10;
     position: relative;
-    background: white;
   }
 
   .isoLoginContent {
-    ${'' /* min-height: 100%; */}
     display: flex;
     flex-direction: column;
-    padding: 70px 50px;
+    padding: 50px;
     position: relative;
-    background-color: ${({ theme }) => theme.background.content};
-
     @media only screen and (max-width: 767px) {
       width: 100%;
       padding: 70px 20px;

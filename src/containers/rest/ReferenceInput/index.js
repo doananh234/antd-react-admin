@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Form } from 'antd';
 import { connect } from 'react-redux';
+import { retrieveReference } from 'redux/referenceData/slice';
 import CRUDActions from '../../../redux/crudActions';
-import { retrieveReference } from '../../../redux/referenceData/actions';
-import { getRecordData, upperCaseFirstChart } from '../../../utils/tools';
+import { getRecordData } from '../../../utils/tools';
 import {
   getReferenceResource,
   getTotalReference,
@@ -96,21 +96,25 @@ const mapStateToProps = (state, props) => ({
 const mapDispatchToProps = (dispatch, props) => ({
   retrieveReference: data =>
     dispatch(
-      retrieveReference(props.resource, Array.isArray(data) ? data : [data], props.mappedBy)
+      retrieveReference(
+        props.resource,
+        Array.isArray(data) ? data : [data],
+        props.mappedBy,
+      ),
     ),
   retrieveList: (filter, isRefresh) =>
     dispatch(
-      CRUDActions[props.resource][`getAll${upperCaseFirstChart(props.resource)}`](
+      CRUDActions[props.resource].getAll(
         {
           ...props.initialFilter,
           ...filter,
         },
-        { isRefresh }
-      )
+        { isRefresh },
+      ),
     ),
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(Form.create({})(ReferenceInput));

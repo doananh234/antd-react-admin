@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import i18next from 'i18next';
 import { connect } from 'react-redux';
 import { Form, Icon, Button } from 'antd';
+import { resetPassword as resetPasswordAction } from 'redux/auth/slice';
 import { history } from '../../redux/store';
-import { resetPassword as resetPasswordAction } from '../../redux/auth/actions';
 import ResetPasswordStyleWrapper from './styles';
 import MaterialInput from '../../components/common/MaterialInput';
 import Text from '../../components/common/Text';
@@ -35,7 +35,11 @@ class ResetPassword extends Component {
           form.setFields({
             confirmPassword: {
               value: confirmPassword,
-              errors: [new Error('Your password and confirmation password do not match.')],
+              errors: [
+                new Error(
+                  'Your password and confirmation password do not match.',
+                ),
+              ],
             },
           });
         }
@@ -65,20 +69,26 @@ class ResetPassword extends Component {
                 <FormItem>
                   {getFieldDecorator('password', {
                     rules: [
-                      { required: true, message: i18next.t('input.password.validateMsg.required') },
+                      {
+                        required: true,
+                        message: i18next.t(
+                          'input.password.validateMsg.required',
+                        ),
+                      },
                     ],
                   })(
                     <MaterialInput
                       type={isShowPassword ? undefined : 'password'}
                       placeholder={i18next.t('login.password')}
-                      prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                      suffix={(
-                        <Icon
-                          type={isShowPassword ? 'eye-invisible' : 'eye'}
-                          onClick={this.showPassword('isShowPassword')}
-                        />
-)}
-                    />
+                      prefix=<Icon
+                        type="mail"
+                        style={{ color: 'rgba(0,0,0,.25)' }}
+                      />
+                      suffix=<Icon
+                        type={isShowPassword ? 'eye-invisible' : 'eye'}
+                        onClick={this.showPassword('isShowPassword')}
+                      />
+                    />,
                   )}
                 </FormItem>
                 <FormItem>
@@ -86,25 +96,34 @@ class ResetPassword extends Component {
                     rules: [
                       {
                         required: true,
-                        message: i18next.t('input.confirmPassword.validateMsg.required'),
+                        message: i18next.t(
+                          'input.confirmPassword.validateMsg.required',
+                        ),
                       },
                     ],
                   })(
                     <MaterialInput
                       type={isShowConfirmPassword ? undefined : 'password'}
-                      placeholder={i18next.t('input.confirmPassword.placeholder')}
-                      prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                      suffix={(
-                        <Icon
-                          type={isShowConfirmPassword ? 'eye-invisible' : 'eye'}
-                          onClick={this.showPassword('isShowConfirmPassword')}
-                        />
-)}
-                    />
+                      placeholder={i18next.t(
+                        'input.confirmPassword.placeholder',
+                      )}
+                      prefix=<Icon
+                        type="mail"
+                        style={{ color: 'rgba(0,0,0,.25)' }}
+                      />
+                      suffix=<Icon
+                        type={isShowConfirmPassword ? 'eye-invisible' : 'eye'}
+                        onClick={this.showPassword('isShowConfirmPassword')}
+                      />
+                    />,
                   )}
                 </FormItem>
                 <div className="buttonWrapper">
-                  <Button type="primary" htmlType="submit" onClick={this.handleLogin}>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    onClick={this.handleLogin}
+                  >
                     {i18next.t('button.reset')}
                   </Button>
                 </div>
@@ -133,5 +152,5 @@ export default connect(
     resetPassword: (password, resetPasswordToken) => {
       dispatch(resetPasswordAction(password, resetPasswordToken));
     },
-  })
+  }),
 )(WrappedResetPasswordForm);

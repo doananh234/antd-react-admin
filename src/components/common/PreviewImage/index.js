@@ -18,7 +18,7 @@ const PreviewImage = ({ src, onPreview }) => {
       setPreviewImage(item);
     }
   };
-  return (
+  return src ? (
     <PreviewWrapper>
       <img className="image" src={src} alt={src} />
       <div className="overlay">
@@ -28,7 +28,7 @@ const PreviewImage = ({ src, onPreview }) => {
         <img alt="example" style={{ width: '100%' }} src={previewImage} />
       </Modal>
     </PreviewWrapper>
-  );
+  ) : null;
 };
 PreviewImage.propTypes = {
   src: PropTypes.string,

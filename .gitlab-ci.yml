@@ -1,1 +1,1 @@
-include: 'https://enouvo-systems.gitlab.io/gitlab-ci-yaml-template/react-web/.gitlab-ci.yml'
+include: 'https://gitlab-ci-yaml-template.enouvo.com/react-web/.gitlab-ci.yml'

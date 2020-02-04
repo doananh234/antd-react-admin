@@ -5,7 +5,7 @@ import { Layout, Icon } from 'antd';
 import PrivateLayoutWrapper from './styles';
 import Header from '../../containers/Header';
 import SideBar from '../../containers/SideBar';
-import HeaderWithoutSideBar from '../../containers/Header/HeaderWithoutSideBar';
+// import HeaderWithoutSideBar from '../../containers/Header/HeaderWithoutSideBar';
 
 const { Content, Footer } = Layout;
 
@@ -39,45 +39,49 @@ class PrivateLayout extends Component {
   };
 
   render() {
-    const { children, hasPrivateLayoutWrapper, title } = this.props;
-    if (hasPrivateLayoutWrapper) {
-      return (
-        <PrivateLayoutWrapper>
-          <Layout className="windowView">
-            <input
-              onChange={() => {}}
-              id="collapsedTracker"
-              type="checkbox"
-              checked={!this.state.collapsed}
-            />
-            <label htmlFor="collapsedTracker" className="overlay" onClick={this.toggle} />
-            <SideBar collapsed={this.state.collapsed} />
-            <Layout className="mainView">
-              <Header onToggle={this.toggle} collapsed={this.state.collapsed} />
-              <Content className="container">
-                <div className="content">{children}</div>
-                <Footer className="footer">{I18n.t('appInfo.footer')}</Footer>
-                <Footer className="footerMobile">
-                  {mobileTabs.map(tab => (
-                    <a href={tab.url} key={tab.key}>
-                      <Icon type={tab.icon} className="tabIcon" />
-                    </a>
-                  ))}
-                </Footer>
-              </Content>
-            </Layout>
-          </Layout>
-        </PrivateLayoutWrapper>
-      );
-    }
-
+    const { children } = this.props;
+    // if (!hasPrivateLayoutWrapper) {
+    //   return (
+    //     <PrivateLayoutWrapper>
+    //       <Layout className="mainView mainWithoutSidebar">
+    //         <HeaderWithoutSideBar title={title} />
+    //         <Content className="container">
+    //           <div className="content">{children}</div>
+    //         </Content>
+    //       </Layout>
+    //     </PrivateLayoutWrapper>
+    //   );
+    // }
     return (
       <PrivateLayoutWrapper>
-        <Layout className="mainView mainWithoutSidebar">
-          <HeaderWithoutSideBar title={title} />
-          <Content className="container">
-            <div className="content">{children}</div>
-          </Content>
+        <Layout className="windowView">
+          <input
+            onChange={() => {}}
+            id="collapsedTracker"
+            type="checkbox"
+            checked={!this.state.collapsed}
+          />
+          <label
+            role="presentation"
+            htmlFor="collapsedTracker"
+            className="overlay"
+            onClick={this.toggle}
+          />
+          <SideBar collapsed={this.state.collapsed} />
+          <Layout className="mainView">
+            <Header onToggle={this.toggle} collapsed={this.state.collapsed} />
+            <Content className="container">
+              <div className="content">{children}</div>
+              <Footer className="footer">{I18n.t('appInfo.footer')}</Footer>
+              <Footer className="footerMobile">
+                {mobileTabs.map(tab => (
+                  <a href={tab.url} key={tab.key}>
+                    <Icon type={tab.icon} className="tabIcon" />
+                  </a>
+                ))}
+              </Footer>
+            </Content>
+          </Layout>
         </Layout>
       </PrivateLayoutWrapper>
     );
@@ -86,8 +90,8 @@ class PrivateLayout extends Component {
 
 PrivateLayout.propTypes = {
   children: PropTypes.any,
-  hasPrivateLayoutWrapper: PropTypes.bool,
-  title: PropTypes.string,
+  // hasPrivateLayoutWrapper: PropTypes.bool,
+  // title: PropTypes.string,
 };
 
 export default PrivateLayout;

@@ -4,9 +4,15 @@ import usersSagas from './users/sagas';
 import referenceSagas from './referenceData/sagas';
 import configSagas from './config/sagas';
 import modalSagas from './modal/sagas';
-import customersSagas from './customers/sagas';
+import userTypesSagas from './userTypes/sagas';
 
 export default function* root() {
   yield all([
-    ...modalSagas,...customersSagas, ...configSagas, ...usersSagas, ...authSaga, ...referenceSagas]);
+    ...userTypesSagas,
+    ...modalSagas,
+    ...configSagas,
+    ...usersSagas,
+    ...authSaga,
+    ...referenceSagas,
+  ]);
 }

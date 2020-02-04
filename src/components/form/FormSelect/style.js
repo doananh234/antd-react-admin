@@ -14,4 +14,12 @@ export const SelectWrapper = styled(Select)`
       display: none;
     }
   }
+  .loading {
+    text-align: center;
+    margin: auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 `;

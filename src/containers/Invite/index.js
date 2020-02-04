@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter, Redirect } from 'react-router-dom';
 import { Form, Icon, Button, Row, Col } from 'antd';
 import i18n from 'i18next';
-import { registerWithTokenAction } from '../../redux/auth/actions';
+import { registerWithToken as registerWithTokenAction } from 'redux/auth/slice';
 import MaterialInput from '../../components/common/MaterialInput';
 import FormUploadAvatar from '../../components/form/FormUploadAvatar';
 import { history } from '../../redux/store';
@@ -17,7 +17,10 @@ class Invite extends Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         const token = history.location.search.replace('?token=', '');
-        if (values.password === values.confirmPassword && values.password.length >= 6) {
+        if (
+          values.password === values.confirmPassword &&
+          values.password.length >= 6
+        ) {
           this.props.register({
             password: values.password,
             firstName: values.firstName,
@@ -42,53 +45,91 @@ class Invite extends Component {
           <span>{i18n.t('register.title')}</span>
         </div>
         <Form layout="vertical" onSubmit={this.handleSubmit}>
-          <FormUploadAvatar style={{ width: 100, height: 100, margin: 'auto', marginBottom: 20 }} source="avatar" />
+          <FormUploadAvatar
+            style={{
+              width: 100,
+              height: 100,
+              margin: 'auto',
+              marginBottom: 20,
+            }}
+            source="avatar"
+          />
           <Row gutter={16}>
             <Col span={12}>
               <FormItem>
                 {getFieldDecorator('firstName', {
                   rules: [
-                    { required: true, message: i18n.t('input.firstName.validateMsg.required') },
+                    {
+                      required: true,
+                      message: i18n.t('input.firstName.validateMsg.required'),
+                    },
                   ],
-                })(<MaterialInput placeholder={i18n.t('input.firstName.placeholder')} />)}
+                })(
+                  <MaterialInput
+                    placeholder={i18n.t('input.firstName.placeholder')}
+                  />,
+                )}
               </FormItem>
             </Col>
             <Col span={12}>
               <FormItem>
                 {getFieldDecorator('lastName', {
                   rules: [
-                    { required: true, message: i18n.t('input.lastName.validateMsg.required') },
+                    {
+                      required: true,
+                      message: i18n.t('input.lastName.validateMsg.required'),
+                    },
                   ],
-                })(<MaterialInput placeholder={i18n.t('input.lastName.placeholder')} />)}
+                })(
+                  <MaterialInput
+                    placeholder={i18n.t('input.lastName.placeholder')}
+                  />,
+                )}
               </FormItem>
             </Col>
           </Row>
           <FormItem>
             {getFieldDecorator('password', {
-              rules: [{ required: true, message: i18n.t('input.password.validateMsg.required') }],
+              rules: [
+                {
+                  required: true,
+                  message: i18n.t('input.password.validateMsg.required'),
+                },
+              ],
             })(
               <MaterialInput
                 placeholder={i18n.t('input.password.placeholder')}
-                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                prefix={
+                  <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
+                }
                 type="password"
-              />
+              />,
             )}
           </FormItem>
           <FormItem>
             {getFieldDecorator('confirmPassword', {
               rules: [
-                { required: true, message: i18n.t('input.confirmPassword.validateMsg.required') },
+                {
+                  required: true,
+                  message: i18n.t('input.confirmPassword.validateMsg.required'),
+                },
               ],
             })(
               <MaterialInput
                 placeholder={i18n.t('input.confirmPassword.placeholder')}
-                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                prefix={
+                  <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
+                }
                 type="password"
-              />
+              />,
             )}
           </FormItem>
           <div className="action-div">
-            <Button type="primary" htmlType="submit" className="login-form-button">
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="login-form-button"
+            >
               {i18n.t('button.submit')}
             </Button>
           </div>
@@ -111,6 +152,6 @@ export default withRouter(
     }),
     dispatch => ({
       register: params => dispatch(registerWithTokenAction(params)),
-    })
-  )(Form.create()(Invite))
+    }),
+  )(Form.create()(Invite)),
 );

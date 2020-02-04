@@ -1,7 +1,6 @@
 /* eslint-disable */
 import moment from 'moment';
 import i18next from 'i18next';
-import { DISCOUNT_UNIT } from '../configs/localData/index';
 
 // export const formatUnixToDate = unit => moment.unix(unit).format();
 
@@ -22,7 +21,7 @@ export const formatDateTime = text => {
 };
 
 export const formatDate = text => {
-  return text ? moment(text).format(' DD/MMM/YY') : moment().format(' DD/MMM/YY');
+  return text ? moment(text).format(' DD/MMM/YYYY') : moment().format(' DD/MMM/YYYY');
 };
 
 export const formatTime = text => {
@@ -49,11 +48,11 @@ export const stringToSlug = e => {
 };
 export const makeActionName = text => {
   return lowerFirstChar(
-    replaceAll(upperFirstChar(replaceAll(text, '_', ' ').toLowerCase()), ' ', '')
+    replaceAll(upperFirstChar(replaceAll(text, '_', ' ').toLowerCase()), ' ', ''),
   );
 };
 
-export const formatMoney = (number = 0, n, x) => {
+export const formatMoney = (number = 0, n, x, currency) => {
   const UNIT = ['', 'K', 'M'];
   let unitRank = 0;
   let tmpPrice = Math.abs(number);
@@ -65,56 +64,13 @@ export const formatMoney = (number = 0, n, x) => {
   const re = `\\d(?=(\\d{${x || 3}})+${n > 0 ? '\\.' : '$'})`;
   return `${number >= 0 ? '' : '-'}${Number(tmpPrice * 1000)
     .toFixed(2)
-    .replace(new RegExp(re, 'g'), '$&,')} ${UNIT[unitRank]}`;
+    .replace(new RegExp(re, 'g'), '$&,')}${UNIT[unitRank]} ${currency}`;
 };
 
-export const formatCheckinTime = (checkin, isComplete) => {
-  return `${moment(checkin.startTime).format('hh:mmA')} - ${
-    isComplete ? moment(checkin.endTime).format('hh:mmA') : 'now'
-  }`;
-};
-
-export const getDailyStatus = record => {
-  if (!record.checkins || !record.checkins[0]) {
-    return {
-      type: 'CHECK IN',
-      text: i18next.t('button.checkin'),
-      className: 'btnCheckin',
-      timeStr: i18next.t('checkinStatus.waitingCheckin'),
-      icon: 'ic-check-in',
-    };
-  }
-  if (record.checkins && record.checkins[0] && !record.checkins[0].endTime) {
-    return {
-      type: 'CHECK OUT',
-      text: i18next.t('button.checkout'),
-      className: 'btnCheckout',
-      timeStr: formatCheckinTime(record.checkins[0]),
-      icon: 'ic-check-out',
-    };
-  }
+export const inputNumberFormatter = () => {
   return {
-    type: 'COMPLETE',
-    text: i18next.t('button.complete'),
-    className: 'btnDisable',
-    timeStr: formatCheckinTime(record.checkins[0], true),
-    icon: 'check-circle',
+    formatter: value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+    parser: value => value.replace(/\$\s?|(,*)/g, ''),
+    ruleType: 'number',
   };
-};
-
-export const formatDisCount = (unit, value) => {
-  if (!unit) {
-    return 'none';
-  }
-  const discountUtil = DISCOUNT_UNIT.find(data => data.value === unit);
-  return formatMoney(value) + (discountUtil ? discountUtil.text : '');
-};
-
-export const getTotalValue = (list, valueKey) => {
-  if (!list) return 0;
-  let total = 0;
-  list.forEach(e => {
-    total += e[valueKey];
-  });
-  return formatMoney(total);
 };

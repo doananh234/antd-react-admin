@@ -1,12 +1,13 @@
-
 # CRUD Actions
+
 - `/redux/${modal}`
 
-The  Rest List use to show data of a model.
+The Rest List use to show data of a model.
 
 ## Default State
+
 ```js
-  INITIAL_CRUD_STATE = {
+INITIAL_CRUD_STATE = {
   loading: false, // => loading when get&filter filter list
   itemLoadings: {}, // => loading when get&update one record
   error: null, // => error when request API
@@ -20,24 +21,27 @@ The  Rest List use to show data of a model.
   numberOfPages: 1, // => number of pages
   sort: '', // => sortBy, orderBy
   currentData: {}, // => current data you manage: edit, show
-}
+};
 ```
 
 ## Props
 
-| Command | Description |
-| ------- | ----------- |
-| `getAll${models}` | Get all data actions for the model |
+| Command            | Description                          |
+| ------------------ | ------------------------------------ |
+| `getAll${models}`  | Get all data actions for the model   |
 | `getById${models}` | Get by Id data actions for the model |
-| `edit${models}` | Edit action for the model  |
-| `create${models}` | Create action for the model |
+| `edit${models}`    | Edit action for the model            |
+| `create${models}`  | Create action for the model          |
 
 ## Add Custom Action
 
 - `/redux/${model}/actions.js`
 
 ```js
-import { makeCRUDConstantCreator, makeCRUDActionsCreator } from '../crudCreator/actions';
+import {
+  makeCRUDConstantCreator,
+  makeCRUDActionsCreator,
+} from '../crudCreator/slice';
 import { makeConstantCreator, makeActionCreator } from '../../utils/reduxUtils';
 
 export const PRIMARY_KEY = 'id';
@@ -45,10 +49,11 @@ export const MODEL = 'models';
 export const IGNORE_ACTIONS = [];
 export const ModelTypes = {
   ...makeCRUDConstantCreator(MODEL, IGNORE_ACTIONS),
-  ...makeConstantCreator('CUSTOM_ACTION') // add custom action
+  ...makeConstantCreator('CUSTOM_ACTION'), // add custom action
 };
 const CRUDModelActions = makeCRUDActionsCreator(MODEL, IGNORE_ACTIONS);
-export const customAction = data => makeActionCreator(ModelTypes.CUSTOM_ACTION, { data });
+export const customAction = data =>
+  makeActionCreator(ModelTypes.CUSTOM_ACTION, { data });
 /**
  * getAllCaseTypes({pageSize, page })
  * getByIdCaseTypes(data)
@@ -63,7 +68,10 @@ export default { ...CRUDModelActions, customAction };
 
 ```js
 import { makeReducerCreator } from '../../utils/reduxUtils';
-import { makeCRUDReducerCreator, INITIAL_CRUD_STATE } from '../crudCreator/reducer';
+import {
+  makeCRUDReducerCreator,
+  INITIAL_CRUD_STATE,
+} from '../crudCreator/reducer';
 import { MODEL, IGNORE_ACTIONS, ModelTypes } from './actions';
 
 export const INITIAL_STATE = {
@@ -72,12 +80,12 @@ export const INITIAL_STATE = {
 
 const customAction = (state, { data }) => ({
   ...state,
-  customData: data
-})
+  customData: data,
+});
 
 const reducer = makeReducerCreator(INITIAL_STATE, {
   ...makeCRUDReducerCreator(MODEL, IGNORE_ACTIONS),
-  [ModelTypes.CUSTOM_ACTION]: customAction
+  [ModelTypes.CUSTOM_ACTION]: customAction,
 });
 
 export default reducer;
@@ -87,7 +95,12 @@ export default reducer;
 
 ```js
 import { call, put, takeEvery, select } from 'redux-saga/effects';
-import ModelActions, {ModelTypes, MODEL, IGNORE_ACTIONS, PRIMARY_KEY } from './actions';
+import ModelActions, {
+  ModelTypes,
+  MODEL,
+  IGNORE_ACTIONS,
+  PRIMARY_KEY,
+} from './actions';
 import rootCRUDSaga from '../crudCreator/saga';
 // use IGNORE_SAGAS to replace "saga" or ignore "saga"
 // IGNORE_SAGAS = ['GET_ALL', 'GET_BY_ID', 'DELETE', 'EDIT', 'CREATE'];
@@ -106,13 +119,12 @@ export default [
   ...rootCRUDSaga(MODEL, IGNORE_SAGAS, ModelActions, PRIMARY_KEY),
   takeEvery(ModelTypes.CUSTOM_ACTION, customSaga),
 ];
-
 ```
 
 ## Format request and response data with your API
 
 - `/redux/crudCreator/dataProvider.js`
-  
+
 ```js
 import { keyBy } from 'lodash';
 import { PRIMARY_KEY } from './actions'; // =>default: PRIMARY_KEY=id
@@ -120,7 +132,7 @@ import { getValidData } from '../../utils/tools';
 
 export const convertRequestParams = (
   type,
-  params
+  params,
   // resource
   // options = { primaryKey: PRIMARY_KEY }
 ) => {
@@ -134,7 +146,8 @@ export const convertRequestParams = (
     case 'GET_ALL': // => format data for request: page,limit, filter, order,...
       return {
         ...formatedParams,
-        filter: Object.keys(filter).length > 0 ? JSON.stringify(filter) : undefined,
+        filter:
+          Object.keys(filter).length > 0 ? JSON.stringify(filter) : undefined,
       };
     case 'GET_BY_ID': // => format data for request: id, include,....
       return {
@@ -162,7 +175,7 @@ export const convertResponseData = (type, response, options = {}) => {
             [PRIMARY_KEY]: data[PRIMARY_KEY],
             backupId: data[PRIMARY_KEY],
           })),
-          PRIMARY_KEY
+          PRIMARY_KEY,
         ),
         ids: response.results.map(data => data[PRIMARY_KEY]),
         total: response.total,

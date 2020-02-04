@@ -1,5 +1,5 @@
 import { keyBy } from 'lodash';
-import { PRIMARY_KEY } from './actions';
+import { PRIMARY_KEY } from './slice';
 import { getValidData } from '../../utils/tools';
 
 export const convertRequestParams = (
@@ -10,7 +10,7 @@ export const convertRequestParams = (
 ) => {
   const formatedParams = {
     ...params,
-    page: undefined,
+    offset: undefined,
     count: undefined,
   };
   const filter = getValidData(formatedParams.filter, true);
@@ -18,7 +18,8 @@ export const convertRequestParams = (
     case 'GET_ALL':
       return {
         ...formatedParams,
-        filter: Object.keys(filter).length > 0 ? JSON.stringify(filter) : undefined,
+        filter:
+          Object.keys(filter).length > 0 ? JSON.stringify(filter) : undefined,
       };
     case 'GET_BY_ID':
       return {
@@ -36,28 +37,38 @@ export const convertRequestParams = (
   }
 };
 
-export const convertResponseData = (type, response, options = { primaryKey: PRIMARY_KEY }) => {
+export const convertResponseData = (
+  type,
+  response,
+  options = { primaryKey: PRIMARY_KEY },
+) => {
   switch (type) {
     case 'GET_ALL':
       return {
         data: keyBy(
-          response.results.map(data => ({
+          response?.data?.items.map(data => ({
             ...data,
-            [PRIMARY_KEY]: data[options.primaryKey || PRIMARY_KEY],
+            [options.primaryKey]: data[options.primaryKey || PRIMARY_KEY],
             backupId: data[PRIMARY_KEY],
           })),
           options.primaryKey || PRIMARY_KEY,
         ),
-        ids: response.results.map(data => data[options.primaryKey || PRIMARY_KEY]),
-        total: response.total,
+        ids: response?.data?.items.map(
+          data => data[options.primaryKey || PRIMARY_KEY],
+        ),
+        total: response?.data?.totalItems,
       };
     case 'GET_BY_ID':
     case 'CREATE':
-      return response && response.id
-        ? { ...response, [PRIMARY_KEY]: response[options.primaryKey || PRIMARY_KEY] }
+      return response && response.data
+        ? {
+            ...response.data,
+            [options.primaryKey]:
+              response.data[options.primaryKey || PRIMARY_KEY],
+          }
         : null;
     case 'EDIT':
-      return response && response.id ? { ...response } : null;
+      return response && response.data ? { ...response.data } : null;
     case 'DELETE':
     default:
       return response;

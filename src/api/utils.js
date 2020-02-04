@@ -9,7 +9,7 @@ async function customFetch(path, headerOptions) {
   const normalFetch = fetch(path, headerOptions);
   const res = await timeoutPromise(
     TIME_OUT,
-    normalFetch.then(checkIfErrorOccurs).catch(checkIfErrorOccurs)
+    normalFetch.then(checkIfErrorOccurs).catch(checkIfErrorOccurs),
   );
 
   if (!res.code) {
@@ -42,7 +42,10 @@ async function customFetch(path, headerOptions) {
     } else {
       const error = {
         code: res.code,
-        message: e.error || e.message ? e.message || e.error : 'Something wrong. Please try again.',
+        message:
+          e.error || e.message
+            ? e.message || e.error
+            : 'Something wrong. Please try again.',
       };
       throw error;
     }
@@ -62,7 +65,7 @@ export const timeoutPromise = (ms, promise) =>
       err => {
         clearTimeout(timeoutId);
         reject(err);
-      }
+      },
     );
   });
 
@@ -95,7 +98,7 @@ function requestWrapper(method) {
     // check that req url is relative and request was sent to our domain
     const token = localStorage.getItem('sessionToken');
     if (token) {
-      defaults.headers.authorization = `Bearer ${token}`;
+      defaults.headers.Authorization = `${token}`;
     }
 
     if (method === 'POST' || method === 'PUT') {

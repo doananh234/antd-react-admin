@@ -1,13 +1,13 @@
 const theme = {
   palette: {
-    primary: '#5d4ec2',
+    primary: '#56ac00',
     lightPrimary: '#4cb1e8',
     secondary: '#52cfa4',
     loadingBackgroundColor: '#2c3e51cc',
     color: ['#788195', '#E4E6E9'],
   },
   fonts: {
-    primary: 'Georgia, serif',
+    primary: 'Roboto',
   },
   fontWeight: {
     thin: 100, // Thin
@@ -21,26 +21,29 @@ const theme = {
     black: 900, // Black
   },
   background: {
-    container: '#f5f7fa',
     content: '#fff',
+    container: '#f4f7f9',
     input: '#efeff0',
     disabled: '#969696',
-    headerTable: '#d4d2f450',
+    headerTable: '#ffff',
+    gray: '#f0f0f0',
   },
   text: {
     primary: '#1f2933',
     text: '#1f2933',
     lightPrimary: '#3e4c59',
-    secondary: '#7b8794',
-    tabTitle: '#262626',
+    secondary: '#a4a4a4',
+    tabTitle: '#7f817c',
     empty: '#969696',
     highlight: '#5d4ec2',
     disabled: '#969696',
-    formLabel: '#4a4a4a',
-    headerTable: '#1f2933',
+    formLabel: '#9c9d9b',
+    headerTable: '#0f100d',
+    note: '#878787',
+    formIcon: '#41433f',
   },
   border: {
-    default: '#d4d2f450',
+    default: '#dddddd',
     light: '#e4e7eb',
   },
   scrollbar: {
@@ -65,6 +68,14 @@ const theme = {
   },
   card: {
     header: '#d4d2f450',
+  },
+  sidebar: {
+    activeText: 'white',
+    activeBG: '#56ac00',
+  },
+  drawer: {
+    headerTitle: '#0f100d',
+    closeIcon: '#91938e',
   },
 };
 module.exports = theme;

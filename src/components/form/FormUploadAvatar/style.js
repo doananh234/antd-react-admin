@@ -1,16 +1,25 @@
 import styled from 'styled-components';
 
 const UploadImageWrapper = styled.div`
-  border: solid 1px ${({ theme }) => theme.border.default};
+  display: flex;
+  align-items: center;
+
+  ${'' /* border: solid 1px ${({ theme }) => theme.border.default}; */}
   border-radius: 50%;
+  .cropModal {
+    z-index: 2;
+  }
+  .header {
+    margin-left: 16px;
+  }
   .ant-form-item-control {
     display: flex;
-    justify-content: center;
     cursor: pointer;
     .ant-avatar {
       display: flex;
       justify-content: center;
       align-items: center;
+      background: ${({ theme }) => theme.background.gray};
       .anticon {
         font-size: 30px;
       }

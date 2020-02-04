@@ -1,21 +1,33 @@
 import styled from 'styled-components';
-// import loginBackground from '../../assets/images/login_background.jpg';
+import loginBackground from '../../assets/images/publicbg.jpg';
 
 const PublicLayoutWrapper = styled.div`
   .layout {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: row;
+    align-items: center;
+    background: ${({ theme }) => theme.background.content};
+    justify-content: center;
+  }
+
+  .layout-content {
+    max-height: 789px;
+    display: flex;
+    flex-direction: row;
+    background: ${({ theme }) => theme.background.container};
+    box-shadow: 0 20px 70px 0 rgba(0, 0, 0, 0.1);
+    min-width: 70%;
   }
 
   .main-img {
-    background-image: url(https://res.cloudinary.com/csmenouvo/image/upload/v1554345431/undraw_status_update_jjgk.png);
+    background-image: url(${loginBackground});
     background-color: transparent;
-    background-size: contain;
+    background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    height: 100vh;
-    flex: 1;
+    object-fit: cover;
+    width: 50%;
     background-color: white;
     @media only screen and (max-width: 768px) {
       display: none;
@@ -23,13 +35,10 @@ const PublicLayoutWrapper = styled.div`
   }
 
   .main-content {
-    background-color: white;
-    padding: 70px 50px;
+    flex: 1;
+    padding: 50px;
     text-align: center;
-    height: 100vh;
-    max-width: 450px;
-    min-width: 450px;
-    width: auto;
+    width: 50%;
     @media only screen and (max-width: 768px) {
       flex: 1;
       max-width: 100%;

@@ -71,7 +71,7 @@ const FormDatePicker = props => {
               disabled={disabled}
               format="ddd - MMM DD YYYY"
               className="viewDatePicker"
-            />
+            />,
           )}
         </div>
       </FormItemUI>

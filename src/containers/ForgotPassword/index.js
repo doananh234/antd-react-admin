@@ -4,7 +4,7 @@ import i18next from 'i18next';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Form, Button, Icon, Divider } from 'antd';
-import { forgotPassword as forgotPasswordAction } from '../../redux/auth/actions';
+import { forgotPassword as forgotPasswordAction } from 'redux/auth/slice';
 import ForgotPasswordStyleWrapper from './styles';
 import MaterialInput from '../../components/common/MaterialInput';
 import Text from '../../components/common/Text';
@@ -19,6 +19,7 @@ class ForgotPassword extends Component {
     };
   }
 
+  // eslint-disable-next-line react/no-deprecated
   componentWillReceiveProps(nextProps) {
     const { loading } = this.props;
     if (loading && !nextProps.loading && !nextProps.error) {
@@ -74,14 +75,25 @@ class ForgotPassword extends Component {
                   <FormItem>
                     {getFieldDecorator('email', {
                       rules: [
-                        { required: true, message: i18next.t('input.email.validateMsg.required') },
-                        { type: 'email', message: i18next.t('input.email.validateMsg.invalid') },
+                        {
+                          required: true,
+                          message: i18next.t(
+                            'input.email.validateMsg.required',
+                          ),
+                        },
+                        {
+                          type: 'email',
+                          message: i18next.t('input.email.validateMsg.invalid'),
+                        },
                       ],
                     })(
                       <MaterialInput
                         placeholder={i18next.t('login.yourEmail')}
-                        prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                      />
+                        prefix=<Icon
+                          type="mail"
+                          style={{ color: 'rgba(0,0,0,.25)' }}
+                        />
+                      />,
                     )}
                   </FormItem>
                 </div>
@@ -124,5 +136,5 @@ export default connect(
   }),
   dispatch => ({
     forgotPassword: email => dispatch(forgotPasswordAction(email)),
-  })
+  }),
 )(WrappedForgotPasswordForm);

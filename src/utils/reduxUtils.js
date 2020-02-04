@@ -2,30 +2,13 @@ import { notification } from 'antd';
 import { call, put, fork } from 'redux-saga/effects';
 import { push } from 'connected-react-router';
 import I18n from 'i18next';
-import _ from 'lodash';
-import { logout } from '../redux/auth/actions';
+// eslint-disable-next-line
+import { setLoading } from 'redux/loading/slice';
+// eslint-disable-next-line
+import { logout } from 'redux/auth/slice';
 // import { logout } from './login/actions';
 
 const ERROR_CODE = [401];
-
-export function makeConstantCreator(...params) {
-  const constant = {};
-  _.each(params, param => {
-    constant[param] = param;
-  });
-  return constant;
-}
-
-export const makeActionCreator = (type, params = null) => ({ type, ...params });
-
-export const makeReducerCreator = (initialState = null, handlers = {}) => (
-  state = initialState,
-  action
-) => {
-  if (!action && !action.type) return state;
-  const handler = handlers[action.type];
-  return (handler && handler(state, action)) || state;
-};
 
 export function* apiWrapper(
   config = { isShowProgress: true, isShowSuccessNoti: false },
@@ -33,23 +16,29 @@ export function* apiWrapper(
   ...params
 ) {
   try {
+    yield put(setLoading(config.isShowLoading));
     const response = yield call(apiFunc, ...params);
+    yield put(setLoading(false));
     yield fork(checkError, response);
-    notification.destroy();
+
     config.isShowSuccessNoti &&
       notification.success({
         message: I18n.t('success.title'),
-        description: config.successDescription || I18n.t('success.description'),
+        description:
+          response.message ||
+          config.successDescription ||
+          I18n.t('success.description'),
       });
     return response;
   } catch (err) {
+    yield put(setLoading(false));
     notification.destroy();
     notification.error({
       message: I18n.t('error.title'),
       description: err.message || I18n.t('error.description'),
     });
     yield fork(checkError, err);
-    throw new Error(err);
+    throw err;
   }
 }
 

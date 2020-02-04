@@ -4,5 +4,5 @@ const getRawConfigName = (state, name) => state.config[name];
 
 export const getConfigByName = createSelector(
   [getRawConfigName],
-  config => config || []
+  config => config || [],
 );

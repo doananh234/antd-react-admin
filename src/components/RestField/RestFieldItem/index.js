@@ -33,6 +33,7 @@ RestFieldItem.propTypes = {
   format: PropTypes.func,
   formatSubmitData: PropTypes.func,
   onChangeRecord: PropTypes.func,
+  filterKey: PropTypes.string,
 };
 
 RestFieldItem.defaultProps = {

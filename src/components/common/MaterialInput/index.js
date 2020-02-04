@@ -3,9 +3,16 @@ import PropTypes from 'prop-types';
 import { Input } from 'antd';
 import MaterialInputWrapper from './styles';
 
-const MaterialInput = ({ placeholder, prefix, suffix, disabled, ...params }) => (
+const MaterialInput = ({
+  placeholder,
+  prefix,
+  suffix,
+  disabled,
+  ...params
+}) => (
   <MaterialInputWrapper isPrefix={!!prefix} isSuffix={!!suffix}>
-    <Input {...params} disabled={disabled} />
+    <Input {...params} autocomplete="new-password" disabled={disabled} />
+
     {prefix}
     <span className="suffix">{suffix}</span>
     <label>{placeholder}</label>

@@ -231,7 +231,10 @@ export const CHECKIN_STATUS = [
   { text: 'checkinStatus.all', value: 'all' },
   { text: 'checkinStatus.upcoming', value: 'upcoming' },
 ];
-export const DISCOUNT_UNIT = [{ text: '%', value: 'percent' }, { text: 'VND', value: 'number' }];
+export const DISCOUNT_UNIT = [
+  { text: '%', value: 'percent' },
+  { text: 'VND', value: 'number' },
+];
 export const PAYMENT_METHOD = [
   { text: 'payType.paymentByCash', value: 'cash' },
   { text: 'payType.paymentByBank', value: 'bank' },
@@ -255,3 +258,13 @@ export const ROLE = [
 
 export const JOBS = commonJobs;
 export const NATIONALITIES = uniqBy(nationalities, 'nationality');
+
+export const QUALIFICATIONS = [
+  { text: 'qualifications.university', value: 'university' },
+  { text: 'qualifications.colleges', value: 'colleges' },
+];
+
+export const CONTRACT_TYPES = [
+  { text: 'contractTypes.official', value: 'official' },
+  { text: 'contractTypes.partTime', value: 'partTime' },
+];

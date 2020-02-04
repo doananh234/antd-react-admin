@@ -1,14 +1,14 @@
-import { call, put, takeEvery } from 'redux-saga/effects';
-import { ConfigTypes, getConfigSuccess, getConfigFailure } from './actions';
-import { apiWrapper } from '../../utils/reduxUtils';
-import { getConfig } from '../../api/configs';
+import { call, put, takeLatest } from 'redux-saga/effects';
+import { apiWrapper } from 'utils/reduxUtils';
+import { getConfig } from 'api/configs';
+import { getConfigSuccess, getConfigFailure } from './slice';
 
 export function* getConfigSaga() {
   try {
     const response = yield call(
       apiWrapper,
       { isShowProgress: false, isShowSuccessNoti: false },
-      getConfig
+      getConfig,
     );
     if (response) {
       yield put(getConfigSuccess(response));
@@ -20,4 +20,4 @@ export function* getConfigSaga() {
   }
 }
 
-export default [takeEvery(ConfigTypes.GET_CONFIG, getConfigSaga)];
+export default [takeLatest([getConfig.type], getConfigSaga)];

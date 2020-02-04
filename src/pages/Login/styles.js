@@ -1,21 +1,39 @@
 import styled from 'styled-components';
 
 export default styled.div`
+  text-align: left;
+  height: 100%;
+  .logo {
+    width: 50px;
+    height: 50px;
+  }
   .title {
-    margin: 15px 0 40px;
+    margin: 50px 0 20px;
     & span {
-      font-size: 24px;
-      font-weight: 300;
+      font-size: 35px;
+      font-weight: bold;
       line-height: 1;
-      text-transform: uppercase;
-      color: #788195;
+      color: ${({ theme }) => theme.text.secondary};
     }
+    .highlight {
+      color: ${({ theme }) => theme.palette.primary};
+    }
+  }
+
+  .sub-title {
+    font-size: 14px;
+    margin-bottom: 90px;
+    color: ${({ theme }) => theme.text.primary};
+    max-width: 300px;
   }
 
   .sub-action-div {
     display: flex;
     justify-content: space-between;
-    margin: 25px 0 10px;
+    margin: 10px 0 10px;
+    a {
+      color: ${({ theme }) => theme.text.primary};
+    }
   }
 
   .action-div {

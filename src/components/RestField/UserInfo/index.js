@@ -7,7 +7,16 @@ import { getRecordData } from '../../../utils/tools';
 import { MEMBER_ROLES } from '../../../configs/localData/index';
 
 const UserInfo = props => {
-  const { record, isShowName, size, isLink, prefixLink, nameProp, roleProp, avatarProp } = props;
+  const {
+    record,
+    isShowName,
+    size,
+    isLink,
+    prefixLink,
+    nameProp,
+    roleProp,
+    avatarProp,
+  } = props;
   const content =
     record &&
     (isLink ? (
@@ -26,7 +35,9 @@ const UserInfo = props => {
           ''
         )}
         <div style={{ lineHeight: '12px' }}>
-          <small style={{ color: '#8d8a8a' }}>{getUserRole(getRecordData(record, roleProp))}</small>
+          <small style={{ color: '#8d8a8a' }}>
+            {getUserRole(getRecordData(record, roleProp))}
+          </small>
         </div>
       </Link>
     ) : (
@@ -34,7 +45,9 @@ const UserInfo = props => {
       <a role="main" style={{ marginLeft: 10 }}>
         {getRecordData(record, nameProp) || record.email}
         <div style={{ lineHeight: '12px' }}>
-          <small style={{ color: '#8d8a8a' }}>{getUserRole(getRecordData(record, roleProp))}</small>
+          <small style={{ color: '#8d8a8a' }}>
+            {getUserRole(getRecordData(record, roleProp))}
+          </small>
         </div>
       </a>
     ));
@@ -45,7 +58,9 @@ const UserInfo = props => {
           <Avatar src={getRecordData(record, avatarProp)} size={size} />
         )) || <Avatar icon="user" size={size} />}
         {(record && isShowName && content) || (
-          <span style={{ marginLeft: 10 }}>{i18next.t('error.waitingUpdate')}</span>
+          <span style={{ marginLeft: 10 }}>
+            {i18next.t('error.waitingUpdate')}
+          </span>
         )}
       </div>
     </div>
@@ -74,7 +89,7 @@ UserInfo.defaultProps = {
   avatarProp: 'avatar',
   isShowName: true,
   isLink: true,
-  prefixLink: 'users',
+  prefixLink: '/users',
 };
 
 export default UserInfo;

@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import I18n from 'i18next';
 import { Menu, Icon, Dropdown, Avatar } from 'antd';
-import { logout as logoutAction } from '../../redux/auth/actions';
+import { useDispatch } from 'react-redux';
+import { logout } from 'redux/auth/slice';
 import HeaderWrapper from './styles';
 
-const Header = ({ logout, onToggle, collapsed }) => {
-  const [locale, setLocale] = useState(localStorage.getItem('i18nextLng') || I18n.language);
+const Header = ({ onToggle, collapsed }) => {
+  const dispatch = useDispatch();
+  const [locale, setLocale] = useState(
+    localStorage.getItem('i18nextLng') || I18n.language,
+  );
   const profileMenu = [
     {
       key: 'profile',
@@ -26,11 +29,10 @@ const Header = ({ logout, onToggle, collapsed }) => {
     <HeaderWrapper className="header">
       <div className="leftHeader">
         <Icon
-          className="trigger"
-          type={collapsed ? 'menu-unfold' : 'menu-fold'}
+          className={`trigger ${collapsed ? '' : 'reverse-trigger'}`}
+          type="ic-menu"
           onClick={onToggle}
         />
-
         <div className="title">{I18n.t('appInfo.name')}</div>
       </div>
       <div className="rightHeader">
@@ -49,7 +51,7 @@ const Header = ({ logout, onToggle, collapsed }) => {
           EN
         </div>
         <Dropdown
-          overlay={(
+          overlay={() => (
             <Menu style={{ minWidth: '120px' }}>
               {profileMenu.map(menu => (
                 <Menu.Item key={menu.key}>
@@ -57,11 +59,11 @@ const Header = ({ logout, onToggle, collapsed }) => {
                 </Menu.Item>
               ))}
               <Menu.Divider />
-              <Menu.Item onClick={logout} key="logout">
+              <Menu.Item onClick={() => dispatch(logout())} key="logout">
                 {I18n.t('header.logout')}
               </Menu.Item>
             </Menu>
-)}
+          )}
           trigger={['click']}
         >
           <Avatar size="large" icon="user" />
@@ -71,14 +73,8 @@ const Header = ({ logout, onToggle, collapsed }) => {
   );
 };
 Header.propTypes = {
-  logout: PropTypes.func,
   collapsed: PropTypes.bool,
   onToggle: PropTypes.func,
 };
 
-export default connect(
-  null,
-  dispatch => ({
-    logout: () => dispatch(logoutAction()),
-  })
-)(Header);
+export default Header;

@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import CRUDActions from '../../../redux/crudActions';
-import { getRecordData, upperCaseFirstChart } from '../../../utils/tools';
-import { searchReference } from '../../../redux/referenceData/actions';
+import { getRecordData } from '../../../utils/tools';
+import { searchReference } from '../../../redux/referenceData/slice';
 import { getReferenceArr } from '../../../redux/referenceData/selectors';
-import { PRIMARY_KEY } from '../../../redux/crudCreator/actions';
+import { PRIMARY_KEY } from '../../../redux/crudCreator/slice';
 
 class RefOneToMany extends Component {
   componentDidMount() {
@@ -17,7 +17,7 @@ class RefOneToMany extends Component {
             where: {
               [mappedBy]: { $in: [getRecordData(record, source)] },
             },
-          }
+          },
     );
   }
 
@@ -97,27 +97,28 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = (dispatch, props) => ({
-  search: (text, searchKey) => dispatch(searchReference(props.resource, text, searchKey)),
+  search: (text, searchKey) =>
+    dispatch(searchReference(props.resource, text, searchKey)),
   retrieveList: (filter, isRefresh) =>
     dispatch(
-      CRUDActions[props.resource][`getAll${upperCaseFirstChart(props.resource)}`](filter, {
+      CRUDActions[props.resource].getAll(filter, {
         isRefresh,
-      })
+      }),
     ),
   gotoShowPage: id => props.history.push(`/auth/${props.resource}/${id}/show`),
   gotoEditPage: id => props.history.push(`/auth/${props.resource}/${id}/edit`),
   deleteItem: id =>
     dispatch(
-      CRUDActions[props.resource][`edit${upperCaseFirstChart(props.resource)}`]({
+      CRUDActions[props.resource].edit({
         [PRIMARY_KEY]: id,
         [props.mappedBy]: null,
-      })
+      }),
     ),
 });
 
 const RefOneToManyConnected = connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(RefOneToMany);
 
 RefOneToManyConnected.defaultProps = {

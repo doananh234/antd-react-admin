@@ -51,54 +51,52 @@ export default class AvatarCropper extends Component {
   }
 
   render() {
+    const { cropDimension } = this.props;
     return (
-      <div>
-        <div className="static-modal">
-          <Modal
-            visible={this.props.isShowModal}
-            onCancel={this.props.onHideModal}
-            className="avatar-editor-modal"
-            header="Edit Avatar"
-            bodyStyle={{ textAlign: 'center' }}
-            footer={[
-              <Button
-                className="btn-fill btn-wd"
-                type="primary"
-                onClick={() => this.handleSave()}
-                key="saveBtn"
-              >
-                {I18n.t('button.save')}
-              </Button>,
-            ]}
+      <Modal
+        width={cropDimension.width + 100}
+        visible={this.props.isShowModal}
+        onCancel={this.props.onHideModal}
+        className="avatar-editor-modal"
+        header="Edit Avatar"
+        bodyStyle={{ textAlign: 'center' }}
+        footer={[
+          <Button
+            className="btn-fill btn-wd"
+            type="primary"
+            onClick={() => this.handleSave()}
+            key="saveBtn"
           >
-            <AvatarEditor
-              ref={editor => this.setEditorRef(editor)}
-              width={250}
-              height={250}
-              border={50}
-              color={[0, 0, 0, 0.6]} // RGBA
-              scale={parseFloat(this.state.scale)}
-              rotate={0}
-              borderRadius={125}
-              onPositionChange={p => this.handlePositionChange(p)}
-              // onImageChange={() => this.handleSave()}
-              image={this.props.image}
-              accept="image/*"
-            />
-            <br />
-            Zoom:
-            <div className="zoom-div">
-              <input
-                name="scale"
-                type="range"
-                onChange={e => this.handleScale(e)}
-                min="1"
-                max="2"
-                step="0.01"
-                defaultValue="1"
-              />
-            </div>
-          </Modal>
+            {I18n.t('button.save')}
+          </Button>,
+        ]}
+      >
+        <AvatarEditor
+          ref={editor => this.setEditorRef(editor)}
+          width={cropDimension.width}
+          height={cropDimension.height}
+          border={cropDimension.border}
+          color={[0, 0, 0, 0.6]} // RGBA
+          scale={parseFloat(this.state.scale)}
+          rotate={0}
+          borderRadius={cropDimension.borderRadius}
+          onPositionChange={p => this.handlePositionChange(p)}
+          // onImageChange={() => this.handleSave()}
+          image={this.props.image}
+          accept="image/*"
+        />
+        <br />
+        Zoom:
+        <div className="zoom-div">
+          <input
+            name="scale"
+            type="range"
+            onChange={e => this.handleScale(e)}
+            min="0.5"
+            max="2"
+            step="0.01"
+            defaultValue="1"
+          />
         </div>
         {!!this.state.preview && (
           <img
@@ -111,7 +109,7 @@ export default class AvatarCropper extends Component {
             alt=""
           />
         )}
-      </div>
+      </Modal>
     );
   }
 }
@@ -121,4 +119,14 @@ AvatarCropper.propTypes = {
   image: PropTypes.object,
   isShowModal: PropTypes.bool,
   onHideModal: PropTypes.func,
+  cropDimension: PropTypes.object,
+};
+
+AvatarCropper.defaultProps = {
+  cropDimension: {
+    width: 250,
+    height: 250,
+    border: 50,
+    borderRadius: 125,
+  },
 };

@@ -52,11 +52,11 @@ const FilterUI = ({ source, resourceFilter, handleReset, setSelectedKeys, confir
       <RangePicker
         value={value}
         onChange={e => {
-          setValue(e);
+          setValue(e[0] && [e[0].startOf('day'),e[1] && e[1].endOf('day')]);
           setSelectedKeys([
             {
-              $gte: e[0] && e[0].toISOString(),
-              $lte: e[1] && e[1].toISOString(),
+              $gte: e[0] && e[0].startOf('day').toISOString(),
+              $lte: e[1] && e[1].endOf('day').toISOString(),
             },
           ]);
         }}
