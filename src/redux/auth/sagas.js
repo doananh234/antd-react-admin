@@ -46,8 +46,8 @@ function* loginSaga({ payload }) {
       loginApi,
       payload,
     );
-    if (response.data) {
-      localStorage.setItem('sessionToken', response.data);
+    if (response.token) {
+      localStorage.setItem('sessionToken', response.token);
       yield put(loginSuccess(response));
       yield put(getCurentUser());
     } else {

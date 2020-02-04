@@ -36,7 +36,7 @@ class Login extends Component {
         <div className="sub-title">{`${i18n.t('login.subTitle')}`}</div>
         <Form layout="vertical" onSubmit={this.handleSubmit}>
           <FormItem>
-            {getFieldDecorator('username', {
+            {getFieldDecorator('email', {
               rules: [
                 {
                   required: true,
