@@ -1,4 +1,4 @@
-const checkIfErrorOccurs = res => ({
+const checkIfErrorOccurs = (res) => ({
   code: res.status,
   res,
 });
@@ -58,11 +58,11 @@ export const timeoutPromise = (ms, promise) =>
       reject(new Error('Request time out! Please try again.'));
     }, ms);
     promise.then(
-      res => {
+      (res) => {
         clearTimeout(timeoutId);
         resolve(res);
       },
-      err => {
+      (err) => {
         clearTimeout(timeoutId);
         reject(err);
       },
@@ -73,7 +73,7 @@ export default customFetch;
 
 function requestWrapper(method) {
   const request = async (url, data = null, params = {}) => {
-    let convertUrl = `${process.env.REACT_APP_SERVER_URL}/api/v1${url}`;
+    let convertUrl = `${process.env.REACT_APP_SERVER_URL}/api/v1/admin${url}`;
     let convertParams = params;
     let convertData = data;
     if (method === 'GET') {
@@ -93,12 +93,14 @@ function requestWrapper(method) {
       method,
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
+        // ...(businessId && { businessId }),
       },
     };
     // check that req url is relative and request was sent to our domain
+
     const token = localStorage.getItem('sessionToken');
     if (token) {
-      defaults.headers.Authorization = `${token}`;
+      defaults.headers.Authorization = `Bearer ${token}`;
     }
 
     if (method === 'POST' || method === 'PUT') {
@@ -122,8 +124,8 @@ function requestWrapper(method) {
 export function getQueryString(params) {
   const esc = encodeURIComponent;
   return Object.keys(params)
-    .filter(k => params[k] || params[k] === 0)
-    .map(k => `${esc(k)}=${esc(params[k])}`)
+    .filter((k) => params[k] || params[k] === 0)
+    .map((k) => `${esc(k)}=${esc(params[k])}`)
     .join('&');
 }
 

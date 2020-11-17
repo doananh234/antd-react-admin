@@ -13,7 +13,6 @@ const FormRadio = props => {
     required,
     requiredMessage,
     placeholder,
-    form,
     defaultValue,
     type,
     dataResource,
@@ -22,25 +21,25 @@ const FormRadio = props => {
     rules,
   } = props;
   return (
-    <FormItem label={header}>
-      {form.getFieldDecorator(source, {
-        rules: [{ required, message: i18next.t(requiredMessage), ...rules }],
-        initialValue: defaultValue,
-      })(
-        <RadioGroup placeholder={placeholder}>
-          {dataResource.map(data =>
-            type === 'button' ? (
-              <RadioButton key={data[valuePops]} value={data[valuePops]}>
-                {data[titleProps]}
-              </RadioButton>
-            ) : (
-              <Radio key={data[valuePops]} value={data[valuePops]}>
-                {data[titleProps]}
-              </Radio>
-            ),
-          )}
-        </RadioGroup>,
-      )}
+    <FormItem
+      label={header}
+      name={source}
+      rules={[{ required, message: i18next.t(requiredMessage), ...rules }]}
+      initialValue={defaultValue}
+    >
+      <RadioGroup placeholder={placeholder}>
+        {dataResource.map(data =>
+          type === 'button' ? (
+            <RadioButton key={data[valuePops]} value={data[valuePops]}>
+              {data[titleProps]}
+            </RadioButton>
+          ) : (
+            <Radio key={data[valuePops]} value={data[valuePops]}>
+              {data[titleProps]}
+            </Radio>
+          ),
+        )}
+      </RadioGroup>
     </FormItem>
   );
 };
@@ -51,7 +50,6 @@ FormRadio.propTypes = {
   required: PropTypes.bool,
   requiredMessage: PropTypes.node,
   placeholder: PropTypes.string,
-  form: PropTypes.object,
   defaultValue: PropTypes.any,
   dataResource: PropTypes.any,
   type: PropTypes.string,

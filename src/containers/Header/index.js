@@ -1,42 +1,57 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import I18n from 'i18next';
-import { Menu, Icon, Dropdown, Avatar } from 'antd';
-import { useDispatch } from 'react-redux';
-import { logout } from 'redux/auth/slice';
+import { Link } from 'react-router-dom';
+import { Menu, Dropdown, Avatar } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from 'redux/auth/actions';
+// import { ROLE } from 'configs/localData';
+import { checkRole } from 'utils/tools';
+import { MenuFoldOutlined, UserOutlined } from '@ant-design/icons';
+import Notifications from './Notifications';
 import HeaderWrapper from './styles';
 
 const Header = ({ onToggle, collapsed }) => {
   const dispatch = useDispatch();
-  const [locale, setLocale] = useState(
-    localStorage.getItem('i18nextLng') || I18n.language,
-  );
+  const currentRole = useSelector((state) => state.auth.role);
+  const currentUser = useSelector((state) => state.auth.data);
+  // const notSeen = useSelector((state) => state.notifications.notSeen);
+  const [visible, setVisible] = useState(false);
+  const toggleDrawer = () => {
+    setVisible(!visible);
+  };
+  // const [locale, setLocale] = useState(
+  //   localStorage.getItem('i18nextLng') || I18n.language,
+  // );
   const profileMenu = [
     {
       key: 'profile',
       text: 'header.profile',
-      url: '#',
+      url: '/profile',
     },
   ];
 
-  const changeLocale = e => () => {
-    setLocale(e);
-    I18n.changeLanguage(e);
-    localStorage.setItem('i18nextLng', e);
-  };
+  // const changeLocale = e => () => {
+  //   setLocale(e);
+  //   I18n.changeLanguage(e);
+  //   localStorage.setItem('i18nextLng', e);
+  // };
+
+  useEffect(() => {
+    I18n.changeLanguage('en');
+  }, []);
 
   return (
     <HeaderWrapper className="header">
       <div className="leftHeader">
-        <Icon
+        <MenuFoldOutlined
           className={`trigger ${collapsed ? '' : 'reverse-trigger'}`}
-          type="ic-menu"
           onClick={onToggle}
         />
         <div className="title">{I18n.t('appInfo.name')}</div>
       </div>
       <div className="rightHeader">
-        <div
+        {/* <div
           className={`localeSelect${locale === 'vi' ? ' active' : ''}`}
           role="presentation"
           onClick={changeLocale('vi')}
@@ -49,15 +64,33 @@ const Header = ({ onToggle, collapsed }) => {
           onClick={changeLocale('en')}
         >
           EN
+        </div> */}
+        {/* <div className="notification-section">
+          <Button onClick={toggleDrawer}>
+            <Badge count={notSeen}>
+              <BellOutlined />
+            </Badge>
+          </Button>
+        </div> */}
+        <div className="user-role">
+          <div className="name">
+            {`${currentUser?.customer?.displayName || ''}`}
+          </div>
+          <div className="role">
+            {currentUser?.email}
+            {/* {I18n.t(ROLE.find((role) => role.value === currentRole)?.text)} */}
+          </div>
         </div>
         <Dropdown
           overlay={() => (
             <Menu style={{ minWidth: '120px' }}>
-              {profileMenu.map(menu => (
-                <Menu.Item key={menu.key}>
-                  <a href={menu.url}>{I18n.t(menu.text)}</a>
-                </Menu.Item>
-              ))}
+              {profileMenu.map((menu) =>
+                !checkRole(menu.roles, currentRole) ? null : (
+                  <Menu.Item key={menu.key}>
+                    <Link to={menu.url}>{I18n.t(menu.text)}</Link>
+                  </Menu.Item>
+                ),
+              )}
               <Menu.Divider />
               <Menu.Item onClick={() => dispatch(logout())} key="logout">
                 {I18n.t('header.logout')}
@@ -66,8 +99,17 @@ const Header = ({ onToggle, collapsed }) => {
           )}
           trigger={['click']}
         >
-          <Avatar size="large" icon="user" />
+          <Avatar
+            src={currentUser?.customer?.avatar}
+            size="large"
+            icon={<UserOutlined />}
+          />
         </Dropdown>
+        <Notifications
+          closable={false}
+          onClose={toggleDrawer}
+          visible={visible}
+        />
       </div>
     </HeaderWrapper>
   );

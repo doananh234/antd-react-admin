@@ -1,98 +1,75 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { replace } from 'connected-react-router';
-import Modal from '../../components/common/Modal';
-import UserTypes from '../../pages/UserTypes';
-
-import Users from '../../pages/Users';
+import { useLocation, useHistory } from 'react-router';
+import Modal from 'components/common/Modal';
+import Users from 'pages/Users';
 
 const modalRoutes = [
-  {
-    path: '/userTypes',
-    routes: [
-      {
-        path: '/create',
-        component: UserTypes.Create,
-      },
-      {
-        path: '/edit',
-        component: UserTypes.Edit,
-      },
-    ],
-  },
   {
     path: '/users',
     routes: [
       {
         path: '/create',
         component: Users.Create,
-        modalOptions: {
-          width: 480,
-        },
       },
       {
         path: '/edit',
         component: Users.Edit,
-        modalOptions: {
-          width: 480,
-        },
       },
     ],
   },
 ];
 
-const getModalRoute = currentModal => {
+let modal = null;
+
+const getModalRoute = (currentModal) => {
   const modalRoute =
     currentModal &&
-    modalRoutes.find(route => currentModal.search(route.path) > -1);
+    modalRoutes.find((route) => currentModal.search(route.path) > -1);
   if (modalRoute) {
     return modalRoute.routes.find(
-      route => currentModal.indexOf(route.path) > -1,
+      (route) => currentModal.indexOf(route.path) > -1,
     );
   }
   return modalRoute;
 };
 
-class ModalRoute extends Component {
-  componentDidMount() {
-    const { location } = this.props;
+const ModalRoute = () => {
+  const location = useLocation();
+  const history = useHistory();
+  useEffect(() => {
+    console.log('lo', location.hash);
     if (location.hash && location.hash !== '#') {
       const modelRoute = location.hash.replace('#', '/');
-      this.modal = getModalRoute(modelRoute);
+      modal = getModalRoute(modelRoute);
     }
-  }
-
-  closeModal = () => {
-    const { replaceRoute, location } = this.props;
-    replaceRoute(`${location.pathname}${location.search}`);
+    // eslint-disable-next-line
+  }, [location.hash]);
+  const closeModal = () => {
+    history.replace(`${location.pathname}${location.search}`);
   };
 
-  render() {
-    const { location } = this.props;
-    const modelRoute = location.hash.replace('#', '/');
-    this.modal = getModalRoute(modelRoute) || this.modal;
-    const modalOptions =
-      this.modal && this.modal.modalOptions ? this.modal.modalOptions : {};
-    return (
-      <Modal
-        {...modalOptions}
-        visible={!!(location.hash && location.hash !== '#')}
-        footer={null}
-        onCancel={this.closeModal}
-        onClose={this.closeModal}
-      >
-        {this.modal && this.modal.component && (
-          <this.modal.component
-            showModal
-            visibleModal={!!(location.hash && location.hash !== '#')}
-            location={location}
-          />
-        )}
-      </Modal>
-    );
-  }
-}
+  const modelRoute = location.hash.replace('#', '/');
+  modal = getModalRoute(modelRoute) || modal;
+  const modalOptions = modal && modal?.modalOptions ? modal?.modalOptions : {};
+  return (
+    <Modal
+      {...modalOptions}
+      visible={!!(location.hash && location.hash !== '#')}
+      footer={null}
+      onCancel={closeModal}
+      onClose={closeModal}
+    >
+      {modal?.component && (
+        <modal.component
+          showModal
+          visibleModal={!!(location.hash && location.hash !== '#')}
+          location={location}
+        />
+      )}
+    </Modal>
+  );
+};
 
 ModalRoute.propTypes = {
   location: PropTypes.object,
@@ -102,12 +79,4 @@ ModalRoute.propTypes = {
   replaceRoute: PropTypes.func,
 };
 
-const mapStateToProps = state => ({
-  location: state.router.location,
-});
-
-const mapDispatchToProps = dispatch => ({
-  replaceRoute: data => dispatch(replace(data)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ModalRoute);
+export default ModalRoute;

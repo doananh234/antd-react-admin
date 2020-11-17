@@ -1,7 +1,12 @@
 import React from 'react';
 import i18next from 'i18next';
 import PropTypes from 'prop-types';
-import { Icon } from 'antd';
+import {
+  DeleteOutlined,
+  EyeOutlined,
+  LoadingOutlined,
+} from '@ant-design/icons';
+import { getImageUrl } from 'utils/tools';
 
 const UploadImageItem = ({
   defaultSourceKey,
@@ -13,12 +18,22 @@ const UploadImageItem = ({
   deleteImage,
   isDefault,
 }) => (
-  <div onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} className="uploadImage">
-    {item.status !== 'done' && <Icon className="loading" type="loading" />}
-    <img className="image" src={item.url || item.response} alt={item.url} />
+  <div
+    onMouseEnter={onMouseEnter}
+    onMouseLeave={onMouseLeave}
+    className="uploadImage"
+  >
+    {item.status !== 'done' && <LoadingOutlined className="loading" />}
+    <img
+      className="image"
+      src={getImageUrl(item.url || item.response)}
+      alt={item.url}
+    />
     <div className="overlay">
-      <Icon type="eye" onClick={() => onPreviewUI({ ...item, url: item.url || item.response })} />
-      <Icon type="delete" onClick={() => deleteImage(item)} />
+      <EyeOutlined
+        onClick={() => onPreviewUI({ ...item, url: item.url || item.response })}
+      />
+      <DeleteOutlined onClick={() => deleteImage(item)} />
     </div>
     {defaultSourceKey ? (
       <div

@@ -8,6 +8,7 @@ export const FormItemWrapper = styled(FormItem)`
     label {
       color: ${({ theme }) => theme.text.formLabel};
       font-size: 12px;
+      font-weight: 500;
       &:after {
         content: '';
       }

@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Avatar, Icon } from 'antd';
+import { Avatar } from 'antd';
 import PropTypes from 'prop-types';
 import i18next from 'i18next';
-import { getRecordData } from '../../../utils/tools';
+import { ManOutlined, WomanOutlined, UserOutlined } from '@ant-design/icons';
+import { getRecordData } from 'utils/tools';
 import { MEMBER_ROLES } from '../../../configs/localData/index';
 
-const UserInfo = props => {
+const UserInfo = (props) => {
   const {
     record,
     isShowName,
@@ -22,17 +23,23 @@ const UserInfo = props => {
     (isLink ? (
       <Link to={`${prefixLink}/${record.id}/edit`} style={{ marginLeft: 10 }}>
         {getRecordData(record, nameProp) || record.email}
-        {record.gender ? (
-          <Icon
+        {record.gender === 'Male' && (
+          <ManOutlined
             style={{
               marginLeft: 5,
               fontSize: 17,
-              color: record.gender === 'Male' ? '#00a7f7' : '#9b28b0',
+              color: '#00a7f7',
             }}
-            type={`${record.gender.toLowerCase()}`}
           />
-        ) : (
-          ''
+        )}
+        {record.gender === 'Female' && (
+          <WomanOutlined
+            style={{
+              marginLeft: 5,
+              fontSize: 17,
+              color: '#9b28b0',
+            }}
+          />
         )}
         <div style={{ lineHeight: '12px' }}>
           <small style={{ color: '#8d8a8a' }}>
@@ -56,7 +63,13 @@ const UserInfo = props => {
       <div style={{ display: 'flex', alignItems: 'center' }}>
         {(record && record.avatar && (
           <Avatar src={getRecordData(record, avatarProp)} size={size} />
-        )) || <Avatar icon="user" size={size} />}
+        )) || (
+          <Avatar
+            icon={<UserOutlined />}
+            size={size}
+            style={{ minWidth: '32px' }}
+          />
+        )}
         {(record && isShowName && content) || (
           <span style={{ marginLeft: 10 }}>
             {i18next.t('error.waitingUpdate')}
@@ -67,8 +80,8 @@ const UserInfo = props => {
   );
 };
 
-const getUserRole = id => {
-  const role = MEMBER_ROLES.find(data => data.id === id);
+const getUserRole = (id) => {
+  const role = MEMBER_ROLES.find((data) => data.id === id);
   return role ? role.text[i18next.language] : id;
 };
 

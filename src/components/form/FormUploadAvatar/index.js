@@ -1,29 +1,26 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { get } from 'lodash';
-import {
-  Upload,
-  Avatar,
-  Progress,
-  Form,
-  Input,
-  Icon,
-  notification,
-} from 'antd';
+import { Upload, Avatar, Progress, Form, Input, notification } from 'antd';
 import I18n from 'i18next';
+import { CameraOutlined } from '@ant-design/icons';
+import { getUrl, uploadMedia } from 'api/uploadMedia';
+import user from 'assets/images/user.png';
+import { getImageUrl } from 'utils/tools';
 import AvatarCropperModal from './AvatarCropperModal';
 import UploadImageWrapper from './style';
-import { del } from '../../../api/utils';
-import user from '../../../assets/images/user.png';
-import { getUrl, uploadMedia } from '../../../api/uploadMedia';
 
-const uploadUrl = `${process.env.REACT_APP_SERVER_URL}/api/v1/upload`;
+const uploadUrl = `${process.env.REACT_APP_SERVER_URL}/api/v1/uploadFile`;
 const FormItem = Form.Item;
 
 // const confirm = Modal.confirm;
 
 class UploadImage extends Component {
   static getDerivedStateFromProps = (nextProps, prevState) => {
+    console.log(
+      'get(nextProps.record, nextProps.source) || nextProps.defaultValue',
+      get(nextProps.record, nextProps.source) || nextProps.defaultValue,
+    );
     if (
       get(nextProps.record, nextProps.source) !== prevState.prevRecordImgSource
     ) {
@@ -67,7 +64,7 @@ class UploadImage extends Component {
   //   }
   // };
 
-  onUnload = e => {
+  onUnload = (e) => {
     if (this.state.imgDisplay && this.props.form) {
       localStorage.setItem('url', this.state.imgDisplay);
       // eslint-disable-next-line
@@ -92,17 +89,21 @@ class UploadImage extends Component {
         loading: true,
       });
 
+      // const formData = new FormData();
+      // formData.append('type', 'image');
+      // formData.append('images', croppedFile);
       const responseS3 = await getUrl(croppedFile.name, croppedFile.type);
       const response = await uploadMedia(responseS3.uploadUrl, croppedFile);
+      // const response = await uploadImages(formData);
       this.setState({
-        imgDisplay: response.url,
+        imgDisplay: responseS3.fileName,
         loading: false,
         hasErr: false,
       });
-      onChange && onChange(source, response.url);
+      onChange && onChange(source, responseS3.fileName);
       form &&
         form.setFieldsValue({
-          [source]: response.url,
+          [source]: responseS3.fileName,
         });
       return response;
     } catch (error) {
@@ -126,8 +127,12 @@ class UploadImage extends Component {
     }
   };
 
-  onRemove = url => {
-    del('/deleteFile', { url });
+  onRemove = (url) => {
+    // del('/deleteFile', { url });
+    fetch(`${process.env.REACT_APP_SERVER_URL}/api/v1/deleteFile`, {
+      method: 'DELETE',
+      body: JSON.stringify({ key: url }),
+    });
     this.setState({
       file: null,
       imgDisplay: null,
@@ -161,11 +166,11 @@ class UploadImage extends Component {
     }
 
     if (!hasErr) {
-      return <Avatar src={imgDisplay} style={style} />;
+      return <Avatar src={getImageUrl(imgDisplay)} style={style} />;
     }
 
     return (
-      <Avatar src={imgDisplay} style={style}>
+      <Avatar src={getImageUrl(imgDisplay)} style={style}>
         <Progress
           percent={this.state.loadingProgress}
           showInfo={false}
@@ -179,7 +184,6 @@ class UploadImage extends Component {
   render() {
     const {
       hasCrop,
-      form,
       source,
       style,
       className,
@@ -192,7 +196,7 @@ class UploadImage extends Component {
     const props = {
       showUploadList: false,
       action: uploadUrl,
-      beforeUpload: file => {
+      beforeUpload: (file) => {
         this.setState(() => ({
           file,
           isShowCropperModal: hasCrop,
@@ -207,15 +211,18 @@ class UploadImage extends Component {
     return (
       <UploadImageWrapper className={className}>
         <FormItem label={label}>
-          {form &&
-            form.getFieldDecorator(source, {
-              initialValue: imgDisplay || defaultValue,
-            })(<Input style={{ display: 'none' }} />)}
+          <Form.Item
+            style={{ display: 'none' }}
+            name={source}
+            initialValue={imgDisplay || defaultValue}
+          >
+            <Input style={{ display: 'none' }} />
+          </Form.Item>
           <Upload {...props} accept="image/*">
             <div className="image-uploader">
               {this.renderImage()}
               <div className="image-hover" style={style}>
-                <Icon type="camera" className="image-hover-icon" />
+                <CameraOutlined className="image-hover-icon" />
               </div>
             </div>
           </Upload>

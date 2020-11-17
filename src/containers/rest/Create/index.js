@@ -1,28 +1,90 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import I18n from 'i18next';
-import { goBack as goBackAction } from 'connected-react-router';
-import { Icon } from 'antd';
 import { closeModal as closeModalAction } from 'redux/modal/slice';
+import { useLocation, useHistory } from 'react-router';
+import RestCreateComponent from 'components/RestLayout/Create';
+import Text from 'components/common/Text';
 import CRUDActions from '../../../redux/crudActions';
-import RestCreateComponent from '../../../components/RestLayout/Create';
-import Text from '../../../components/common/Text';
 import crudSelectors from '../../../redux/crudSelectors';
 
-const RestCreate = props => {
+const RestCreate = (props) => {
+  const {
+    showModal,
+    header,
+    defaultOptions,
+    customOnSubmit,
+    resource,
+    customOnBack,
+  } = props;
+  const route = useSelector((state) => state.modal.current);
+  const location = useLocation();
+  const record = useSelector((state) =>
+    crudSelectors[props.resource].getDefaultCreateData(state, {
+      ...props,
+      location,
+    }),
+  );
+  const loading = useSelector(crudSelectors[props.resource].getCreateLoading);
+  const error = useSelector(crudSelectors[props.resource].getError);
+
+  const history = useHistory();
+  const dispatch = useDispatch();
+
   const onBack = () => {
-    const { route, closeModal, goBack } = props;
     if (!route) {
-      goBack();
+      history.goBack();
     } else {
-      closeModal();
+      dispatch(closeModalAction());
     }
   };
 
-  const { showModal, header, resource } = props;
+  const gotoShowPage = (id) => {
+    history.push(`${location.pathname.replace('create', '')}/${id}/edit`);
+  };
+
+  const onSubmit = (data) => {
+    if (customOnSubmit) {
+      dispatch(
+        customOnSubmit({
+          data,
+          options: {
+            isBack: true,
+            ...defaultOptions,
+          },
+        }),
+      );
+    } else
+      dispatch(
+        CRUDActions[props.resource].create({
+          data,
+          options: {
+            isBack: !customOnBack,
+            ...defaultOptions,
+          },
+        }),
+      ).then(({ payload: { data } }) => {
+        if (data.id && !(!defaultOptions || defaultOptions.isBack === false)) {
+          customOnBack ? customOnBack() : onBack();
+        }
+      });
+  };
+
+  const content = (
+    <RestCreateComponent
+      {...props}
+      gotoShowPage={gotoShowPage}
+      onSubmit={onSubmit}
+      onBack={onBack}
+      record={record}
+      loading={loading}
+      error={error}
+    />
+  );
+
   return !showModal ? (
-    <RestCreateComponent {...props} onBack={onBack} />
+    content
   ) : (
     <>
       {header !== null && (
@@ -32,33 +94,17 @@ const RestCreate = props => {
               ? I18n.t(header || `${resource}.createPage`)
               : header}
           </div>
-          <Icon onClick={onBack} className="modalBtnBack" type="ic-close" />
+          <span
+            onClick={onBack}
+            role="presentation"
+            className="modalBtnBack"
+            type="anticon ic-close"
+          />
         </Text>
       )}
-      <RestCreateComponent {...props} onBack={onBack} />
+      {content}
     </>
   );
-};
-
-const mapStateToProps = (state, props) => ({
-  route: state.modal.current,
-  record: crudSelectors[props.resource].getDefaultCreateData(state, props),
-  loading: crudSelectors[props.resource].getCreateLoading(state, props),
-  error: crudSelectors[props.resource].getError(state, props),
-  location: state.router.location,
-});
-
-const mapDispatchToProps = (dispatch, props) => {
-  return {
-    onSubmit: data =>
-      dispatch(CRUDActions[props.resource].create(data, props.defaultOptions)),
-    gotoShowPage: id =>
-      props.history.push(
-        `${props.match.path.replace('create', '')}/${id}/edit`,
-      ),
-    closeModal: () => dispatch(closeModalAction()),
-    goBack: () => dispatch(goBackAction()),
-  };
 };
 
 RestCreate.propTypes = {
@@ -68,16 +114,16 @@ RestCreate.propTypes = {
   route: PropTypes.string,
   showModal: PropTypes.bool,
   goBack: PropTypes.func,
-};
-const ConnectedRestCreate = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(RestCreate);
-
-ConnectedRestCreate.propTypes = {
   goShowPageWhenSuccess: PropTypes.bool,
+  defaultOptions: PropTypes.object,
+  customOnSubmit: PropTypes.func,
+  customOnBack: PropTypes.func,
 };
-ConnectedRestCreate.defaultProps = {
+
+RestCreate.defaultProps = {
   goShowPageWhenSuccess: true,
+  defaultOptions: {
+    isBack: true,
+  },
 };
-export default ConnectedRestCreate;
+export default RestCreate;

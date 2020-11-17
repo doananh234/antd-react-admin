@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 const ActivitiesLogWrapper = styled.div`
   .list {
+    border: none;
     width: 100%;
     background: ${({ theme }) => theme.background.content};
   }

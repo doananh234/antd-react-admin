@@ -1,10 +1,11 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Upload, Modal, Icon } from 'antd';
-import { xor } from 'lodash';
+import { Upload, Modal } from 'antd';
+import { xor, isEmpty } from 'lodash';
 import i18next from 'i18next';
+import { PlusOutlined } from '@ant-design/icons';
+import { getImageUrl, getRecordData } from 'utils/tools';
 import FormItem from '../FormItem';
-import { getRecordData } from '../../../utils/tools';
 import { getUrl, uploadMedia } from '../../../api/uploadMedia';
 import { FormMultiUploadWrapper } from './styles';
 import UploadImage from '../../../assets/images/upload.png';
@@ -18,23 +19,32 @@ export const RestUpload = ({ defaultSourceKey, ...props }) => {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [fileList, setFileList] = useState([]);
-
+  useEffect(() => {
+    if (!isEmpty(props.record) && isEmpty(fileList)) {
+      setFileList(makeFileList(props.record[props.source]));
+    }
+    // eslint-disable-next-line
+  }, [props.record]);
   const handleCancel = () => {
     setPreviewVisible(false);
   };
 
-  const handlePreview = file => {
+  const handlePreview = (file) => {
     setPreviewVisible(true);
     setPreviewImage(file.url || file.thumbUrl);
   };
 
-  const deleteImage = item => {
+  const deleteImage = (item) => {
     const results = xor(fileList, [item]);
     setFileList(results);
+    fetch(`${process.env.REACT_APP_SERVER_URL}/api/v1/deleteFile`, {
+      method: 'DELETE',
+      body: JSON.stringify({ key: item.response || item.url }),
+    });
     results.length === 0 && setDisabled(false);
     props.form &&
       props.form.setFieldsValue({
-        [props.source]: results.map(e => e.url || e.response),
+        [props.source]: results.map((e) => e.url || e.response),
       });
   };
 
@@ -47,22 +57,22 @@ export const RestUpload = ({ defaultSourceKey, ...props }) => {
   };
 
   const onSetDefault = useCallback(
-    item => {
-      defaultSourceKey && setDefaultImage(item.url || item.response);
+    (item) => {
+      defaultSourceKey && setDefaultImage(item.response || item.url);
       defaultSourceKey &&
         props.form &&
         props.form.setFieldsValue({
-          [defaultSourceKey]: item.url || item.response,
+          [defaultSourceKey]: item.response || item.url,
         });
     },
     [defaultSourceKey, props.form],
   );
 
-  const handleChange = e => setFileList(e.fileList);
+  const handleChange = (e) => setFileList(e.fileList);
   const uploadButton =
     fileList && fileList.length === 0 ? (
       <div className="uploadArea">
-        <Icon type="plus" />
+        <PlusOutlined />
         <div className="ant-upload-text">
           {'Upload '}
           {props.placeholder && i18next.t(props.placeholder)}
@@ -70,45 +80,49 @@ export const RestUpload = ({ defaultSourceKey, ...props }) => {
       </div>
     ) : null;
 
-  useEffect(() => {
-    setFileList(
-      props.defaultValue || getRecordData(props.record, props.source)
-        ? makeFileList(
-            props.defaultValue || getRecordData(props.record, props.source),
-          )
-        : [],
-    );
-    defaultSourceKey &&
-      onSetDefault({ url: getRecordData(props.record, defaultSourceKey) });
-    setPreviewImage(
-      makeFileList(
-        props.defaultValue || getRecordData(props.record, props.source),
-      ),
-    );
-  }, [
-    defaultSourceKey,
-    onSetDefault,
-    props.defaultValue,
-    props.record,
-    props.record.id,
-    props.source,
-  ]);
+  useEffect(
+    () => {
+      setFileList(
+        props.defaultValue || getRecordData(props.record, props.source)
+          ? makeFileList(
+              props.defaultValue || getRecordData(props.record, props.source),
+            )
+          : [],
+      );
+      defaultSourceKey &&
+        onSetDefault({ url: getRecordData(props.record, defaultSourceKey) });
+      setPreviewImage(
+        makeFileList(
+          props.defaultValue || getRecordData(props.record, props.source),
+        ),
+      );
+    },
+    // eslint-disable-next-line
+    [
+      // defaultSourceKey,
+      // onSetDefault,
+      // props.defaultValue,
+      // props.record,
+      // props.record.id,
+      // props.source,
+    ],
+  );
 
   const customRequest = async ({ onSuccess, file }) => {
     const responseS3 = await getUrl(file.name, file.type);
     const response = await uploadMedia(responseS3.uploadUrl, file);
     if (response) {
-      onSuccess(response, file);
+      onSuccess(responseS3.fileName, file);
     }
   };
 
-  const onChangeUpload = e => {
+  const onChangeUpload = (e) => {
     if (fileList.length === 0) {
       onSetDefault(e.fileList[0]);
     }
     handleChange({ fileList: e.fileList });
     const formattedData = e.fileList.map(
-      data => (data && data.response) || data.url,
+      (data) => (data && data.response) || data.url,
     );
     setPreviewImage(formattedData);
     props.onChange && props.onChange(formattedData);
@@ -121,6 +135,8 @@ export const RestUpload = ({ defaultSourceKey, ...props }) => {
     }
   };
 
+  console.log('fileList', fileList);
+
   return (
     <>
       {props.form && defaultSourceKey && (
@@ -131,6 +147,7 @@ export const RestUpload = ({ defaultSourceKey, ...props }) => {
           defaultValue={
             props.defaultValue || getRecordData(props.record, defaultSourceKey)
           }
+          style={{ display: 'none' }}
         >
           <input style={{ display: 'none' }} />
         </FormItem>
@@ -144,6 +161,7 @@ export const RestUpload = ({ defaultSourceKey, ...props }) => {
             defaultValue={
               props.defaultValue || getRecordData(props.record, props.source)
             }
+            style={{ display: 'none' }}
           >
             <input style={{ display: 'none' }} />
           </FormItem>
@@ -159,7 +177,10 @@ export const RestUpload = ({ defaultSourceKey, ...props }) => {
           multiple={props.multiple}
           disabled={props.disabled || disabled}
           listType="picture-card"
-          fileList={fileList}
+          fileList={fileList.map((e) => ({
+            ...e,
+            url: getImageUrl(e?.response || e.url),
+          }))}
           showUploadList={false}
           onPreview={handlePreview}
           onChange={onChangeUpload}
@@ -189,16 +210,20 @@ export const RestUpload = ({ defaultSourceKey, ...props }) => {
           </div>
         </Dragger>
         <Modal visible={previewVisible} footer={null} onCancel={handleCancel}>
-          <img alt="example" style={{ width: '100%' }} src={previewImage} />
+          <img
+            alt="example"
+            style={{ width: '100%' }}
+            src={getImageUrl(previewImage)}
+          />
         </Modal>
       </FormMultiUploadWrapper>
     </>
   );
 };
 
-const makeFileList = values =>
+const makeFileList = (values) =>
   Array.isArray(values)
-    ? values.map(value =>
+    ? values.map((value) =>
         value && value.url
           ? value
           : {

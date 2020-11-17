@@ -5,7 +5,7 @@ const IumpedColumn = ({ data }) =>
   map(data, item => (
     <div>
       {item.title}
-:
+      :
       <b>{item.value}</b>
     </div>
   ));

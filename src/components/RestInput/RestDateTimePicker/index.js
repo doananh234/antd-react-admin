@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { get } from 'lodash';
 import moment from 'moment';
 import I18n from 'i18next';
-import { DatePicker, Button } from 'antd';
+import { DatePicker, Button, Form } from 'antd';
+import { getRecordData } from 'utils/tools';
 import FormDateTimePicker from '../../form/FormDateTimePicker';
-import { getRecordData } from '../../../utils/tools';
 import { RestInputContext } from '../RestInputContext';
 
 const { RangePicker } = DatePicker;
 
-const RestFormDateTimePicker = props => (
+const RestFormDateTimePicker = (props) => (
   <RestInputContext.Consumer>
     {({ record, form }) => (
       <FormDateTimePicker
@@ -25,6 +25,32 @@ const RestFormDateTimePicker = props => (
     )}
   </RestInputContext.Consumer>
 );
+
+export const RestFormDateRagePicker = (props) => {
+  const { record, form } = useContext(RestInputContext);
+
+  useEffect(() => {
+    get(record, props.source) &&
+      form.setFieldsValue({
+        [props.source]: props.formatDefault(get(record, props.source)),
+      });
+    // eslint-disable-next-line
+  }, [record]);
+  return (
+    <Form.Item name={props.source} label="Deadline" rules={[{ type: 'array' }]}>
+      <RangePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+    </Form.Item>
+  );
+};
+
+RestFormDateRagePicker.propTypes = {
+  source: PropTypes.string,
+  formatDefault: PropTypes.func,
+};
+
+RestFormDateRagePicker.defaultProps = {
+  formatDefault: (value) => value,
+};
 /* eslint-disable */
 export const dateFilterDropdown = (source, resourceFilter, handleReset) => ({
   setSelectedKeys,
@@ -42,17 +68,23 @@ export const dateFilterDropdown = (source, resourceFilter, handleReset) => ({
   );
 };
 
-const FilterUI = ({ source, resourceFilter, handleReset, setSelectedKeys, confirm }) => {
+const FilterUI = ({
+  source,
+  resourceFilter,
+  handleReset,
+  setSelectedKeys,
+  confirm,
+}) => {
   const defaultValue = get(resourceFilter.filter, `${source}`);
   const [value, setValue] = useState(
-    defaultValue && [moment(defaultValue.$gte), moment(defaultValue.$lte)]
+    defaultValue && [moment(defaultValue.$gte), moment(defaultValue.$lte)],
   );
   return (
     <div style={{ padding: 8 }}>
       <RangePicker
         value={value}
-        onChange={e => {
-          setValue(e[0] && [e[0].startOf('day'),e[1] && e[1].endOf('day')]);
+        onChange={(e) => {
+          setValue(e[0] && [e[0].startOf('day'), e[1] && e[1].endOf('day')]);
           setSelectedKeys([
             {
               $gte: e[0] && e[0].startOf('day').toISOString(),

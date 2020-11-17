@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import I18n from 'i18next';
 import { Select, Spin, Row, Col } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import { ButtonWrapper } from './styles';
 
 const { Option } = Select;
@@ -15,7 +16,7 @@ class AddReferenceForm extends Component {
         resourceData: nextProps.resourceData,
         // eslint-disable-next-line react/prop-types
         data: nextProps.resourceFilter.filter(
-          data =>
+          (data) =>
             // eslint-disable-next-line react/prop-types
             data[nextProps.filterProp].toLowerCase().search(searchText) > -1,
         ),
@@ -33,7 +34,7 @@ class AddReferenceForm extends Component {
     };
   }
 
-  onSearch = value => {
+  onSearch = (value) => {
     if (!value || value === '') {
       return;
     }
@@ -45,7 +46,7 @@ class AddReferenceForm extends Component {
     this.props.onSearch(value);
   };
 
-  handleChange = value => {
+  handleChange = (value) => {
     this.setState({
       value,
       data: [],
@@ -83,7 +84,7 @@ class AddReferenceForm extends Component {
             onChange={this.handleChange}
             style={{ width: '100%' }}
           >
-            {data.map(d => (
+            {data.map((d) => (
               <Option key={d.id}>{d.name}</Option>
             ))}
           </Select>
@@ -93,7 +94,7 @@ class AddReferenceForm extends Component {
           <ButtonWrapper
             disabled={value.length === 0}
             type="primary"
-            icon="plus"
+            icon={<PlusOutlined />}
             onClick={this.addReference}
           >
             {I18n.t('button.add')}

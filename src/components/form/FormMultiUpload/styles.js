@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 
 export const FormMultiUploadWrapper = styled.div`
-  min-height: 200px;
   & > span {
+    height: 250px;
     display: flex;
+    margin-bottom: 20px;
   }
   .ant-upload-list {
     margin-left: 8px;
@@ -24,7 +25,7 @@ export const FormMultiUploadWrapper = styled.div`
   .ant-upload.ant-upload-drag {
     width: 100%;
     height: 100%;
-    position: absolute;
+    ${'' /* position: absolute; */}
     background: transparent;
     border: 5px dashed ${({ theme }) => theme.border.default};
     color: ${({ theme }) => theme.text.secondary};

@@ -2,11 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Tooltip } from 'antd';
 import I18n from 'i18next';
+import { EyeOutlined } from '@ant-design/icons';
 import { ButtonWrapper } from './styles';
 
-const ShowButton = props => (
+const ShowButton = (props) => (
   <Tooltip header={I18n.t('tooltip.viewDetail')}>
-    <ButtonWrapper icon="profile" onClick={() => props.gotoShowPage(props.record.id, props.source)}>
+    <ButtonWrapper
+      type="primary"
+      icon={<EyeOutlined />}
+      onClick={() => props.gotoShowPage(props.record.id, props.source)}
+    >
       {/* <IntlMessages id="button.show" /> */}
     </ButtonWrapper>
   </Tooltip>

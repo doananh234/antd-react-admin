@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { Icon } from 'antd';
+import { Table } from 'antd';
+import Icon from '@ant-design/icons';
 
 export const HeaderTableWrapper = styled.input`
   background: transparent;
@@ -28,5 +29,35 @@ export const HeaderTableWrapper = styled.input`
 export const IconWrapper = styled(Icon)`
   &.highlightFilter {
     color: ${({ theme }) => theme.palette.primary} !important;
+  }
+`;
+
+export const DropdownStyles = styled.div`
+  .search-button {
+    i {
+      color: white;
+    }
+  }
+`;
+
+export const TableStyles = styled(Table)`
+  .ant-table-content {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  // .ant-table-cell > div {
+  //   width: auto !important;
+  // }
+  .ant-table-thead > tr > th {
+    background: ${({ theme }) => theme.table.headerBackground} !important;
+    color: ${({ theme }) => theme.table.headerColor} !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+  }
+  .ant-table-tbody > tr:last-child > td {
+    border: none !important;
+  }
+  .ant-table-tbody > tr {
+    font-size: 12px;
   }
 `;

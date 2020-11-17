@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useLocation } from 'react-router';
+import { makeBreadCrumbFromPath } from 'utils/tools';
 import CustomBreadcrumb from '../../common/Breadcrumb';
 import ButtonEdit from '../../RestActions/EditButton';
 import DeleteButton from '../../RestActions/DeleteButton';
 import Layout from '../../common/Layout';
-import Box from '../../common/Box';
 import ActionView from '../ActionLayout';
 import PageTitle from '../../common/PageTitle';
-import { makeBreadCrumbFromPath } from '../../../utils/tools';
 
 const RestShowComponent = ({
   noCardWrapper,
@@ -20,8 +20,8 @@ const RestShowComponent = ({
   hasEdit,
   hasDel,
   header,
-  location,
 }) => {
+  const location = useLocation();
   const BREADCRUMB_LIST = makeBreadCrumbFromPath(location);
 
   if (!record) return null;
@@ -45,7 +45,7 @@ const RestShowComponent = ({
     </div>
   );
 
-  const components = React.Children.map(children, element =>
+  const components = React.Children.map(children, (element) =>
     React.cloneElement(element, { key: element.props.source, record }),
   );
 
@@ -65,7 +65,7 @@ const RestShowComponent = ({
           <CustomBreadcrumb data={BREADCRUMB_LIST} />
         </PageTitle>
       )}
-      <Box>{content}</Box>
+      {content}
     </Layout>
   );
 };
@@ -81,7 +81,6 @@ RestShowComponent.propTypes = {
   hasDel: PropTypes.bool,
   header: PropTypes.any,
   noActions: PropTypes.bool,
-  location: PropTypes.object,
 };
 
 RestShowComponent.defaultProps = {

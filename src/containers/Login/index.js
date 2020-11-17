@@ -1,112 +1,121 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { withRouter, Redirect, Link } from 'react-router-dom';
-import { Form, Button, Checkbox } from 'antd';
+import { Form, Button } from 'antd';
 import i18n from 'i18next';
-import { login as loginAction } from 'redux/auth/slice';
-import MaterialInput from '../../components/common/MaterialInput';
-import Logo from '../../assets/images/logo.png';
+import { login as loginAction } from 'redux/auth/actions';
+import { MailOutlined, LockOutlined } from '@ant-design/icons';
+import MaterialInput from 'components/common/MaterialInput';
+import logo from '../../assets/images/fullLogo.png';
 
 const FormItem = Form.Item;
 
-class Login extends Component {
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        this.props.login(values);
-      }
-    });
+const Login = () => {
+  const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const loading = useSelector((state) => state.auth.loading);
+  const login = (params) => dispatch(loginAction(params));
+  const handleSubmit = () => {
+    // e.preventDefault();
+    form
+      .validateFields()
+      .then((values) => {
+        login(values);
+      })
+      .catch((err) => {
+        console.log('err', err);
+      });
   };
-
-  render() {
-    const { form, isAuthenticated } = this.props;
-    if (isAuthenticated) {
-      return <Redirect to="/" />;
-    }
-    const { getFieldDecorator } = form;
-    return (
-      <div>
-        <img className="logo" src={Logo} alt="" />
-        <div className="title">
-          <span>{i18n.t('login.title')}</span>
-          <span className="highlight">{` ${i18n.t('appInfo.name')}`}</span>
-        </div>
-        <div className="sub-title">{`${i18n.t('login.subTitle')}`}</div>
-        <Form layout="vertical" onSubmit={this.handleSubmit}>
-          <FormItem>
-            {getFieldDecorator('email', {
-              rules: [
-                {
-                  required: true,
-                  message: i18n.t('input.username.validateMsg.required'),
-                },
-              ],
-            })(
-              <MaterialInput
-                placeholder={i18n.t('input.username.placeholder')}
-              />,
-            )}
-          </FormItem>
-          <FormItem>
-            {getFieldDecorator('password', {
-              rules: [
-                {
-                  required: true,
-                  message: i18n.t('input.password.validateMsg.required'),
-                },
-              ],
-            })(
-              <MaterialInput
-                placeholder={i18n.t('input.password.placeholder')}
-                type="password"
-              />,
-            )}
-          </FormItem>
-          <div className="sub-action-div">
-            <FormItem>
-              {getFieldDecorator('rememberMe')(
-                <Checkbox>
-                  <span className="note">{i18n.t('login.rememberMe')}</span>
-                </Checkbox>,
-              )}
-            </FormItem>
+  if (isAuthenticated) {
+    return <Redirect to="/" />;
+  }
+  return (
+    <div>
+      <img alt="" src={logo} className="logo" />
+      <div className="title">
+        <div className="maintitle">{i18n.t('login.title')}</div>
+        {/* <div className="mintitle">{i18n.t('login.botTitle')}</div> */}
+      </div>
+      <Form form={form} layout="vertical" onFinish={handleSubmit}>
+        <FormItem
+          name="email"
+          rules={[
+            {
+              required: true,
+              message: i18n.t('input.email.validateMsg.required'),
+            },
+            {
+              type: 'email',
+              message: i18n.t('input.email.validateMsg.invalid'),
+            },
+          ]}
+        >
+          <MaterialInput
+            placeholder={i18n.t('input.email.placeholder')}
+            prefix={
+              <MailOutlined
+                style={{
+                  color: 'rgba(0,0,0,.25)',
+                  marginTop: '3px',
+                  fontSize: '20px',
+                }}
+              />
+            }
+          />
+        </FormItem>
+        <FormItem
+          name="password"
+          rules={[
+            {
+              required: true,
+              message: i18n.t('input.password.validateMsg.required'),
+            },
+          ]}
+        >
+          <MaterialInput
+            placeholder={i18n.t('input.password.placeholder')}
+            prefix={
+              <LockOutlined
+                type="lock"
+                style={{
+                  color: 'rgba(0,0,0,.25)',
+                  marginTop: '3px',
+                  fontSize: '21px',
+                }}
+              />
+            }
+            type="password"
+          />
+        </FormItem>
+        <div className="action-div">
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={loading}
+            className="login-form-button"
+          >
+            {i18n.t('login.loginBtn')}
+          </Button>
+          <div
+            style={{
+              marginTop: 20,
+              fontSize: '20px',
+              width: '180px',
+              height: '23px',
+              textAlign: 'left',
+            }}
+          >
             <Link to="/forgot-password" href="/forgot-password">
-              <b className="note black">{i18n.t('forgotPassword.title')}</b>
+              {i18n.t('forgotPassword.title')}
             </Link>
           </div>
-          <div className="action-div">
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="login-form-button"
-              size="large"
-            >
-              {i18n.t('login.loginBtn')}
-            </Button>
-          </div>
-        </Form>
-      </div>
-    );
-  }
-}
-
-Login.propTypes = {
-  form: PropTypes.object,
-  login: PropTypes.func,
-  isAuthenticated: PropTypes.bool,
+        </div>
+      </Form>
+    </div>
+  );
 };
 
-export default withRouter(
-  connect(
-    state => ({
-      isAuthenticated: state.auth.isAuthenticated,
-    }),
-    dispatch => ({
-      login: params => {
-        dispatch(loginAction(params));
-      },
-    }),
-  )(Form.create()(Login)),
-);
+Login.propTypes = {};
+
+export default withRouter(Login);

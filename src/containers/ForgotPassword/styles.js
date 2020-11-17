@@ -4,7 +4,7 @@ const ForgotPasswordStyleWrapper = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: flex-end;
+  ${'' /* justify-content: flex-end; */}
   position: relative;
 
   &:before {
@@ -20,7 +20,8 @@ const ForgotPasswordStyleWrapper = styled.div`
   }
 
   .isoLoginContentWrapper {
-    width: 500px;
+    ${'' /* width: 500px; */}
+    width: 100%;
     height: 100%;
     overflow-y: auto;
     z-index: 10;
@@ -31,7 +32,7 @@ const ForgotPasswordStyleWrapper = styled.div`
     min-height: 100%;
     display: flex;
     flex-direction: column;
-    padding: 70px 50px;
+    padding: 70px 0px;
     position: relative;
     background-color: transparent;
 

@@ -4,26 +4,18 @@ import { Row, Col } from 'antd';
 import I18n from 'i18next';
 import { ButtonWrapper, FooterButtonRowWrapper } from './styles';
 
-const ButtonRow = props => {
-  const { loading, onBack, handleSubmit, type, showModal } = props;
+const ButtonRow = (props) => {
+  const { loading, onBack, type, showModal } = props;
   if (showModal) {
     return (
       <FooterButtonRowWrapper className="showTotal">
-        <ButtonWrapper
-          onClick={() => {
-            handleSubmit();
-          }}
-          type="primary"
-          loading={loading}
-        >
+        <ButtonWrapper type="primary" loading={loading} htmlType="submit">
           {I18n.t(type === 'create' ? 'button.create' : 'button.save')}
         </ButtonWrapper>
         {!showModal && <span style={{ width: 20 }} />}
         <ButtonWrapper
           className="btn-back"
-          onClick={() => {
-            onBack();
-          }}
+          onClick={onBack}
         >
           {I18n.t('button.cancel')}
         </ButtonWrapper>
@@ -35,9 +27,6 @@ const ButtonRow = props => {
       <Col lg={12} md={0} sm={0} xs={24} />
       <Col lg={showModal ? 12 : 3} md={3} sm={24} xs={24}>
         <ButtonWrapper
-          onClick={() => {
-            handleSubmit();
-          }}
           htmlType="submit"
           type="primary"
           loading={loading}
@@ -48,9 +37,7 @@ const ButtonRow = props => {
       <Col md={0} sm={0} xs={24} />
       <Col lg={showModal ? 12 : 3} md={3} sm={24} xs={24}>
         <ButtonWrapper
-          onClick={() => {
-            onBack();
-          }}
+          onClick={onBack}
         >
           {I18n.t('button.cancel')}
         </ButtonWrapper>

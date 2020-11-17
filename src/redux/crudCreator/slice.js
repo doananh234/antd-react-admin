@@ -1,8 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import _ from 'lodash';
-import { DEFERRED } from '../ExposedPromiseMiddleware';
-
-export const PRIMARY_KEY = 'id';
+import { PRIMARY_KEY } from './dataProvider';
 
 export const INITIAL_STATE = {
   loading: false,
@@ -17,19 +15,28 @@ export const INITIAL_STATE = {
   total: 0,
   numberOfPages: 1,
   sort: '',
+  createLoading: false,
 };
 
 // getAll
-export const getAll = (state, { payload: { data = {}, options = {} } }) => {
+
+export const getAll = (
+  state,
+  {
+    meta: {
+      arg: { data, options = {} },
+    },
+  },
+) => {
   if (options.isRefresh) {
-    // eslint-disable-next-line no-param-reassign
+    // eslint-disable-next-line
     state = {
       ...INITIAL_STATE,
       loading: true,
       ...data,
     };
   } else {
-    // eslint-disable-next-line no-param-reassign
+    // eslint-disable-next-line
     state = {
       ...state,
       loading: true,
@@ -49,76 +56,94 @@ export const getAllSuccess = (state, { payload: { data } }) => {
   state.numberOfPages = data.numberOfPages;
 };
 
-export const getAllFailure = (state, { payload: { data } }) => {
+export const getAllFailure = (state, { payload }) => {
   state.loading = false;
-  state.error = data;
-  state.data = {};
-  state.total = data.total;
+  state.error = payload?.data;
 };
 
 // getOne
 
-export const getById = (state, { payload: { data } }) => {
+export const getDataById = (
+  state,
+  {
+    meta: {
+      arg: { data },
+    },
+  },
+) => {
   state.currentId = data[PRIMARY_KEY];
-  state.loading = true;
+  state.itemLoadings = { ...state.itemLoadings, [data[PRIMARY_KEY]]: true };
 };
 
-export const getByIdSuccess = (state, { payload: { data } }) => {
+export const getDataByIdSuccess = (state, { payload: { data } }) => {
   state.data = { ...state.data, [data[PRIMARY_KEY]]: data };
   state.currentData = data;
-  state.loading = false;
+  state.itemLoadings = { ...state.itemLoadings, [data[PRIMARY_KEY]]: false };
 };
 
-export const getByIdFailure = (state, { payload: { data } }) => {
+export const getDataByIdFailure = (state, { payload: { data } }) => {
   state.error = data;
-  state.loading = false;
+  state.itemLoadings = { ...state.itemLoadings, [data[PRIMARY_KEY]]: false };
 };
 
-export const create = state => {
+export const create = (state) => {
   state.error = null;
-  state.loading = false;
+  state.createLoading = true;
 };
 
 export const createSuccess = (state, { payload: { data } }) => {
   state.data = { ...state.data, [data[PRIMARY_KEY]]: data };
-  state.loading = false;
+  state.createLoading = false;
   state.ids = [...state.ids, data[PRIMARY_KEY]];
   state.currentId = data.id;
+  state.currentData = data;
   state.error = null;
 };
 
 export const createFailure = (state, { payload: { data } }) => {
   state.error = data;
-  state.loading = false;
+  state.createLoading = false;
 };
 
 // Edit
 
-export const edit = (state, { payload: { data } }) => {
+export const edit = (
+  state,
+  {
+    meta: {
+      arg: { data },
+    },
+  },
+) => {
   state.error = null;
-  state.loading = true;
   state.itemLoadings = { ...state.itemLoadings, [data[PRIMARY_KEY]]: true };
 };
 
 export const editSuccess = (state, { payload: { data } }) => {
   state.error = null;
-  state.loading = false;
   state.data = {
     ...state.data,
     [data[PRIMARY_KEY]]: { ...state.data[data[PRIMARY_KEY]], ...data },
   };
+  state.currentData = data;
   state.itemLoadings = { ...state.itemLoadings, [data[PRIMARY_KEY]]: false };
 };
 
 export const editFailure = (state, { payload: { data } }) => {
   state.error = data;
-  state.loading = false;
   state.itemLoadings = { ...state.itemLoadings, [data[PRIMARY_KEY]]: false };
 };
 
 // Delete
 
-export const del = (state, { payload: { data } }) => {
+export const del = (
+  state,
+  {
+    meta: {
+      arg: { data },
+    },
+  },
+) => {
   state.error = null;
   state.itemLoadings = data[PRIMARY_KEY]
     ? { ...state.itemLoadings, [data[PRIMARY_KEY]]: true }
@@ -137,117 +162,65 @@ export const delSuccess = (state, { payload: { data } }) => {
 };
 
 export const delFailure = (state, { payload: { data } }) => {
+  delete state.data[data[PRIMARY_KEY]];
   state.error = data;
-  state.loading = false;
   state.itemLoadings = data[PRIMARY_KEY]
     ? { ...state.itemLoadings, [data[PRIMARY_KEY]]: null }
     : null;
 };
 
-export const clearCurrentData = state => ({
-  ...state,
-  currentId: null,
-  currentData: {},
-});
+const clearCurrent = (state) => {
+  state.error = null;
+  state.currentId = null;
+  state.currentData = null;
+};
 
-export const setCurrent = (state, { data }) => ({
-  ...state,
-  currentId: data[PRIMARY_KEY],
-  currentData: { ...data, ...state.data[data[PRIMARY_KEY]] },
-  itemLoadings: { ...state.itemLoadings, [data[PRIMARY_KEY]]: true },
-});
+export const makeCRUDSlice = (
+  model,
+  actions,
+  customActions = {},
+  ignoreActions = [],
+) => {
+  const extraReducers = {
+    [actions.getAll.pending]: getAll,
+    [actions.getAll.fulfilled]: getAllSuccess,
+    [actions.getAll.rejected]: getAllFailure,
 
-export const makeCRUDSlice = (model, customAction = {}) => {
-  const reducers = {
-    getAll: {
-      reducer: getAll,
-      prepare: (data, options) => ({
-        payload: {
-          data,
-          options,
-        },
-        [DEFERRED]: true,
-      }),
-    },
-    getAllFailure,
-    getAllSuccess,
-    create: {
-      reducer: create,
-      prepare: (data, options) => ({
-        payload: {
-          data,
-          options,
-        },
-        [DEFERRED]: true,
-      }),
-    },
-    createFailure,
-    createSuccess,
-    edit: {
-      reducer: edit,
-      prepare: (data, options) => ({
-        payload: {
-          data,
-          options,
-        },
-        [DEFERRED]: true,
-      }),
-    },
-    editFailure,
-    editSuccess,
-    del: {
-      reducer: del,
-      prepare: (data, options) => ({
-        payload: {
-          data,
-          options,
-        },
-        [DEFERRED]: true,
-      }),
-    },
-    delSuccess,
-    delFailure,
-    getById: {
-      reducer: getById,
-      prepare: (data, options) => ({
-        payload: {
-          data,
-          options,
-        },
-        [DEFERRED]: true,
-      }),
-    },
-    getByIdFailure,
-    getByIdSuccess,
-    clearCurrent: {
-      reducer: clearCurrentData,
-      prepare: (data, options) => ({
-        payload: {
-          data,
-          options,
-        },
-        [DEFERRED]: true,
-      }),
-    },
-    setCurrent: {
-      reducer: setCurrent,
-      prepare: (data, options) => ({
-        payload: {
-          data,
-          options,
-        },
-        [DEFERRED]: true,
-      }),
-    },
-    ...customAction,
+    [actions.getDataById.pending]: getDataById,
+    [actions.getDataById.fulfilled]: getDataByIdSuccess,
+    [actions.getDataById.rejected]: getDataByIdFailure,
+
+    [actions.create.pending]: create,
+    [actions.create.fulfilled]: createSuccess,
+    [actions.create.rejected]: createFailure,
+
+    [actions.edit.pending]: edit,
+    [actions.edit.fulfilled]: editSuccess,
+    [actions.edit.rejected]: editFailure,
+
+    [actions.del.pending]: del,
+    [actions.del.fulfilled]: delSuccess,
+    [actions.del.rejected]: delFailure,
+    [actions.clearCurrent]: clearCurrent,
   };
 
-  const modelSlice = createSlice({
+  ignoreActions.forEach((element) => {
+    // eslint-disable-next-line
+    const _ignoreActions = Object.keys(extraReducers).filter(
+      (key) => key.indexOf(element) > -1,
+    );
+    _ignoreActions.forEach((e) => {
+      delete extraReducers[e];
+    });
+  });
+
+  const slice = createSlice({
     name: model,
     initialState: INITIAL_STATE,
-    reducers,
+    reducers: {},
+    extraReducers: { ...extraReducers, ...customActions },
   });
-  return modelSlice;
+  return slice;
 };
 
 export default makeCRUDSlice;

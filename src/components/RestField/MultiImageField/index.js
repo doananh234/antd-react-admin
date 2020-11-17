@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Spin, List } from 'antd';
+import { getRecordData } from 'utils/tools';
 import Title from '../../common/Title';
 import { ImageWrapper } from './styles';
-import { getRecordData } from '../../../utils/tools';
 
-const RestImageField = props => {
+const RestImageField = (props) => {
   const { record, header, source, imageStyle, table } = props;
   if (record) {
     return (
@@ -22,9 +22,14 @@ const RestImageField = props => {
             xxl: 3,
           }}
           dataSource={getRecordData(record, source)}
-          renderItem={item => (
+          renderItem={(item) => (
             <List.Item>
-              <ImageWrapper key={item} alt={item} src={item} style={imageStyle} />
+              <ImageWrapper
+                key={item}
+                alt={item}
+                src={item}
+                style={imageStyle}
+              />
             </List.Item>
           )}
         />

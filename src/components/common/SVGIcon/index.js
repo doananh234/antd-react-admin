@@ -9,6 +9,10 @@ import { ReactComponent as Transactions } from '../../../assets/icons/ic-trasact
 import { ReactComponent as Users } from '../../../assets/icons/ic-user.svg';
 import { ReactComponent as Bookings } from '../../../assets/icons/group-3.svg';
 import { ReactComponent as Chekins } from '../../../assets/icons/ic-user-checkin.svg';
+import { ReactComponent as Delivery } from '../../../assets/icons/delivery.svg';
+import { ReactComponent as Pharmacy } from '../../../assets/icons/pharmacy.svg';
+import { ReactComponent as Preparing } from '../../../assets/icons/preparing.svg';
+import { ReactComponent as Sending } from '../../../assets/icons/sending.svg';
 
 const SVG_ICONS = {
   team: ICCustomer,
@@ -19,6 +23,10 @@ const SVG_ICONS = {
   user: Users,
   'ic-seat': Bookings,
   check: Chekins,
+  'ic-delivery': Delivery,
+  'ic-pharmacy': Pharmacy,
+  'ic-prepare': Preparing,
+  'ic-send': Sending,
 };
 
 function SVGIcon({ type, className, ...props }) {

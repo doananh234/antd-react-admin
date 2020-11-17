@@ -1,10 +1,10 @@
 import crudActions from './crudActions';
-import CRUDSelectors from './crudCreator/selectors';
+import { CRUDSelectors } from './crudCreator/selectors';
 
 const models = Object.keys(crudActions);
 
 const crudSelectors = {};
-models.forEach(name => {
+models.forEach((name) => {
   crudSelectors[name] = new CRUDSelectors(name);
 });
 

@@ -8,7 +8,7 @@ class RestListLayout extends Component {
   onChangePagination = ({ current, pageSize }) => {
     const { resourceFilter } = this.props;
     this.props.retrieveList({
-      page: current,
+      offset: current,
       limit: pageSize,
       filter: resourceFilter.filter,
     });
@@ -30,25 +30,25 @@ class RestListLayout extends Component {
     }
   }
 
-  onChangePage = page => {
+  onChangePage = (page) => {
     const { resourceFilter } = this.props;
     this.props.retrieveList({
-      page,
-      limit: resourceFilter.limit || 20,
+      offset: (page - 1) * resourceFilter.limit,
+      limit: resourceFilter.limit || 10,
       filter: resourceFilter.filter,
     });
   };
 
-  renderListItem = record => {
+  renderListItem = (record) => {
     const { children } = this.props;
     const actionGroup =
       Array.isArray(children) &&
       children.find(
-        element => element && element.props.source === 'actionGroup',
+        (element) => element && element.props.source === 'actionGroup',
       );
     const actions =
       Array.isArray(children) && actionGroup
-        ? React.Children.map(actionGroup.props.children, item =>
+        ? React.Children.map(actionGroup.props.children, (item) =>
             React.cloneElement(item, {
               record,
               table: true,
@@ -61,7 +61,7 @@ class RestListLayout extends Component {
     return Array.isArray(children) ? (
       <Card className="item" actions={actions}>
         <Row>
-          {React.Children.map(children, item => {
+          {React.Children.map(children, (item) => {
             if (!item || item.props.source === 'actionGroup') return null;
             return (
               <Col span={24} key={item.props.header}>
@@ -102,15 +102,15 @@ class RestListLayout extends Component {
     } = this.props;
     return (
       <List
-        grid={grid || { gutter: 16 }}
+        grid={grid}
         pagination={{
           position: 'none',
           onChange: this.onChangePage,
-          pageSize: resourceFilter.limit || 20,
+          pageSize: resourceFilter.limit || 10,
         }}
         style={{ marginTop: 20 }}
         dataSource={resourceData || []}
-        renderItem={record => (
+        renderItem={(record) => (
           <List.Item key={record && record.id}>
             {responseRender && !isList
               ? responseRender(record, {
