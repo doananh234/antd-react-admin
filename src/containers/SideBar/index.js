@@ -1,102 +1,95 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import I18n from 'i18next';
-import { Layout, Menu, Icon } from 'antd';
-import { history } from '../../redux/store';
-import Logo from '../../assets/images/logo.png';
-// import FullLogo from '../../assets/images/logo.png';
+import { Layout, Menu } from 'antd';
+import { checkRole } from 'utils/tools';
+import { useHistory, useLocation } from 'react-router';
+import {
+  DashboardOutlined,
+  SettingOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import fullLogo from 'assets/images/fullLogo.png';
+import smallLogo from 'assets/images/smallLogo.png';
 
-const getCurrentTab = str => {
+const getCurrentTab = (str, key) => {
   const paths = str && str.split('/');
-  return paths && paths[1];
+  return paths && paths[key];
 };
 
 const sidebarMenu = [
   {
     key: 'dashboard',
     text: 'sideBar.dashboard',
-    icon: 'ic-dashboard',
+    Icon: DashboardOutlined,
     url: '/',
   },
   {
-    key: 'teachers',
-    text: 'sideBar.teachers',
-    icon: 'ic-student',
-    url: '/teachers',
-  },
-  {
-    key: 'staff',
+    key: 'users',
     text: 'sideBar.users',
-    icon: 'ic-teacher',
-    url: '/staff',
-  },
-  {
-    key: 'attendances',
-    text: 'sideBar.attendances',
-    icon: 'ic-attendance',
-    url: '/attendances',
-  },
-  {
-    key: 'finances',
-    text: 'sideBar.finances',
-    icon: 'ic-finance',
-    url: '/finances',
-  },
-  {
-    key: 'notifications',
-    text: 'sideBar.notifications',
-    icon: 'ic-notification',
-    url: '/notifications',
+    Icon: UserOutlined,
+    url: '/users',
   },
   {
     key: 'settings',
     text: 'sideBar.settings',
-    icon: 'ic-config',
-    url: '/settings/classes',
+    Icon: SettingOutlined,
+    url: '/settings/categories',
   },
 ];
 
-const SideBar = ({ location, collapsed }) => {
-  const url = getCurrentTab(location.pathname);
+const SideBar = ({ collapsed }) => {
+  const role = useSelector((state) => state.auth.role);
+  const location = useLocation();
+  const history = useHistory();
+  const url = getCurrentTab(location.pathname, 1);
+
   return (
-    <Layout.Sider
-      trigger={null}
-      collapsible
-      collapsed={collapsed}
-      className="sidebar"
-      collapsedWidth={64}
-    >
-      <div className="logo">
-        <img alt="" src={Logo} />
-        <img alt="" src={Logo} className="fullLogo" />
-      </div>
-      <Menu
-        mode="inline"
-        selectedKeys={[url || 'dashboard']}
-        defaultSelectedKeys={[url || 'dashboard']}
+    <div className={`sider-wrapper sider-wrapper-${collapsed}`}>
+      <Layout.Sider
+        trigger={null}
+        collapsible
+        theme="dark"
+        collapsed={collapsed}
+        className="sidebar"
+        collapsedWidth={64}
       >
-        {sidebarMenu.map(menu => (
-          <Menu.Item
-            key={menu.key}
-            title={I18n.t(menu.text)}
-            onClick={() => history.push(menu.url)}
-          >
-            <Icon type={menu.icon} />
-            {!collapsed && <span>{I18n.t(menu.text)}</span>}
-          </Menu.Item>
-        ))}
-      </Menu>
-    </Layout.Sider>
+        <div className="logo">
+          {collapsed && <img alt="" src={smallLogo} />}
+          <img alt="" src={fullLogo} className="fullLogo" />
+        </div>
+        <Menu
+          mode="inline"
+          theme="dark"
+          selectedKeys={[url || 'dashboard']}
+          defaultSelectedKeys={[url || 'dashboard']}
+        >
+          {sidebarMenu.map((menu) => {
+            if (!checkRole(menu.roles, role)) {
+              return null;
+            }
+            return (
+              <Menu.Item
+                key={menu.key}
+                title={I18n.t(menu.text)}
+                onClick={() => history.push(menu.url)}
+                icon={<menu.Icon />}
+              >
+                {!collapsed && (
+                  <span className="menu-label">{I18n.t(menu.text)}</span>
+                )}
+              </Menu.Item>
+            );
+          })}
+        </Menu>
+      </Layout.Sider>
+    </div>
   );
 };
 
 SideBar.propTypes = {
-  location: PropTypes.object,
   collapsed: PropTypes.bool,
 };
 
-export default connect(state => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  location: state.router.location,
-}))(SideBar);
+export default SideBar;

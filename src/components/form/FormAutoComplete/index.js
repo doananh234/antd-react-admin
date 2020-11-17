@@ -1,15 +1,50 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { AutoComplete } from 'antd';
-import FormItem from '../FormItem';
+import I18n from 'i18next';
+import { FormItemWrapper } from '../FormItem/styles';
 
-const renderOption = (titleProp, valueProp) => item => (
-  <AutoComplete.Option key={item[valueProp]}>{item[titleProp]}</AutoComplete.Option>
+const renderOption = (titleProp) => (item) => (
+  <AutoComplete.Option key={item[titleProp]}>
+    {item[titleProp]}
+  </AutoComplete.Option>
 );
 class FormAutoComplete extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
   onSelect = (inputValue, option) => {
     const { onSelect } = this.props;
-    onSelect(inputValue, option);
+
+    onSelect && onSelect(inputValue, option);
+  };
+
+  onChange = (text) => {
+    const {
+      form,
+      resourceData,
+      newDataSource,
+      source,
+      titleProp,
+      onChange,
+      valueProp,
+    } = this.props;
+    const option = resourceData.find((e) => e[titleProp] === text);
+    if (option) {
+      form.setFieldsValue({
+        [source]: option[valueProp],
+        [newDataSource]: undefined,
+      });
+      onChange(option[valueProp]);
+    } else {
+      form.setFieldsValue({
+        [newDataSource]: text,
+        [source]: undefined,
+      });
+      onChange(text);
+    }
   };
 
   render() {
@@ -21,20 +56,38 @@ class FormAutoComplete extends Component {
       className,
       valueProp,
       titleProp,
-      onChange,
+      label,
+      header,
+      defaultValue,
+      newDataSource,
     } = this.props;
     return (
-      <FormItem {...this.props}>
+      <FormItemWrapper
+        name={newDataSource}
+        className={className}
+        label={I18n.t(label || header)}
+      >
         <AutoComplete
-          dataSource={resourceData ? resourceData.map(renderOption(titleProp, valueProp)) : []}
+          dataSource={
+            resourceData
+              ? resourceData.map(renderOption(titleProp, valueProp))
+              : []
+          }
+          defaultValue={
+            this.state.value ||
+            resourceData?.find((e) => e[valueProp] === defaultValue)?.[
+              titleProp
+            ] ||
+            defaultValue
+          }
           disabled={disabled}
           placeholder={placeholder}
           className={className}
-          onSearch={value => onSearch(value)}
+          onSearch={(value) => onSearch(value)}
           onSelect={this.onSelect}
-          onChange={onChange}
+          onChange={this.onChange}
         />
-      </FormItem>
+      </FormItemWrapper>
     );
   }
 }
@@ -49,6 +102,11 @@ FormAutoComplete.propTypes = {
   className: PropTypes.string,
   onSelect: PropTypes.func,
   onChange: PropTypes.func,
+  header: PropTypes.string,
+  label: PropTypes.string,
+  source: PropTypes.string,
+  defaultValue: PropTypes.string,
+  newDataSource: PropTypes.string,
 };
 
 FormAutoComplete.defaultProps = {

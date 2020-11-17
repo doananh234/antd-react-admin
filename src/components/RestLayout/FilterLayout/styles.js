@@ -3,9 +3,12 @@ import { Form } from 'antd';
 
 export const FilterFormWrapper = styled(Form)`
   margin: auto;
+  margin-bottom: 30px;
+  background: ${({ theme }) => theme.background.content};
+  padding: 20px;
   .filterContainer {
     display: flex;
-    @media only screen and (max-width: 576px) {
+    @media only screen and (max-width: 768px) {
       flex-direction: column;
     }
   }
@@ -13,16 +16,31 @@ export const FilterFormWrapper = styled(Form)`
     flex: 1;
     justify-content: flex-end;
     margin-right: 10px;
+    & > div {
+      display: flex;
+      justify-content: space-between;
+      .ant-form-item {
+        margin-bottom: 0;
+        .ant-form-item-control {
+          line-height: normal;
+        }
+      }
+    }
     @media only screen and (max-width: 576px) {
       margin-right: 0px;
     }
   }
   .filterActions {
-    width: 200px;
-    @media only screen and (max-width: 576px) {
+    width: 250px;
+    .ant-btn {
+      height: 40px;
+    }
+    @media only screen and (max-width: 768px) {
       display: block;
       width: 100%;
-      margin-top: 15px;
+      .ant-row > .ant-col {
+        margin-bottom: 15px;
+      }
     }
   }
   .border {

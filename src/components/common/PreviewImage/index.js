@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Modal } from 'antd';
+import { Modal } from 'antd';
+import { EyeOutlined } from '@ant-design/icons';
+import { getImageUrl } from 'utils/tools';
 import { PreviewWrapper } from './styles';
 
 const PreviewImage = ({ src, onPreview }) => {
@@ -10,7 +12,7 @@ const PreviewImage = ({ src, onPreview }) => {
     setPreviewVisible(null);
   };
 
-  const onPreviewUI = item => {
+  const onPreviewUI = (item) => {
     if (onPreview) {
       onPreview(item);
     } else {
@@ -20,12 +22,16 @@ const PreviewImage = ({ src, onPreview }) => {
   };
   return src ? (
     <PreviewWrapper>
-      <img className="image" src={src} alt={src} />
+      <img className="image" src={getImageUrl(src)} alt={src} />
       <div className="overlay">
-        <Icon type="eye" onClick={() => onPreviewUI(src)} />
+        <EyeOutlined onClick={() => onPreviewUI(src)} />
       </div>
       <Modal visible={previewVisible} footer={null} onCancel={handleCancel}>
-        <img alt="example" style={{ width: '100%' }} src={previewImage} />
+        <img
+          alt="example"
+          style={{ width: '100%' }}
+          src={getImageUrl(previewImage)}
+        />
       </Modal>
     </PreviewWrapper>
   ) : null;

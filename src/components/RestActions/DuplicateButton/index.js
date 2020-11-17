@@ -1,38 +1,62 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { omit } from 'lodash';
+import { pick } from 'lodash';
 import I18n from 'i18next';
-import CMSActions, { cleanCMSData } from 'redux/cms/actions';
-import { Tooltip } from 'antd';
+import { Tooltip, Popconfirm } from 'antd';
+import moment from 'moment';
+import { createOrders } from 'redux/orders/actions';
+import { CopyOutlined } from '@ant-design/icons';
 import { ButtonWrapper } from './styles';
 
 const DuplicateButton = ({ source, record }) => {
   const dispatch = useDispatch();
-  useEffect(
-    () => () => {
-      dispatch(cleanCMSData());
-    },
-    [dispatch],
-  );
+  useEffect(() => () => {}, [dispatch]);
   const handleDuplicate = () => {
-    const value = omit(record, [
-      'backupContent',
-      'createdAt',
-      'updatedAt',
-      'id',
-      'backupId',
-      'slug',
-      'publishedAt',
-      'isActive',
-      'status',
+    const data = pick(record, [
+      'priceOrder',
+      'customerRequirements',
+      'customerNote',
+      'infoOrderLink',
+      'niche',
+      'platform',
+      'orderFeature',
+      'productCatalogIds',
+      'deadline',
+      'orderRequirementId',
+      'name',
+      'thumbnail',
     ]);
-    dispatch(CMSActions.createCms(value, { isBack: false }));
+    dispatch(
+      createOrders({
+        data: {
+          ...data,
+          status: 'pre_order',
+          finishedDate: moment().add(1, 'day').toISOString(),
+          deadline: moment().add(1, 'day').toISOString(),
+        },
+        options: {
+          isBack: false,
+          isShowSuccessNoti: true,
+          successDescription: 'Clone new order successfully!',
+          customApiResource: 'orders/clone',
+        },
+      }),
+    );
   };
+
   return (
-    <Tooltip title={I18n.t('button.duplicate')}>
-      <ButtonWrapper source={source} icon="copy" onClick={handleDuplicate} />
-    </Tooltip>
+    <Popconfirm
+      placement="topLeft"
+      title={I18n.t('orders.cloneConfirm')}
+      onConfirm={handleDuplicate}
+      okText="Yes"
+      cancelText="No"
+    >
+      <Tooltip placement="bottom" title={I18n.t('button.duplicate')}>
+        <ButtonWrapper source={source} icon={<CopyOutlined />} />
+      </Tooltip>
+    </Popconfirm>
   );
 };
 

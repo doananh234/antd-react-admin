@@ -4,8 +4,8 @@ import i18n from 'i18next';
 import { Select, Spin } from 'antd';
 import { Waypoint } from 'react-waypoint';
 import { map, isObject } from 'lodash';
+import { getRecordData, onSearch as onChangeSearch } from 'utils/tools';
 import FormItem from '../FormItem';
-import { getRecordData, onSearch as onChangeSearch } from '../../../utils/tools';
 import { SelectWrapper } from './style';
 
 const { Option } = Select;
@@ -29,6 +29,7 @@ class FormSelect extends Component {
 
   render() {
     const {
+      allowClear,
       header,
       required,
       placeholder,
@@ -46,6 +47,7 @@ class FormSelect extends Component {
       selectProps,
       formatText,
       onEnter,
+      isFilterOption,
     } = this.props;
     return (
       <FormItem
@@ -55,19 +57,21 @@ class FormSelect extends Component {
         header={i18n.t(header)}
         required={required}
         defaultValue={defaultValue}
+        name={this.props.source}
       >
         <SelectWrapper
           disabled={disabled}
           placeholder={i18n.t(placeholder)}
-          filterOption={this.onSelectOption}
+          filterOption={isFilterOption ? this.onSelectOption : false}
           showSearch
-          allowClear
+          allowClear={allowClear}
           className={className}
-          onSearch={value => onSearch(value)}
+          onSearch={(value) => onSearch(value)}
           onChange={onChange}
           {...selectProps}
+          autoComplete="new-password"
         >
-          {map(format ? format(resourceData) : resourceData, data =>
+          {map(format ? format(resourceData) : resourceData, (data) =>
             children ? (
               <Option
                 key={valueProp ? getRecordData(data, valueProp) : data}
@@ -85,7 +89,10 @@ class FormSelect extends Component {
                 key={valueProp ? getRecordData(data, valueProp) : data}
                 value={valueProp ? getRecordData(data, valueProp) : data}
               >
-                {formatText(titleProp ? getRecordData(data, titleProp) : data, data)}
+                {formatText(
+                  titleProp ? getRecordData(data, titleProp) : data,
+                  data,
+                )}
               </Option>
             ),
           )}
@@ -104,6 +111,7 @@ class FormSelect extends Component {
 }
 
 FormSelect.propTypes = {
+  allowClear: PropTypes.bool,
   source: PropTypes.string,
   header: PropTypes.any,
   required: PropTypes.bool,
@@ -128,6 +136,7 @@ FormSelect.propTypes = {
   formatText: PropTypes.func,
   record: PropTypes.object,
   onEnter: PropTypes.func,
+  isFilterOption: PropTypes.bool,
 };
 
 FormSelect.defaultProps = {
@@ -137,10 +146,12 @@ FormSelect.defaultProps = {
   placeholder: 'placeholder.undefined',
   onChange: () => {},
   onSearch: () => {},
-  formatText: data => data,
+  formatText: (data) => data,
   selectProps: {},
   valueProp: 'value',
   titleProp: 'text',
+  allowClear: true,
+  isFilterOption: true,
 };
 
 export default FormSelect;

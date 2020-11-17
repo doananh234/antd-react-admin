@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { retrieveReference } from '../../../redux/referenceData/slice';
-import { getRecordData } from '../../../utils/tools';
+import { retrieveReference } from 'redux/referenceData/actions';
+import { getRecordData } from 'utils/tools';
 import {
   getReferenceLoading,
   getReferenceData,
@@ -30,7 +30,7 @@ class RestReferenceManyToMany extends Component {
     return (
       <div>
         {type === 'singleElement'
-          ? resourceData.map(data =>
+          ? resourceData?.map((data) =>
               isLink ? (
                 <Link
                   key={Math.random()}
@@ -76,9 +76,16 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = (dispatch, props) => ({
-  retrieveReference: ids =>
-    dispatch(retrieveReference(props.resource, ids, props.mappedBy)),
-  gotoShowPage: id => props.history.push(`/auth/${props.resource}/${id}/show`),
+  retrieveReference: (ids) =>
+    dispatch(
+      retrieveReference({
+        resource: props.resource,
+        ids,
+        mappedBy: props.mappedBy,
+      }),
+    ),
+  gotoShowPage: (id) =>
+    props.history.push(`/auth/${props.resource}/${id}/show`),
 });
 
 RestReferenceManyToMany.propTypes = {

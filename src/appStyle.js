@@ -37,8 +37,17 @@ export const GlobalStyle = createGlobalStyle`
   .text-primary {
     color: ${({ theme }) => theme.palette.primary};
   }
+  .text-headerTable {
+    color: ${({ theme }) => theme.palette.headerTable};
+  }
   .bg-primary {
-    background: ${({ theme }) => theme.palette.primary};
+    background: ${({ theme }) => theme.background.primary};
+  }
+  .bg-warning {
+    background: ${({ theme }) => theme.background.warning};
+  }
+  .bg-error {
+    background: ${({ theme }) => theme.background.error};
   }
   .t-14px-1\\.57 {
     font: normal normal 14px/1.57 ${({ theme }) => theme.fonts.primary};
@@ -46,14 +55,58 @@ export const GlobalStyle = createGlobalStyle`
   .t-500-14px-1\\.57 {
     font: normal 500 14px/1.57 ${({ theme }) => theme.fonts.primary};
   }
+  .t-500-16px-1\\.5 {
+    font: normal 500 16px/1.5 ${({ theme }) => theme.fonts.header};
+  }
+  .t-500-24px-1\\.17 {
+    font: normal 500 16px/1.17 ${({ theme }) => theme.fonts.header};
+  }
   .ml-8px {
     margin-left: 8px;
+  }
+  .ant-card-body {
+    padding-top: 20px
   }
 
   /* ------------------ Override antd---------------- */
   .ant-pagination .ant-pagination-item-active a {
     color: #ffffff;
   }
+
+  .ql-editor {
+    min-height: 200px;
+  }
+  .ant-form-item-label {
+      label {
+        color: #000;
+        font-size: 12px;
+        font-weight: 500;
+      }
+    }
+    .html-content {
+      border-radius:10px;
+      width: 100%;
+      background: white;
+      word-break: break-word;
+      img {
+        max-width: 200px;
+        max-height: 200px;
+        object-fit:contain;
+      }
+    }
+    .label {
+      display: flex;
+      align-items:center;
+      svg {
+        margin-right:5px;
+      }
+      path {
+        fill: rgba(0, 0, 0, 0.45);
+      }
+    }
+    .ant-input-number {
+      width: 100%;
+    }
 `;
 
 export default AppWrapper;

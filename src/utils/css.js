@@ -252,6 +252,9 @@ export const CLASS_UTILITY = `
   .text-center {
     text-align: center;
   }
+  .text-left {
+    text-align: left;
+  }
   .text-right {
     text-align: right;
   }

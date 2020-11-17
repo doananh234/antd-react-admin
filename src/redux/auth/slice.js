@@ -1,4 +1,13 @@
-import { createSlice, createAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+import {
+  getCurrentUser,
+  login,
+  logout,
+  updateCurrentUser,
+  forgotPassword,
+  register,
+  resetPassword,
+} from './actions';
 
 export const initialState = {
   isAuthenticated: !!localStorage.getItem('sessionToken'),
@@ -7,96 +16,96 @@ export const initialState = {
     fullName: localStorage.getItem('fullName') || '',
     id: localStorage.getItem('id'),
   },
-  roles: '',
+  role: null,
   loginError: false,
   loginSuccess: false,
+  permissionData: null,
 };
 
-const { actions, reducer } = createSlice({
+const { reducer } = createSlice({
   name: 'Auth',
   initialState,
   reducers: {
-    loginSuccess: state => {
-      state.isAuthenticated = true;
-      state.loginError = false;
-      state.loginSuccess = true;
+    getPermissionsSuccess: (state, { payload }) => {
+      state.loading = false;
+      state.permissionData = payload;
     },
-
-    logout: state => {
-      state.isAuthenticated = false;
-    },
-    loginFail: (state, { payload }) => {
-      state.isAuthenticated = false;
-      state.loginError = payload;
-      state.loginSuccess = false;
-    },
-    getCurentUserSuccess: (state, { payload }) => {
-      state.data = payload;
-    },
-    getCurentUserFailure: (state, { payload }) => {
+    getPermissionsFail: (state, { payload }) => {
+      state.loading = false;
       state.error = payload;
     },
-    updateUser: state => {
+    subscribeUser: (state) => {
       state.loading = true;
     },
-    updateUserSuccess: (state, { payload }) => {
-      state.data = payload;
+    subscribeUserSuccess: (state) => {
       state.loading = false;
     },
-    updateUserFailure: state => {
+    subscribeUserFail: (state, { payload }) => {
+      state.error = payload.error;
       state.loading = false;
     },
-    forgotPassword: state => {
-      state.loading = true;
-    },
-    forgotPasswordSuccess: state => {
-      state.loading = false;
-    },
-    forgotPasswordFailure: (state, { payload }) => {
-      state.loading = false;
-      state.error = payload;
-    },
-    resetPasswordSuccess: state => {
-      state.loading = false;
-    },
-    resetPasswordFailure: (state, { payload }) => {
-      state.loading = false;
-      state.error = payload;
-    },
-    registerSuccess: state => {
+  },
+  extraReducers: {
+    [login.fulfilled]: (state, { payload }) => {
       state.isAuthenticated = true;
+      state.currentUser = payload;
       state.loginError = false;
       state.loginSuccess = true;
-    },
-    registerFail: (state, { payload }) => {
       state.loading = false;
-      state.error = payload;
+    },
+    [login.rejected]: (state) => {
+      state.isAuthenticated = false;
+      state.loading = false;
+    },
+    [login.pending]: (state) => {
+      state.loading = true;
+    },
+    [register.pending]: (state) => {
+      state.loading = true;
+    },
+    [register.fulfilled]: (state) => {
+      state.loading = false;
+    },
+    [register.rejected]: (state) => {
+      state.loading = false;
+    },
+    [getCurrentUser.fulfilled]: (state, { payload }) => {
+      state.data = payload;
+      state.role = payload.systemRoleName;
+    },
+    [logout.fulfilled]: (state) => {
+      state.isAuth = false;
+      state.currentUser = null;
+    },
+    [updateCurrentUser.pending]: (state) => {
+      state.loading = true;
+    },
+    [updateCurrentUser.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.data = { ...state.data, ...payload };
+    },
+    [updateCurrentUser.rejected]: (state) => {
+      state.loading = false;
+    },
+    [forgotPassword.pending]: (state) => {
+      state.loading = true;
+    },
+    [forgotPassword.fulfilled]: (state) => {
+      state.loading = false;
+    },
+    [forgotPassword.rejected]: (state) => {
+      state.loading = false;
+    },
+    [resetPassword.pending]: (state) => {
+      state.loading = true;
+    },
+    [resetPassword.fulfilled]: (state) => {
+      state.loading = false;
+    },
+    [resetPassword.rejected]: (state) => {
+      state.loading = false;
     },
   },
 });
-
-export const registerWithToken = createAction('Auth/registerWithToken');
-export const register = createAction('Auth/register');
-export const resetPassword = createAction('Auth/resetPassword');
-export const login = createAction('Auth/login');
-export const getCurentUser = createAction('Auth/getCurentUser');
-
-export const {
-  loginSuccess,
-  logout,
-  loginFail,
-  updateUser,
-  updateUserFailure,
-  updateUserSuccess,
-  getCurentUserFailure,
-  getCurentUserSuccess,
-  resetPasswordFailure,
-  resetPasswordSuccess,
-  forgotPasswordFailure,
-  forgotPasswordSuccess,
-  forgotPassword,
-  registerFail,
-  registerSuccess,
-} = actions;
 
 export default reducer;

@@ -1,11 +1,11 @@
 import React from 'react';
 import { Rate } from 'antd';
 import PropTypes from 'prop-types';
+import { getRecordData } from 'utils/tools';
 import { RatingWrapper } from './style';
-import { getRecordData } from '../../../utils/tools';
 import Text from '../../common/Text';
 
-const RatingField = props => (
+const RatingField = (props) => (
   <RatingWrapper>
     <div>
       <Rate
@@ -20,9 +20,9 @@ const RatingField = props => (
     <div>
       {!props.isHideTotalRater && (
         <Text type="bodyGray">
-(
+          (
           {getRecordData(props.record, props.totalRater) || 0}
-)
+          )
         </Text>
       )}
     </div>

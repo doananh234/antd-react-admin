@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { retrieveReference } from '../../../redux/referenceData/slice';
-import { getRecordData } from '../../../utils/tools';
+import { retrieveReference } from 'redux/referenceData/actions';
+import { getRecordData } from 'utils/tools';
 import {
   getReferenceData,
   getReferenceLoading,
-} from '../../../redux/referenceData/selectors';
+} from 'redux/referenceData/selectors';
 
 class RestReference extends Component {
   componentDidMount() {
@@ -36,7 +36,7 @@ class RestReference extends Component {
           resourceData ? resourceData.id : getRecordData(record, source)
         }/edit`}
       >
-        {React.Children.map(children, element =>
+        {React.Children.map(children, (element) =>
           React.cloneElement(element, {
             record: resourceData,
             resource,
@@ -46,7 +46,7 @@ class RestReference extends Component {
         )}
       </Link>
     ) : (
-      React.Children.map(children, element =>
+      React.Children.map(children, (element) =>
         React.cloneElement(element, {
           record: resourceData,
           resource,
@@ -81,8 +81,14 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = (dispatch, props) => ({
-  retrieveReference: id =>
-    dispatch(retrieveReference(props.resource, id ? [id] : [], props.mappedBy)),
+  retrieveReference: (id) =>
+    dispatch(
+      retrieveReference({
+        resource: props.resource,
+        ids: id ? [id] : [],
+        mappedBy: props.mappedBy,
+      }),
+    ),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RestReference);

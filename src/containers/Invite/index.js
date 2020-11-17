@@ -1,157 +1,134 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { withRouter, Redirect } from 'react-router-dom';
-import { Form, Icon, Button, Row, Col } from 'antd';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { withRouter, Redirect, useHistory } from 'react-router-dom';
+import { Form, Button, Row, Col } from 'antd';
 import i18n from 'i18next';
-import { registerWithToken as registerWithTokenAction } from 'redux/auth/slice';
-import MaterialInput from '../../components/common/MaterialInput';
+import { registerWithToken as registerWithTokenAction } from 'redux/auth/actions';
+import { LockOutlined } from '@ant-design/icons';
+import MaterialInput from 'components/common/MaterialInput';
 import FormUploadAvatar from '../../components/form/FormUploadAvatar';
-import { history } from '../../redux/store';
 
 const FormItem = Form.Item;
 
-class Invite extends Component {
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        const token = history.location.search.replace('?token=', '');
-        if (
-          values.password === values.confirmPassword &&
-          values.password.length >= 6
-        ) {
-          this.props.register({
-            password: values.password,
-            firstName: values.firstName,
-            lastName: values.lastName,
-            avatar: values.avatar,
-            token,
-          });
-        }
+const Invite = () => {
+  const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const history = useHistory();
+  const register = (params) => dispatch(registerWithTokenAction(params));
+
+  const handleSubmit = () => {
+    form.validateFields().then((values) => {
+      const token = history.location.search.replace('?token=', '');
+      if (
+        values.password === values.confirmPassword &&
+        values.password.length >= 6
+      ) {
+        register({
+          password: values.password,
+          firstName: values.firstName,
+          lastName: values.lastName,
+          avatar: values.avatar,
+          token,
+        });
       }
     });
   };
 
-  render() {
-    const { form, isAuthenticated } = this.props;
-    if (isAuthenticated) {
-      return <Redirect to="/" />;
-    }
-    const { getFieldDecorator } = form;
-    return (
-      <div>
-        <div className="title">
-          <span>{i18n.t('register.title')}</span>
-        </div>
-        <Form layout="vertical" onSubmit={this.handleSubmit}>
-          <FormUploadAvatar
-            style={{
-              width: 100,
-              height: 100,
-              margin: 'auto',
-              marginBottom: 20,
-            }}
-            source="avatar"
-          />
-          <Row gutter={16}>
-            <Col span={12}>
-              <FormItem>
-                {getFieldDecorator('firstName', {
-                  rules: [
-                    {
-                      required: true,
-                      message: i18n.t('input.firstName.validateMsg.required'),
-                    },
-                  ],
-                })(
-                  <MaterialInput
-                    placeholder={i18n.t('input.firstName.placeholder')}
-                  />,
-                )}
-              </FormItem>
-            </Col>
-            <Col span={12}>
-              <FormItem>
-                {getFieldDecorator('lastName', {
-                  rules: [
-                    {
-                      required: true,
-                      message: i18n.t('input.lastName.validateMsg.required'),
-                    },
-                  ],
-                })(
-                  <MaterialInput
-                    placeholder={i18n.t('input.lastName.placeholder')}
-                  />,
-                )}
-              </FormItem>
-            </Col>
-          </Row>
-          <FormItem>
-            {getFieldDecorator('password', {
-              rules: [
-                {
-                  required: true,
-                  message: i18n.t('input.password.validateMsg.required'),
-                },
-              ],
-            })(
-              <MaterialInput
-                placeholder={i18n.t('input.password.placeholder')}
-                prefix={
-                  <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
-                }
-                type="password"
-              />,
-            )}
-          </FormItem>
-          <FormItem>
-            {getFieldDecorator('confirmPassword', {
-              rules: [
-                {
-                  required: true,
-                  message: i18n.t('input.confirmPassword.validateMsg.required'),
-                },
-              ],
-            })(
-              <MaterialInput
-                placeholder={i18n.t('input.confirmPassword.placeholder')}
-                prefix={
-                  <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
-                }
-                type="password"
-              />,
-            )}
-          </FormItem>
-          <div className="action-div">
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="login-form-button"
-            >
-              {i18n.t('button.submit')}
-            </Button>
-          </div>
-        </Form>
-      </div>
-    );
+  if (isAuthenticated) {
+    return <Redirect to="/" />;
   }
-}
-
-Invite.propTypes = {
-  form: PropTypes.object,
-  register: PropTypes.func,
-  isAuthenticated: PropTypes.bool,
+  return (
+    <div>
+      <div className="title">
+        <span>{i18n.t('register.title')}</span>
+      </div>
+      <Form form={form} layout="vertical" onFinish={handleSubmit}>
+        <FormUploadAvatar
+          style={{
+            width: 100,
+            height: 100,
+            margin: 'auto',
+            marginBottom: 20,
+          }}
+          source="avatar"
+        />
+        <Row gutter={16}>
+          <Col span={12}>
+            <FormItem
+              name="firstName"
+              rules={[
+                {
+                  required: true,
+                  message: i18n.t('input.firstName.validateMsg.required'),
+                },
+              ]}
+            >
+              <MaterialInput
+                placeholder={i18n.t('input.firstName.placeholder')}
+              />
+            </FormItem>
+          </Col>
+          <Col span={12}>
+            <FormItem
+              name="lastName"
+              rules={[
+                {
+                  required: true,
+                  message: i18n.t('input.lastName.validateMsg.required'),
+                },
+              ]}
+            >
+              <MaterialInput
+                placeholder={i18n.t('input.lastName.placeholder')}
+              />
+            </FormItem>
+          </Col>
+        </Row>
+        <FormItem
+          name="password"
+          rules={[
+            {
+              required: true,
+              message: i18n.t('input.password.validateMsg.required'),
+            },
+          ]}
+        >
+          <MaterialInput
+            placeholder={i18n.t('input.password.placeholder')}
+            prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
+            type="password"
+          />
+        </FormItem>
+        <FormItem
+          name="confirmPassword"
+          rules={[
+            {
+              required: true,
+              message: i18n.t('input.confirmPassword.validateMsg.required'),
+            },
+          ]}
+        >
+          <MaterialInput
+            placeholder={i18n.t('input.confirmPassword.placeholder')}
+            prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
+            type="password"
+          />
+        </FormItem>
+        <div className="action-div">
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="login-form-button"
+          >
+            {i18n.t('button.submit')}
+          </Button>
+        </div>
+      </Form>
+    </div>
+  );
 };
 
-export default withRouter(
-  connect(
-    state => ({
-      isAuthenticated: state.auth.isAuthenticated,
-    }),
-    dispatch => ({
-      register: params => dispatch(registerWithTokenAction(params)),
-    }),
-  )(Form.create()(Invite)),
-);
+Invite.propTypes = {};
+
+export default withRouter(Invite);

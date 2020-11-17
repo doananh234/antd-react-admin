@@ -18,7 +18,7 @@ export const getReferenceResource = createSelector(
     const { data, ids } = references;
     const formattedIds = unionBy(ids, resources.ids);
     const formattedData = { ...data, ...resources.data };
-    return formattedIds.map(id => formattedData[id]);
+    return formattedIds.map((id) => formattedData[id]);
   },
 );
 
@@ -26,7 +26,7 @@ export const getReferenceArr = createSelector(
   [getRawReferenceResource],
   (resources = { data: {}, ids: [] }) => {
     const { data, ids } = resources;
-    return ids.map(id => data[id]);
+    return ids.map((id) => data[id]);
   },
 );
 
@@ -34,7 +34,7 @@ export const getReferenceArrByResourceName = createSelector(
   [getRawReferenceByResourceName],
   (resources = { data: {}, ids: [] }) => {
     const { data, ids } = resources;
-    return ids.map(id => data[id]);
+    return ids.map((id) => data[id]);
   },
 );
 export const getReferenceLoading = createSelector(
@@ -50,7 +50,7 @@ export const getReferenceData = createSelector(
   (resources = { data: {}, ids: [] }, dataSource) => {
     const { data } = resources;
     return Array.isArray(dataSource)
-      ? dataSource.map(id => data[id])
+      ? dataSource.map((id) => data[id])
       : data[`${dataSource}`];
   },
 );
@@ -67,6 +67,6 @@ export const getEnabledLoadMoreReference = createSelector(
   [getRawReferenceResource],
   (resources = { total: 0 }) => {
     const { page, loading, numberOfPages } = resources;
-    return !loading && page < numberOfPages;
+    return !loading && page <= numberOfPages;
   },
 );

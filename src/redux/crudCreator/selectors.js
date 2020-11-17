@@ -1,14 +1,12 @@
 import { createSelector } from 'reselect';
 import { getFilterFromUrl } from '../../utils/tools';
 
-export default class CRUDSelectors {
+export class CRUDSelectors {
   constructor(resource) {
     this.resource = resource;
   }
 
-  getRestByResourceData = state => state[this.resource];
-
-  getRestData = state => state[this.resource];
+  getRestData = (state) => state[this.resource];
 
   getDefaultValue = (state, props) =>
     props.location && (!props.location.hash || props.location.hash === '#')
@@ -17,12 +15,12 @@ export default class CRUDSelectors {
 
   getDefaultFromProps = (state, props) => props.defaultValue;
 
-  getDataArr = createSelector([this.getRestData], resources => {
+  getDataArr = createSelector([this.getRestData], (resources) => {
     const { data, ids } = resources;
-    return ids.map(id => data[id]);
+    return ids?.map((id) => data[id]);
   });
 
-  getTotal = createSelector([this.getRestData], resources => {
+  getTotal = createSelector([this.getRestData], (resources) => {
     const { total } = resources;
     return total;
   });
@@ -48,9 +46,9 @@ export default class CRUDSelectors {
     },
   );
 
-  enabledLoadMore = createSelector([this.getRestData], resources => {
-    const { page, loading, numberOfPages } = resources;
-    return !loading && page < numberOfPages;
+  enabledLoadMore = createSelector([this.getRestData], (resources) => {
+    const { offset, limit, loading, numberOfPages } = resources;
+    return !loading && offset / limit + 1 < numberOfPages;
   });
 
   getLoading = createSelector(
@@ -69,14 +67,14 @@ export default class CRUDSelectors {
     },
   );
 
-  getError = createSelector([this.getRestData], resources => {
+  getError = createSelector([this.getRestData], (resources) => {
     const { error } = resources;
     return error;
   });
 
-  getFilters = createSelector([this.getRestData], resources => {
-    const { limit, page, filter, total, orderBy, q } = resources;
-    return { limit, page, filter, count: total, orderBy, q };
+  getFilters = createSelector([this.getRestData], (resources) => {
+    const { limit, offset, filter, total, orderBy, q } = resources;
+    return { limit, offset, filter, count: total, orderBy, q };
   });
 }
 

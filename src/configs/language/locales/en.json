@@ -1,28 +1,42 @@
 {
   "appInfo": {
-    "footer": "RAA ©2018 Created by Anh Doan",
-    "name": "Anh Doan"
+    "footer": "Anh Doan",
+    "name": "Base Admin"
   },
+  "ZERO_RESULTS": "Address not found",
   "sideBar": {
     "dashboard": "Dashboard",
-    "customers": "Customers",
-    "settings": "Settings",
+    "orders": "Orders",
+    "artists": "Artists",
+    "artworks": "Artworks",
     "users": "Users",
-    "CMS": "CMS",
-    "teachers": "Teachers",
-    "attendances": "Attendances",
-    "finances": "Finances",
-    "notifications": "Notifications"
+    "galleries": "Galleries",
+    "settings": "Settings"
   },
   "header": {
     "profile": "Profile",
+    "pharmacy": "Pharmacy info",
     "logout": "Logout"
   },
   "input": {
+    "grantType": {
+      "placeholder": "Grant Type",
+      "validateMsg": {
+        "required": "Please input your Grant Type",
+        "invalid": "Grant Type is invalid"
+      }
+    },
     "username": {
       "placeholder": "Username",
       "validateMsg": {
         "required": "Please input your username!"
+      }
+    },
+    "address": {
+      "name": "Address",
+      "placeholder": "Address",
+      "validateMsg": {
+        "required": "Please input your Address!"
       }
     },
     "fullName": {
@@ -32,12 +46,14 @@
       }
     },
     "firstName": {
+      "name": "First Name",
       "placeholder": "First Name",
       "validateMsg": {
         "required": "Please input your first name!"
       }
     },
     "lastName": {
+      "name": "Last Name",
       "placeholder": "Last Name",
       "validateMsg": {
         "required": "Please input your last name!"
@@ -56,22 +72,165 @@
       }
     },
     "email": {
+      "name": "Email",
       "placeholder": "Email",
       "validateMsg": {
+        "invalid": "Email is invalid",
         "required": "Please input your email!"
+      }
+    },
+    "phoneNumber": {
+      "name": "Phone Number",
+      "placeholder": "Phone Number",
+      "validateMsg": {
+        "invalid": "Phone number is invalid",
+        "required": "Please input your phone number!"
+      }
+    },
+    "country": {
+      "name": "Country",
+      "placeholder": "Country",
+      "validateMsg": {
+        "invalid": "Country is invalid",
+        "required": "Please input your country!"
+      }
+    },
+    "city": {
+      "name": "City",
+      "placeholder": "City",
+      "validateMsg": {
+        "invalid": "City is invalid",
+        "required": "Please input your city!"
+      }
+    },
+    "district": {
+      "name": "District",
+      "placeholder": "District",
+      "validateMsg": {
+        "invalid": "District is invalid",
+        "required": "Please input your district!"
+      }
+    },
+    "state": {
+      "name": "State",
+      "placeholder": "State",
+      "validateMsg": {
+        "invalid": "State is invalid",
+        "required": "Please input your state!"
+      }
+    },
+    "Address": {
+      "name": "Address",
+      "placeholder": "Address",
+      "validateMsg": {
+        "invalid": "Address is invalid",
+        "required": "Please input your address!"
+      }
+    },
+    "zipCode": {
+      "name": "Zip Code",
+      "placeholder": "Zip Code",
+      "validateMsg": {
+        "invalid": "Zip code is invalid",
+        "required": "Please input your zip code!"
+      }
+    },
+    "promoCode": {
+      "placeholder": "Promo code"
+    },
+    "subscribe": {
+      "placeholder": "Enter your email"
+    },
+    "cardNo": {
+      "name": "Card No",
+      "validateMsg": {
+        "invalid": "Card No is invalid",
+        "required": "Please input Card No!"
+      }
+    },
+    "expiredDate": {
+      "name": "Expired Date",
+      "placeholder": "Select...",
+      "validateMsg": {
+        "invalid": "Date is invalid",
+        "required": "Please select date!"
+      }
+    },
+    "securityCode": {
+      "name": "Security Code",
+      "placeholder": "Enter CVC",
+      "validateMsg": {
+        "invalid": "Security code is invalid",
+        "required": "Please input security code!"
+      }
+    },
+    "shippingMethod": {
+      "validateMsg": {
+        "invalid": "Shipping method is invalid",
+        "required": "Please select shipping method!"
+      }
+    },
+    "paymentMethod": {
+      "validateMsg": {
+        "invalid": "Payment method is invalid",
+        "required": "Please select payment method!"
       }
     }
   },
-
   "form": {
     "btn": {
       "add": "Add new",
       "edit": "Edit"
     }
   },
-
+  "products": {
+    "id": "Product Id",
+    "name": "Product Name",
+    "description": "Product Description"
+  },
+  "orders": {
+    "id": "ID",
+    "header": "Orders",
+    "name": "Name",
+    "editPage": "Edit Order",
+    "createPage": "Create Order",
+    "productCatalogIds": "Product Catalogs",
+    "orderRequirementId": "Order Requirement",
+    "priceOrder": "Order Price",
+    "orderFeature": "Order Features",
+    "platform": "Platform",
+    "niche": "Niche",
+    "finishedDate": "Finished Date",
+    "customerRequirements": "Customer Requirements",
+    "customerNote": "Customer Note",
+    "infoOrderLink": "Info Order Link",
+    "deadline": "Deadline",
+    "createdAt": "Order Time",
+    "status": "Order Status",
+    "note": "Note",
+    "feedback": "Feedback",
+    "customerConfirm": "Do you confirm for this design?",
+    "feedbackPlaceholder": "Type your feedback",
+    "dontHaveInfo": "Don't have data",
+    "rejectOrderStatus": {
+      "pre_order": "Why do you reject order for this deal?",
+      "waiting_approved": "Why do you reject for this design?",
+      "delivery": "Why do you reject received the design file?",
+      "canceled": "Give your new feedback",
+      "done": "Reopen Order - Give your new feedback"
+    },
+    "orderStatus": {
+      "pre_order": "Do you confirm order for this deal?",
+      "waiting_approved": "Do you confirm for this design?",
+      "delivery": "Do you confirm received the design file?",
+      "done": "Thanks for your order!",
+      "canceled": "Something wrong when design :(",
+      "default": "Don't worry, My Designer doing your idea."
+    },
+    "cloneConfirm": "Are you sure you want to clone new order?"
+  },
   "login": {
-    "title": "We Are",
+    "title": "Login",
     "subTitle": "The innovative mobile apps and webs for Schools and Parent to take care our kids",
     "rememberMe": "Remember me",
     "loginBtn": "Log in",
@@ -79,12 +238,10 @@
     "resetPassword": "Reset password",
     "password": "Password"
   },
-
   "register": {
     "title": "Register",
     "registerBtn": "Register"
   },
-
   "forgotPassword": {
     "title": "Forgot password",
     "success": {
@@ -92,50 +249,107 @@
       "description": "Please check your email and create a new password."
     }
   },
-
   "dashboard": {
     "title": "Dashboard"
   },
   "settings": {
-    "title": "Settings"
+    "header": "Settings"
   },
-  "users": {
-    "title": "Users",
-    "header": "Staff",
-    "generalInfo": "General Info",
-    "privateInfo": "Private Info",
-    "id": "Id",
-    "familyName": "Family name",
-    "middleName": "Middle name",
-    "gender": "Gender",
-    "birthday": "Birthday",
-    "nationality": "Nationality",
-    "departmentID": "Department",
-    "avatar": "Avatar",
-    "level": "Level",
-    "qualification": "Qualification",
-    "subject": "Subject",
-    "joinDate": "Join Date",
-    "experience": "Experience",
-    "currentAddress": "Current Address",
-    "permanentAddress": "Permanent Address",
-    "phoneNumber": "Phone Number",
+  "home": {
+    "title": {
+      "orders": "Orders",
+      "overview": "Overview"
+    },
+    "summary": {
+      "user": "Users",
+      "order": "Orders",
+      "artists": "Artists",
+      "artworks": "Artworks",
+      "galleries": "Galleries",
+      "business": "Business",
+      "totalOrder": "Total Order",
+      "totalDoneOrder": "Done Order",
+      "paidMoney": "Paid Money"
+    },
+    "chart": {
+      "title": "Revenue",
+      "sales": "Sales",
+      "profit": "Profit"
+    },
+    "map": {
+      "title": "Top Global Sales"
+    },
+    "country": {
+      "buenosAires": "Buenos Aires",
+      "brasilia": "Brasilia",
+      "santiago": "Santiago",
+      "bogota": "Bogota"
+    },
+    "detailedSummary": {
+      "monthRevenue": "This Month Revenue",
+      "chartRevenue": {
+        "revenue": "Revenue"
+      },
+      "customer": "New Customers",
+      "product": "Popular Product"
+    }
+  },
+  "summaryCard": {
+    "up": "Up From Yesterday",
+    "down": "Down From Yesterday"
+  },
+  "detailSummaryCard": {
+    "up": "Up From Last Month",
+    "down": "Down From Last Month"
+  },
+  "productDetail": {
+    "pageTitle": "Product Detail",
+    "features": "Feature",
+    "satisfiedCustomer": "Satisfied Customer"
+  },
+  "relatedProducts": {
+    "title": "Related Products"
+  },
+  "productsView": {
+    "title": "Products View"
+  },
+  "profile": {
+    "header": "Profile",
+    "profileInfo": "Profile info",
     "email": "Email",
-    "userType": "User Type",
-    "createdAt": "Created At",
-    "updatedAt": "Update At",
-    "status": "Status",
-    "createPage": "Create User",
-    "editPage": "Edit User",
-    "mainClassIds": "Main class",
-    "note": "Note",
-    "contract": "Contract",
-    "userInfo": "User Information",
-    "contractType": "Contract type"
+    "uploadAvatar": "Upload avatar",
+    "username": "Username",
+    "firstName": "First name",
+    "address": "Address",
+    "lastName": "Last name",
+    "gender": "Gender",
+    "phone": "Phone",
+    "summary": "Summary",
+    "note": "Your note",
+    "fullName": "Full Name",
+    "birthday": "Birthday",
+    "national": "National",
+    "facebookLink": "Facebook Link"
   },
-  "posts": {
-    "title": "Posts"
+  "notifications": {
+    "header": "Notifications",
+    "pharmacy": "Pharmacy",
+    "send": "Sending",
+    "prepare": "Preparing",
+    "delivery": "Delivery"
   },
+  "admins": {
+    "createPage": "Create Admin"
+  },
+  "isActive": {
+    "deactive": "Inactive",
+    "active": "Active"
+  },
+  "isDisabled": {
+    "disabled": "Disabled",
+    "notDisabled": "Not disabled"
+  },
+  "role": {},
   "button": {
     "create": "Create",
     "add": "Add",
@@ -151,24 +365,50 @@
     "call": "Call",
     "loadMore": "Load More...",
     "sentInvite": "Sent Invite",
-    "resendInvite": "Resend Invite"
+    "resendInvite": "Resend Invite",
+    "editProfile": "Edit profile",
+    "pin": "Pin",
+    "unpin": "Unpin",
+    "filter": "Filter",
+    "clearFilter": "Clear",
+    "addToCart": "Add to Cart",
+    "addedToCart": "Added to Cart",
+    "updateToCart": "Update to Cart",
+    "apply": "Apply",
+    "subscribe": "Subscribe",
+    "change": "Change",
+    "confirm": "Confirm",
+    "placeYourOrder": "Place Your Order",
+    "accept": "Accept",
+    "reject": "Reject",
+    "changePassword": "Change Password",
+    "duplicate": "Clone New",
+    "reOpen": "Open Again",
+    "setDefault": "Default"
   },
   "popup": {
+    "noData": "No data",
     "alertDelete": "Delete Data",
-    "alertDeleteDes": "Do you want to delete {{customMessage}}?"
+    "alertDeleteDes": "Do you want to delete item {{customMessage}}?"
   },
   "error": {
+    "validateType": "Invalid",
     "title": "Oops!",
-    "description": "Some thing wrong!"
+    "description": "Some thing wrong!",
+    "phone": "The input is not valid Phone!",
+    "waitingUpdate": "Waiting for updates"
   },
   "success": {
     "title": "Successfully!",
     "description": "the update is successful!"
   },
   "tabs": {
-    "classes": "Classes",
-    "schools": "Schools",
-    "department": "Department"
+    "artTypes": "Art Types",
+    "classifications": "Classifications",
+    "styles": "Styles",
+    "subjects": "Subjects",
+    "platforms": "Platforms",
+    "niches": "Niches"
   },
   "statuses": {
     "name": "Name",
@@ -176,45 +416,6 @@
     "isActive": "Status",
     "createPage": "Create Status",
     "editPage": "Edit Status"
-  },
-  "customers": {
-    "title": "Customers",
-    "avatar": "Avatar",
-    "fullName": "Full name",
-    "firstName": "First name",
-    "lastName": "Last name",
-    "email": "Email",
-    "gender": "Gender",
-    "phoneNumber": "Phone number",
-    "address": "Address",
-    "company": "Company",
-    "isActive": "Status",
-    "createPage": "Create Client",
-    "editPage": "Edit Client",
-    "createdAt": "Created time",
-
-    "detail": {
-      "about": "About",
-      "contact": {
-        "note": "New note",
-        "mail": "Send email",
-        "phone": "Call",
-        "emailTitle": "Subject",
-        "message": {
-          "success": "Send mail Successfully"
-        }
-      },
-      "activityLog": {
-        "activityLog": "Activity Logs",
-        "productAttended": "Product Attended",
-        "note": "Note Logs",
-        "email": "Email Logs",
-        "call": "Call Logs"
-      },
-      "popup": {
-        "addNoteSuccess": "The note sent successfully."
-      }
-    }
   },
   "gender": {
     "title": "Gender",
@@ -234,66 +435,48 @@
   "placeholder": {
     "undefined": "select..."
   },
-  "CMS": {
-    "title": "CMS"
-  },
   "text": {
-    "or": "OR"
+    "or": "OR",
+    "googleAddress": "Google Address(use detect latitude, longitude)"
   },
-  "schools": {
-    "title": "Schools",
-    "header": "Schools",
-    "id": "Id",
-    "schoolName": "School name",
-    "email": "Email",
-    "landlinesNumber": "Landlines Number",
-    "phoneNumber": "Phone number",
-    "address": "Address",
-    "faxNumber": "Fax Number",
-    "isActive": "Status",
-    "ward": "Ward",
-    "city": "City",
-    "international": "International",
-    "logo": "Logo",
-    "status": "Status",
-    "createPage": "Create School",
-    "editPage": "Edit School"
+  "currencyUnit": {
+    "text": "VND",
+    "sign": "$"
   },
-  "classes": {
-    "title": "Classes",
-    "header": "Classes",
-    "id": "Id",
-    "name": "Class name",
-    "code": "Code",
-    "subjectName": "Subject Name",
-    "note": "Note",
-    "classTypeID": "Class Type",
-    "startDate": "Start Date",
-    "endDate": "End Date",
-    "addressRoom": "Address Room",
-    "status": "Status",
-    "createdAt": "Created At",
-    "updatedAt": "Update At",
-    "createPage": "Create Class",
-    "editPage": "Edit Class"
+  "overallRating": {
+    "text": "Overall Rating",
+    "start": "Start"
   },
-  "contractTypes": {
-    "official": "Official",
-    "partTime": "Part Time"
+  "reviews": {
+    "text": "reviews",
+    "totalReview": "Total Review"
   },
-  "qualifications": {
-    "university": "University",
-    "colleges": "Colleges"
+  "promoCode": {
+    "name": "Promo Code",
+    "none": "NONE",
+    "title": "Have a promo code ?",
+    "description": "If you have a promo code, You can take discount !",
+    "applySuccess": "Applied successfully"
   },
-  "departments": {
-    "id": "Id",
-    "code": "Code",
+  "payment": {
+    "totalPayment": "Total Payment",
+    "total": "Total",
+    "subTotal": "Sub Total",
+    "shipping": "Shipping"
+  },
+  "payType": {
+    "paymentByCash": "Payment By Cash",
+    "paymentByBank": "Payment By Bank"
+  },
+  "users": {
+    "createPage": "Create User",
+    "editPage": "Edit User",
+    "header": "Users",
     "name": "Name",
-    "userManagerID": "User Manager Id",
-    "userLeaderID": "User Leader Id",
-    "userAnotherID": "User Another Id",
-    "status": "Status",
-    "editPage": "Edit Departments",
-    "createPage": "Tạo Bộ Phận"
+    "email": "Email",
+    "phoneNumber": "Phone",
+    "password": "Password",
+    "role": "Role",
+    "actions": "Actions"
   }
 }

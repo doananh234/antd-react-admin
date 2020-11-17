@@ -1,93 +1,98 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Row, Col } from 'antd';
+import _, { zipObjectDeep } from 'lodash';
 import ButtonRow from '../FooterButtonRow';
 import { RestInputContext } from '../../RestInput/RestInputContext';
 
-const FormComponent = props => {
+const FormComponent = ({
+  loading,
+  onBack,
+  children,
+  positionOfSubmitButton,
+  customSubmitButton,
+  record,
+  showModal,
+  formatOnSubmit,
+  onSubmit,
+  customOnBack,
+}) => {
+  const [form] = Form.useForm();
   const getData = () =>
-    new Promise(resolve => {
-      props.form.validateFields((err, values) => {
-        if (!err) {
-          const submitData = props.formatOnSubmit
-            ? props.formatOnSubmit(values)
-            : values;
-          resolve(submitData);
-        }
+    new Promise((resolve) => {
+      form.validateFields().then((values) => {
+        const parseToObj = zipObjectDeep(Object.keys(values), _.values(values));
+        const submitData = formatOnSubmit
+          ? formatOnSubmit(parseToObj)
+          : parseToObj;
+        resolve(submitData);
         resolve({});
       });
     });
 
   const handleSubmit = () =>
     new Promise((resolve, reject) => {
-      props.form.validateFields((err, values) => {
-        if (!err) {
-          const submitData = props.formatOnSubmit
-            ? props.formatOnSubmit(values)
-            : values;
-          props.onSubmit(submitData);
+      form
+        .validateFields()
+        .then((values) => {
+          const parseToObj = zipObjectDeep(
+            Object.keys(values),
+            _.values(values),
+          );
+          const submitData = formatOnSubmit
+            ? formatOnSubmit(parseToObj)
+            : parseToObj;
+          onSubmit(submitData);
           resolve(values);
-        } else {
+        })
+        .catch((err) => {
           reject(err);
-        }
-      });
+        });
     });
 
-  const {
-    loading,
-    form,
-    onBack,
-    children,
-    positionOfSubmitButton,
-    customSubmitButton,
-    record,
-    showModal,
-  } = props;
-
   return (
-    <Row className="drawerContainer" gutter={16}>
-      <Col
-        className="content"
-        md={positionOfSubmitButton === 'left' ? 20 : 24}
-        xs={24}
-      >
-        <Form>
-          <RestInputContext.Provider value={{ form, record }}>
-            {children}
-          </RestInputContext.Provider>
-        </Form>
-      </Col>
-      <Col
-        className="footer"
-        md={positionOfSubmitButton === 'left' ? 4 : 24}
-        xs={24}
-      >
-        {customSubmitButton ? (
-          React.cloneElement(customSubmitButton, {
-            handleSubmit,
-            onBack,
-            getData,
-          })
-        ) : (
-          <ButtonRow
-            type="create"
-            loading={loading}
-            showModal={showModal}
-            handleSubmit={handleSubmit}
-            onBack={onBack}
-          />
-        )}
-      </Col>
-    </Row>
+    <div className="drawerContainer">
+      <Form layout="vertical" form={form} onFinish={handleSubmit}>
+        <Row gutter={16}>
+          <Col
+            className="content"
+            md={positionOfSubmitButton === 'left' ? 20 : 24}
+            xs={24}
+          >
+            <div className="content-form">
+              <RestInputContext.Provider value={{ form, record }}>
+                {children}
+              </RestInputContext.Provider>
+            </div>
+          </Col>
+          <Col
+            className="footer"
+            md={positionOfSubmitButton === 'left' ? 4 : 24}
+            xs={24}
+          >
+            {customSubmitButton ? (
+              React.cloneElement(customSubmitButton, {
+                onBack,
+                getData,
+              })
+            ) : (
+              <ButtonRow
+                type="create"
+                loading={loading}
+                showModal={showModal}
+                handleSubmit={handleSubmit}
+                onBack={customOnBack || onBack}
+              />
+            )}
+          </Col>
+        </Row>
+      </Form>
+    </div>
   );
 };
 
-const CreateForm = Form.create()(FormComponent);
-const RestCreateForm = props => <CreateForm {...props} />;
-
 FormComponent.propTypes = {
   loading: PropTypes.bool,
-  form: PropTypes.object,
   onBack: PropTypes.func,
   onSubmit: PropTypes.func,
   children: PropTypes.node,
@@ -96,6 +101,7 @@ FormComponent.propTypes = {
   record: PropTypes.object,
   showModal: PropTypes.bool,
   formatOnSubmit: PropTypes.func,
+  customOnBack: PropTypes.func,
 };
 
 FormComponent.defaultProps = {
@@ -103,4 +109,4 @@ FormComponent.defaultProps = {
   record: {},
 };
 
-export default RestCreateForm;
+export default FormComponent;

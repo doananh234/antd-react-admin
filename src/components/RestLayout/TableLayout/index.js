@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { update, get } from 'lodash';
 import PropTypes from 'prop-types';
-import { Table, Button, Input } from 'antd';
+import { Button, Input } from 'antd';
 import I18n from 'i18next';
+import { getRecordData, getValidData } from 'utils/tools';
+import { SearchOutlined, FilterOutlined } from '@ant-design/icons';
 import Text from '../../common/Text';
-import { getRecordData } from '../../../utils/tools';
-import { IconWrapper } from './styles';
+import { DropdownStyles, TableStyles } from './styles';
 
 class RestTableLayout extends Component {
   searchInput = {};
@@ -18,18 +19,18 @@ class RestTableLayout extends Component {
         ? `${sorter.order === 'descend' ? '-' : ''}${sorter.field}`
         : null;
 
-    Object.keys(filters).forEach(filter => {
+    Object.keys(filters).forEach((filter) => {
       const filterKey = filter;
       const $in = Array.isArray(filters[filter])
-        ? filters[filter].filter(data => typeof data !== 'object')
+        ? filters[filter].filter((data) => typeof data !== 'object')
         : filters[filter];
 
       const searchFilter = Array.isArray(filters[filter])
-        ? filters[filter].find(data => typeof data === 'object')
+        ? filters[filter].find((data) => typeof data === 'object')
         : '';
 
       update(formatFilter, filterKey, () => undefined);
-      if ($in.length) {
+      if ($in?.length) {
         update(formatFilter, filterKey, () => $in);
       }
       if (searchFilter) {
@@ -39,14 +40,14 @@ class RestTableLayout extends Component {
       }
     });
     retrieveList({
-      page: e.current,
+      offset: (e.current - 1) * e.pageSize,
       limit: e.pageSize,
       filter: { ...resourceFilter.filter, ...formatFilter },
       orderBy: formatSort,
     });
   };
 
-  onChangeRecord = (record, item) => value => {
+  onChangeRecord = (record, item) => (value) => {
     this.props.updateRecord(
       record.id,
       {
@@ -56,11 +57,11 @@ class RestTableLayout extends Component {
     );
   };
 
-  handleSearch = confirm => {
+  handleSearch = (confirm) => {
     confirm();
   };
 
-  handleReset = dataIndex => {
+  handleReset = (dataIndex) => {
     const { resourceFilter, retrieveList } = this.props;
     const formatFilter = { ...resourceFilter.filter };
     update(formatFilter, dataIndex, () => undefined);
@@ -70,12 +71,12 @@ class RestTableLayout extends Component {
     });
   };
 
-  onBlur = (index, source) => e => {
+  onBlur = (index, source) => (e) => {
     const { onEditHeaderSuccess } = this.props;
     onEditHeaderSuccess({ index, source, value: e.currentTarget.value });
   };
 
-  onKeyPress = e => {
+  onKeyPress = (e) => {
     if (e.key === 'Enter') {
       e.currentTarget.blur();
     }
@@ -88,15 +89,15 @@ class RestTableLayout extends Component {
       ? {
           filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => {
             const filters =
-              selectedKeys?.filter?.(data => typeof data === 'string') || [];
+              selectedKeys?.filter?.((data) => typeof data === 'string') || [];
             return (
-              <div style={{ padding: 8 }}>
+              <DropdownStyles style={{ padding: 8 }}>
                 <Input
-                  ref={node => {
+                  ref={(node) => {
                     this.searchInput[dataIndex] = node;
                   }}
                   placeholder={`Search ${I18n.t(header)}`}
-                  onChange={e =>
+                  onChange={(e) =>
                     setSelectedKeys(
                       e.target.value
                         ? [...filters, { $like: e.target.value }]
@@ -110,8 +111,9 @@ class RestTableLayout extends Component {
                 <Button
                   type="primary"
                   onClick={() => this.handleSearch(confirm)}
-                  icon="search"
+                  icon=<SearchOutlined style={{ color: 'white' }} />
                   size="small"
+                  className="search-button"
                   style={{ width: 90, marginRight: 8 }}
                 >
                   {I18n.t('button.search')}
@@ -129,17 +131,17 @@ class RestTableLayout extends Component {
                 >
                   {I18n.t('button.reset')}
                 </Button>
-              </div>
+              </DropdownStyles>
             );
           },
-          filterIcon: filtered => (
-            <IconWrapper
+          filterIcon: (filtered) => (
+            <SearchOutlined
               type="search"
               className={filtered || defaultValue ? 'highlightFilter' : ''}
               // style={{ color: filtered || defaultValue ? '#1890ff' : undefined }}
             />
           ),
-          onFilterDropdownVisibleChange: visible => {
+          onFilterDropdownVisibleChange: (visible) => {
             if (visible) {
               setTimeout(() => this.searchInput[dataIndex].select());
             }
@@ -159,10 +161,13 @@ class RestTableLayout extends Component {
       customQuery,
       resourceFilter,
       // isScroll,
+      expandedRowRender,
+      expandIcon,
+      expandable,
     } = this.props;
-    const columns = children
-      .filter(e => e)
-      .map(item => ({
+    this.columns = children
+      .filter((e) => e)
+      .map((item) => ({
         fixed: item.props.fixed,
         title:
           item.props.source === 'actionGroup'
@@ -175,7 +180,7 @@ class RestTableLayout extends Component {
               // />
               I18n.t(item.props.header || ''),
         dataIndex: `${item.props.source}`,
-        width: item.props.width,
+        width: item.props.source === 'actionGroup' ? 80 : item.props.width,
         align: item.props.align,
         key: getFilterKey(item),
         sorter: item.props.sorter
@@ -212,8 +217,8 @@ class RestTableLayout extends Component {
               </div>
             );
           }),
-        filterIcon: filtered => (
-          <IconWrapper
+        filterIcon: (filtered) => (
+          <FilterOutlined
             type="filter"
             className={
               filtered ||
@@ -236,36 +241,32 @@ class RestTableLayout extends Component {
           item.props.header,
           item.props.hasSearch,
         ),
-      }));
+      }))
+      .map((e) => getValidData(e));
 
     return (
-      <Table
+      <TableStyles
         // onRow={record => ({
         //   onDoubleClick: () => {
         //     onRow ? onRow(record) : gotoEditPage(record.id);
         //   },
         // })}
+        expandable={expandable}
         onChange={this.onChangePagination}
-        pagination={{
-          position: 'none',
-          // total: resourceFilter.count,
-          current: resourceFilter.page,
-          showTotal,
-          pageSize: resourceFilter.limit,
-          showQuickJumper: true,
-          showSizeChanger: true,
-        }}
-        columns={columns}
+        pagination={false}
+        columns={this.columns}
         loading={loading}
+        expandedRowRender={expandedRowRender}
+        expandIcon={expandIcon}
         dataSource={resourceData || []}
         rowKey="id"
-        // scroll={isScroll ? { x: '500px' } : { x: '100%' }}
+        // scroll={{ x: '1200px' }}
       />
     );
   }
 }
 
-const getFilterKey = item => {
+const getFilterKey = (item) => {
   return item && item.props && item.props.hasSearch
     ? item.props.source
     : item.props.filterKey || `${item.props.source}.$in`;
@@ -322,10 +323,14 @@ RestTableLayout.propTypes = {
   onEditHeaderSuccess: PropTypes.func,
   // isScroll: PropTypes.bool,
   resource: PropTypes.string,
+  expandedRowRender: PropTypes.any,
+  expandIcon: PropTypes.any,
+  expandable: PropTypes.any,
 };
 
 RestTableLayout.defaultProps = {
   onEditHeaderSuccess: () => {},
+  expandedRowRender: null,
   // isScroll: true,
 };
 

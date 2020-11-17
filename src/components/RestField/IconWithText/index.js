@@ -1,19 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Avatar } from 'antd';
-import { getRecordData } from '../../../utils/tools';
+import { getRecordData } from 'utils/tools';
 
-const IconWithText = props => (
+const IconWithText = (props) => (
   <div>
     <Avatar
       icon={
         props.antIcon ? (
-          <i className={`anticon-${getRecordData(props.record, props.antIcon)}`} />
+          <i
+            className={`anticon-${getRecordData(props.record, props.antIcon)}`}
+          />
         ) : (
           getRecordData(props.record, props.icon)
         )
       }
-      style={{ backgroundColor: getRecordData(props.record, props.backgroundColor) }}
+      style={{
+        backgroundColor: getRecordData(props.record, props.backgroundColor),
+      }}
     />
     <span> 
       {' '}

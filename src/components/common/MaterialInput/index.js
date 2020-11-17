@@ -11,19 +11,24 @@ const MaterialInput = ({
   ...params
 }) => (
   <MaterialInputWrapper isPrefix={!!prefix} isSuffix={!!suffix}>
-    <Input {...params} autocomplete="new-password" disabled={disabled} />
+    <Input
+      {...params}
+      placeholder={placeholder}
+      autoComplete="new-password"
+      disabled={disabled}
+    />
 
     {prefix}
     <span className="suffix">{suffix}</span>
-    <label>{placeholder}</label>
+    <label style={{ color: '#05060A', fontSize: '20px' }}>{placeholder}</label>
     <span className="bar" />
   </MaterialInputWrapper>
 );
 
 MaterialInput.propTypes = {
   placeholder: PropTypes.string,
-  prefix: PropTypes.string,
-  suffix: PropTypes.string,
+  prefix: PropTypes.any,
+  suffix: PropTypes.any,
   disabled: PropTypes.bool,
 };
 

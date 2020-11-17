@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import i18next from 'i18next';
-import { getRecordData } from '../../../utils/tools';
+import { getRecordData } from 'utils/tools';
 
 const EnumField = ({ format, resourceData, titleProp, source, valueProp, record }) => {
   const sourceValue = getRecordData(record, source);

@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withTheme } from 'styled-components';
 import { Spin, Tag } from 'antd';
+import { getRecordData } from 'utils/tools';
 import Title from '../../common/Title';
-import { getRecordData } from '../../../utils/tools';
 
-const BooleanField = props =>
+const BooleanField = (props) =>
   props.loading ? (
     <Spin />
   ) : (
@@ -19,7 +19,9 @@ const BooleanField = props =>
     )) || (
       <div>
         {!props.table && <Title>{props.header}</Title>}
-        <Tag color={!props.value ? '#f50' : '#2db7f5'}>{String(props.value ? 'Có' : 'Không')}</Tag>
+        <Tag color={!props.value ? '#f50' : '#2db7f5'}>
+          {String(props.value ? 'Có' : 'Không')}
+        </Tag>
       </div>
     )
   );

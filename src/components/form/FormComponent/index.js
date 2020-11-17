@@ -1,13 +1,25 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Row, Col } from 'antd';
 import { RestInputContext } from '../../RestInput/RestInputContext';
 import ButtonRow from '../../RestLayout/FooterButtonRow';
 
-class OptimizeComponent extends Component {
-  hasError = values => {
+const OptimizeComponent = ({
+  loading,
+  onBack,
+  children,
+  showModal,
+  positionOfSubmitButton,
+  isHideButtonRow,
+  validateFields,
+  onSubmitValues,
+  extraSubmitAction,
+  formatOnSubmit,
+}) => {
+  const [form] = Form.useForm();
+  const hasError = (values) => {
     let hasError;
-    this.props.validateFields.forEach(item => {
+    validateFields.forEach((item) => {
       if (!values[item]) {
         hasError = true;
       }
@@ -15,70 +27,53 @@ class OptimizeComponent extends Component {
     return hasError;
   };
 
-  handleSubmit = e => {
-    e.preventDefault();
-
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        const submitData = this.props.formatOnSubmit ? this.props.formatOnSubmit(values) : values;
-        if (this.props.validateFields && !this.hasError(values)) {
-          this.props.onSubmitValues(submitData);
-          if (this.props.extraSubmitAction) this.props.extraSubmitAction();
+  const handleSubmit = () => {
+    form
+      .validateFields()
+      .then((values) => {
+        const submitData = formatOnSubmit ? formatOnSubmit(values) : values;
+        if (validateFields && !hasError(values)) {
+          onSubmitValues(submitData);
+          if (extraSubmitAction) extraSubmitAction();
         }
 
-        if (!this.props.validateFields) {
-          this.props.onSubmitValues(submitData);
+        if (!validateFields) {
+          onSubmitValues(submitData);
         }
-      }
-    });
+      })
+      .catch(() => {});
   };
-
-  render() {
-    const {
-      loading,
-      form,
-      onBack,
-      children,
-      showModal,
-      positionOfSubmitButton,
-      isHideButtonRow,
-    } = this.props;
-    return (
-      <Form style={{ width: '100%' }} onSubmit={this.handleSubmit}>
-        <Row gutter={16}>
-          <Col md={positionOfSubmitButton === 'left' ? 20 : 24} xs={24}>
-            <RestInputContext.Provider
-              value={{
-                form,
-                handleSubmit: this.handleSubmit,
-              }}
-            >
-              {children}
-            </RestInputContext.Provider>
-          </Col>
-          <Col md={positionOfSubmitButton === 'left' ? 4 : 24} xs={24}>
-            {isHideButtonRow && (
-              <ButtonRow
-                showModal={showModal}
-                loading={loading}
-                handleSubmit={this.handleSubmit}
-                onBack={onBack}
-              />
-            )}
-          </Col>
-        </Row>
-      </Form>
-    );
-  }
-}
-
-const OptimizeComponentWrapper = Form.create()(OptimizeComponent);
-const FormComponentWrapper = props => <OptimizeComponentWrapper {...props} />;
+  return (
+    <Form form={form} style={{ width: '100%' }} onFinish={handleSubmit}>
+      <Row gutter={16}>
+        <Col md={positionOfSubmitButton === 'left' ? 20 : 24} xs={24}>
+          <RestInputContext.Provider
+            value={{
+              form,
+              handleSubmit,
+            }}
+          >
+            {children}
+          </RestInputContext.Provider>
+        </Col>
+        <Col md={positionOfSubmitButton === 'left' ? 4 : 24} xs={24}>
+          {isHideButtonRow && (
+            <ButtonRow
+              showModal={showModal}
+              loading={loading}
+              handleSubmit={handleSubmit}
+              onBack={onBack}
+            />
+          )}
+        </Col>
+      </Row>
+    </Form>
+  );
+};
 
 OptimizeComponent.propTypes = {
   loading: PropTypes.bool,
   showModal: PropTypes.bool,
-  form: PropTypes.object,
   onBack: PropTypes.func,
   onSubmitValues: PropTypes.func,
   children: PropTypes.node,
@@ -95,4 +90,4 @@ OptimizeComponent.defaultProps = {
   validateFields: [],
 };
 
-export default FormComponentWrapper;
+export default OptimizeComponent;

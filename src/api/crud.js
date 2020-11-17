@@ -1,10 +1,10 @@
 import { get, post, put, del, getQueryString } from './utils';
 
 export async function getAllApi(resource, data) {
-  return get(`/${resource}/list`, data);
+  return get(`/${resource}`, data);
 }
 
-export async function getByIdApi(resource, id, data) {
+export async function getDataByIdApi(resource, id, data) {
   return get(`/${resource}/${id}`, data);
 }
 
@@ -33,7 +33,7 @@ export const exportExcel = (resource, query) => {
     'GET',
     `${
       process.env.REACT_APP_SERVER_URL
-    }api/v1/${resource}/exportExcel?${getQueryString(query)}`,
+    }api/v1/admin/${resource}/exportExcel?${getQueryString(query)}`,
   );
   request.setRequestHeader(
     'Authorization',

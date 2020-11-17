@@ -29,7 +29,7 @@ INITIAL_CRUD_STATE = {
 | Command            | Description                          |
 | ------------------ | ------------------------------------ |
 | `getAll${models}`  | Get all data actions for the model   |
-| `getById${models}` | Get by Id data actions for the model |
+| `getDataById${models}` | Get by Id data actions for the model |
 | `edit${models}`    | Edit action for the model            |
 | `create${models}`  | Create action for the model          |
 
@@ -56,7 +56,7 @@ export const customAction = data =>
   makeActionCreator(ModelTypes.CUSTOM_ACTION, { data });
 /**
  * getAllCaseTypes({pageSize, page })
- * getByIdCaseTypes(data)
+ * getDataByIdCaseTypes(data)
  * createCaseTypes(data)
  * deleteCaseTypes()
  * editCaseTypes(data)

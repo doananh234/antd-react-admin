@@ -34,6 +34,7 @@ export const PUBLIC_ROUTES = [
   },
 ];
 
-const PublicRoutes = () => PUBLIC_ROUTES.map(route => <Route {...route} key={route.path} />);
+const publicRoutes = () =>
+  PUBLIC_ROUTES.map((route) => <Route {...route} key={route.path} />);
 
-export default PublicRoutes;
+export default publicRoutes;

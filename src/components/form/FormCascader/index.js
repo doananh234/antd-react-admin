@@ -3,14 +3,13 @@ import PropTypes from 'prop-types';
 import { Cascader } from 'antd';
 import FormItem from '../FormItem';
 
-const FormCascader = props => {
+const FormCascader = (props) => {
   const {
     source,
     header,
     required,
     requiredMessage,
     placeholder,
-    form,
     defaultValue,
     rules,
     onChange,
@@ -20,22 +19,24 @@ const FormCascader = props => {
     showSearch,
   } = props;
   return (
-    <FormItem {...props} header={header} required={required}>
-      {form.getFieldDecorator(source, {
-        rules: [{ required, message: requiredMessage }, ...rules],
-        initialValue: defaultValue,
-      })(
-        <Cascader
-          fieldNames={fieldNames}
-          changeOnSelect
-          onChange={onChange}
-          options={options}
-          showSearch={showSearch}
-          placeholder={placeholder}
-          loadData={loadData}
-          style={{ width: '100%' }}
-        />,
-      )}
+    <FormItem
+      {...props}
+      header={header}
+      name={source}
+      rules={[{ required, message: requiredMessage }, ...rules]}
+      initialValue={defaultValue}
+      required={required}
+    >
+      <Cascader
+        fieldNames={fieldNames}
+        changeOnSelect
+        onChange={onChange}
+        options={options}
+        showSearch={showSearch}
+        placeholder={placeholder}
+        loadData={loadData}
+        style={{ width: '100%' }}
+      />
     </FormItem>
   );
 };

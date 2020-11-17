@@ -1,19 +1,17 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { Icon } from "antd";
-import i18next from "i18next";
-import { HeaderSectionWrapper } from "./styles";
+import React from 'react';
+import PropTypes from 'prop-types';
+// import Icon from '@ant-design/icons';
+import i18next from 'i18next';
+import { HeaderSectionWrapper } from './styles';
 
-const HeaderSection = ({ icon, title }) => (
+const HeaderSection = ({ title }) => (
   <HeaderSectionWrapper>
-    <Icon type={icon} /> 
-    {' '}
+    {/* {icon && <Icon type={icon} />} */}
     {i18next.t(title)}
   </HeaderSectionWrapper>
-  );
+);
 HeaderSection.propTypes = {
   title: PropTypes.string,
-  icon: PropTypes.string,
 };
 
 export default HeaderSection;
