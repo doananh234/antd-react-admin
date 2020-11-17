@@ -1,9 +1,9 @@
 import React from 'react';
-import { Icon } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 
 const UploadButton = () => (
   <div>
-    <Icon type="plus" />
+    <UploadOutlined />
     <div className="ant-upload-text">Upload</div>
   </div>
 );

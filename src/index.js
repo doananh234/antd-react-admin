@@ -2,27 +2,31 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
-import { ConnectedRouter } from 'connected-react-router';
 import { ConfigProvider, Empty } from 'antd';
-import store, { history } from './redux/store';
+import { I18nextProvider } from 'react-i18next';
+import i18n from './configs/language';
+import store from './redux/store';
 import theme from './configs/theme';
-import Routes from './routes';
-import './configs/language';
-import * as serviceWorker from './serviceWorker';
 import AppWrapper, { GlobalStyle } from './appStyle';
+import Routes from './routes';
+import * as serviceWorker from './serviceWorker';
+import 'antd/dist/antd.less';
 
+import { initFirebase } from './api/firebase';
+
+initFirebase();
 ReactDOM.render(
   <Provider store={store}>
-    <ThemeProvider theme={theme}>
-      <AppWrapper>
-        <GlobalStyle />
-        <ConnectedRouter history={history}>
+    <I18nextProvider i18n={i18n}>
+      <ThemeProvider theme={theme}>
+        <AppWrapper>
+          <GlobalStyle />
           <ConfigProvider renderEmpty={() => <Empty />}>
             <Routes />
           </ConfigProvider>
-        </ConnectedRouter>
-      </AppWrapper>
-    </ThemeProvider>
+        </AppWrapper>
+      </ThemeProvider>
+    </I18nextProvider>
   </Provider>,
   document.getElementById('root'),
 );

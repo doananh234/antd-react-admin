@@ -13,8 +13,8 @@ export default styled.div`
   }
   h1 {
     font-size: 19px;
-    font-weight: 500;
-    color: ${({ theme }) => theme.palette.color[0]};
+    font-weight: bold;
+    color: ${({ theme }) => theme.text.primary};
     flex: 1;
     display: flex;
     align-items: center;

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { map } from 'lodash';
-import { Dropdown, Menu, Icon } from 'antd';
-import { getRecordData } from '../../../utils/tools';
+import { Dropdown, Menu } from 'antd';
+import { RightOutlined } from '@ant-design/icons';
+import { getRecordData } from 'utils/tools';
 import { SelectFieldWrapper } from './style';
 
 class SelectField extends Component {
@@ -14,15 +15,23 @@ class SelectField extends Component {
   }
 
   render() {
-    const { onChange, resourceData, valueProps, textProps, value, record, source } = this.props;
+    const {
+      onChange,
+      resourceData,
+      valueProps,
+      textProps,
+      value,
+      record,
+      source,
+    } = this.props;
     const menu = (
       <Menu
-        onClick={e => {
+        onClick={(e) => {
           onChange && onChange(e);
           this.setState({ visible: false });
         }}
       >
-        {map(resourceData, item => (
+        {map(resourceData, (item) => (
           <Menu.Item key={valueProps ? item[valueProps] : item}>
             {getRecordData(item, textProps)}
           </Menu.Item>
@@ -34,16 +43,16 @@ class SelectField extends Component {
       <Dropdown
         overlay={menu}
         trigger={['click']}
-        ref={dropDown => {
+        ref={(dropDown) => {
           this.refDropDown = dropDown;
         }}
-        onVisibleChange={visible => this.setState({ visible })}
+        onVisibleChange={(visible) => this.setState({ visible })}
       >
         <SelectFieldWrapper>
           <span role="presentation">
             <div>{value || getRecordData(record, source)}</div>
             <div className={`icon ${this.state.visible && 'openDropdown'}`}>
-              <Icon type="right" />
+              <RightOutlined />
             </div>
           </span>
         </SelectFieldWrapper>

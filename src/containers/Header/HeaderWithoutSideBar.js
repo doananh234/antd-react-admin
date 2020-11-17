@@ -1,14 +1,17 @@
 /* eslint-disable react/jsx-closing-tag-location */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import I18n from 'i18next';
 import { Menu, Dropdown, Avatar, PageHeader } from 'antd';
-import { goBack } from 'connected-react-router';
-import { logout as logoutAction } from '../../redux/auth/slice';
+import { useHistory } from 'react-router';
+import { UserOutlined } from '@ant-design/icons';
+import { logout as logoutAction } from '../../redux/auth/actions';
 import HeaderWrapper from './styles';
 
-const HeaderWithoutSideBar = ({ logout, back, title }) => {
+const HeaderWithoutSideBar = ({ title }) => {
+  const dispatch = useDispatch();
+  const history = useHistory();
   const [locale, setLocale] = useState(
     localStorage.getItem('locale') || I18n.language,
   );
@@ -20,7 +23,7 @@ const HeaderWithoutSideBar = ({ logout, back, title }) => {
     },
   ];
 
-  const changeLocale = e => () => {
+  const changeLocale = (e) => () => {
     setLocale(e);
     I18n.changeLanguage(e);
     localStorage.setItem('locale', e);
@@ -33,7 +36,7 @@ const HeaderWithoutSideBar = ({ logout, back, title }) => {
   return (
     <HeaderWrapper className="header withoutSidebar">
       <div className="leftHeader">
-        <PageHeader onBack={back} title={I18n.t(title)} />
+        <PageHeader onBack={() => history.goBack()} title={I18n.t(title)} />
 
         <div className="title">{I18n.t('appInfo.name')}</div>
       </div>
@@ -54,31 +57,26 @@ const HeaderWithoutSideBar = ({ logout, back, title }) => {
         </div>
         <Dropdown
           overlay=<Menu style={{ minWidth: '120px' }}>
-            {profileMenu.map(menu => (
+            {profileMenu.map((menu) => (
               <Menu.Item key={menu.key}>
                 <a href={menu.url}>{I18n.t(menu.text)}</a>
               </Menu.Item>
             ))}
             <Menu.Divider />
-            <Menu.Item onClick={logout} key="logout">
+            <Menu.Item onClick={() => dispatch(logoutAction())} key="logout">
               {I18n.t('header.logout')}
             </Menu.Item>
           </Menu>
           trigger={['click']}
         >
-          <Avatar size="large" icon="user" />
+          <Avatar size="large" icon={<UserOutlined />} />
         </Dropdown>
       </div>
     </HeaderWrapper>
   );
 };
 HeaderWithoutSideBar.propTypes = {
-  logout: PropTypes.func,
-  back: PropTypes.func,
   title: PropTypes.string,
 };
 
-export default connect(null, dispatch => ({
-  logout: () => dispatch(logoutAction()),
-  back: data => dispatch(goBack(data)),
-}))(HeaderWithoutSideBar);
+export default HeaderWithoutSideBar;

@@ -1,9 +1,9 @@
 // import crud action
-import { actions as userTypes } from './userTypes/slice';
-import { actions as users } from './users/slice';
+import { usersActions as users } from './users/actions';
+import { notificationsActions as notifications } from './notifications/actions';
 
 export default {
   // actions here
-  userTypes,
   users,
+  notifications,
 };

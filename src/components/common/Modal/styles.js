@@ -8,7 +8,7 @@ export const ModalWrapper = styled(Drawer)`
   .drawerContainer {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    min-height: calc(100vh - 60px);
   }
   .content {
     flex: 1;
@@ -19,15 +19,20 @@ export const ModalWrapper = styled(Drawer)`
     .ant-drawer-body {
       padding: 0px;
       padding-top: 60px;
-      height: 100%;
       overflow: hidden;
-      & > div {
-        height: 100%;
-        overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      .content {
+        flex: 1;
+        height: calc(100vh - 120px);
+        overflow-y: auto;
       }
     }
     .ant-form {
+    }
+    .content-form {
       padding: 10px 24px;
+      flex: 1;
     }
   }
   .ant-modal-header {
@@ -56,7 +61,6 @@ export const ModalWrapper = styled(Drawer)`
   .ant-select-clear-icon,
   .ant-select-dropdown-menu-vertical {
     background: ${({ theme }) => theme.background.gray};
-    border: 1px solid transparent;
     &:hover,
     &:focus,
     &:active {
@@ -106,7 +110,8 @@ export const ModalWrapper = styled(Drawer)`
   }
   .ant-list {
     margin-top: 20px;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     max-height: 460px;
   }
   div::-webkit-scrollbar-thumb {

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Popover, Icon } from 'antd';
+import { useSelector } from 'react-redux';
+import { checkRole } from 'utils/tools';
 import { GroupWrapper } from './styles';
 
 const ActionGroup = ({
@@ -9,32 +10,29 @@ const ActionGroup = ({
   gotoEditPage,
   gotoShowPage,
   deleteItem,
+  pinItem,
   record,
   modelResource,
-  icon,
-  placement,
   hasCustomize,
 }) => {
+  const currentRole = useSelector((state) => state.auth.role);
   if (hasCustomize) {
     if (!record.isDefault) {
       return (
         <GroupWrapper {...elementProps}>
-          <Popover
-            content={React.Children.map(children, element =>
-              React.cloneElement(element, {
-                resource: modelResource,
-                gotoEditPage: element.props.gotoEditPage || gotoEditPage,
-                gotoShowPage: element.props.gotoShowPage || gotoShowPage,
-                deleteItem: element.props.deleteItem || deleteItem,
-                record,
-                key: element.props.source,
-              }),
-            )}
-            trigger="click"
-            placement={placement}
-          >
-            <Icon className="iconSetting" type={icon} />
-          </Popover>
+          {React.Children.map(children, (element) =>
+            checkRole(element.props.roles, currentRole)
+              ? React.cloneElement(element, {
+                  resource: modelResource,
+                  gotoEditPage: element.props.gotoEditPage || gotoEditPage,
+                  gotoShowPage: element.props.gotoShowPage || gotoShowPage,
+                  deleteItem: element.props.deleteItem || deleteItem,
+                  pinItem: element.props.pinItem || pinItem,
+                  record,
+                  key: element.props.source,
+                })
+              : null,
+          )}
         </GroupWrapper>
       );
     }
@@ -42,21 +40,18 @@ const ActionGroup = ({
   }
   return (
     <GroupWrapper {...elementProps}>
-      <Popover
-        content={React.Children.map(children, element =>
-          React.cloneElement(element, {
-            resource: modelResource,
-            gotoEditPage: element.props.gotoEditPage || gotoEditPage,
-            gotoShowPage: element.props.gotoShowPage || gotoShowPage,
-            deleteItem: element.props.deleteItem || deleteItem,
-            record,
-          }),
-        )}
-        trigger="hover"
-        placement={placement}
-      >
-        <Icon className="iconSetting" type={icon} />
-      </Popover>
+      {React.Children.map(children, (element) =>
+        checkRole(element.props.roles, currentRole)
+          ? React.cloneElement(element, {
+              resource: modelResource,
+              gotoEditPage: element.props.gotoEditPage || gotoEditPage,
+              gotoShowPage: element.props.gotoShowPage || gotoShowPage,
+              deleteItem: element.props.deleteItem || deleteItem,
+              pinItem: element.props.pinItem || pinItem,
+              record,
+            })
+          : null,
+      )}
     </GroupWrapper>
   );
 };
@@ -68,6 +63,7 @@ ActionGroup.propTypes = {
   gotoEditPage: PropTypes.func,
   gotoShowPage: PropTypes.func,
   deleteItem: PropTypes.func,
+  pinItem: PropTypes.func,
   source: PropTypes.string,
   fixed: PropTypes.string,
   width: PropTypes.number,
@@ -81,7 +77,6 @@ ActionGroup.propTypes = {
 ActionGroup.defaultProps = {
   source: 'actionGroup',
   fixed: 'right',
-  width: 100,
   placement: 'bottomRight',
 };
 

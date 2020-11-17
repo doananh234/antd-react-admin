@@ -1,7 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import i18next from 'i18next';
-import { getRecordData } from '../../../utils/tools';
+import { getRecordData } from 'utils/tools';
+import { Tag } from 'antd';
+import { STATUS } from 'configs/localData';
+
+export const formatStatus = (data) => {
+  return (
+    <Tag color={STATUS.find((e) => `${e.value}` === `${data}`)?.color}>
+      {STATUS.find((e) => `${e.value}` === `${data}`)?.text}
+    </Tag>
+  );
+};
 
 const RestFieldItem = ({
   record,
@@ -11,6 +21,7 @@ const RestFieldItem = ({
   valueProp,
   component,
   onChangeRecord,
+  customOnChange,
 }) => {
   const element = React.cloneElement(component, {
     record,
@@ -18,13 +29,11 @@ const RestFieldItem = ({
       typeof format(getRecordData(record, source), record) === 'undefined'
         ? i18next.t('error.waitingUpdate')
         : format(getRecordData(record, source), record),
-    onChange: value => {
-      onChangeRecord(formatSubmitData(value));
-    },
+    onChange: (value) =>
+      customOnChange
+        ? customOnChange(formatSubmitData(value), record)
+        : onChangeRecord(formatSubmitData(value)),
   });
-  // element.setAttributeNode('update', e => {
-  //   console.log('e', e);
-  // });
   return element;
 };
 RestFieldItem.propTypes = {
@@ -37,11 +46,12 @@ RestFieldItem.propTypes = {
 };
 
 RestFieldItem.defaultProps = {
-  format: data => data,
-  formatSubmitData: data => data,
+  format: (data) => data,
+  formatSubmitData: (data) => data,
   onChangeRecord: () => {},
   component: <span />,
   valueProp: 'children',
+  filterDropdown: undefined,
 };
 
 export default RestFieldItem;

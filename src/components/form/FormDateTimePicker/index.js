@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { DatePicker, TimePicker } from 'antd';
+import { DatePicker, TimePicker, Form } from 'antd';
 import FormItemUI from '../FormItem';
 import { DateTimePickerWrapper } from './styles';
 
-const FormDatePicker = props => {
+const FormDatePicker = (props) => {
   const {
     isShowTime,
     required,
@@ -15,6 +15,8 @@ const FormDatePicker = props => {
     source,
     form,
     disabled,
+    isShowDate,
+    formatDate,
   } = props;
   const values =
     (defaultValue || initialValue) && !form.getFieldValue(source)
@@ -22,11 +24,14 @@ const FormDatePicker = props => {
       : form.getFieldValue(source);
   const config = {
     rules: [{ type: 'object' }],
-    initialValue: defaultValue || initialValue ? moment(defaultValue || initialValue) : undefined,
+    initialValue:
+      defaultValue || initialValue
+        ? moment(defaultValue || initialValue)
+        : undefined,
     ...formOptions,
   };
-  const getValueFromEvent = value => {
-    const e = value.toISOString();
+  const getValueFromEvent = (value) => {
+    const e = value?.toISOString();
     props.formOptions &&
       props.formOptions.getValueFromEvent &&
       props.formOptions.getValueFromEvent(e);
@@ -38,25 +43,28 @@ const FormDatePicker = props => {
         {...props}
         formOptions={{
           getValueFromEvent,
-          normalize: value => value && moment(value),
+          normalize: (value) => value && moment(value),
         }}
         ruleType="object"
         defaultValue={
-          defaultValue || initialValue ? moment(defaultValue || initialValue) : undefined
+          defaultValue || initialValue
+            ? moment(defaultValue || initialValue)
+            : undefined
         }
         className="title"
         required={required}
+        name={source}
       >
         <div>
           {isShowTime && (
             <TimePicker
               disabled={disabled}
-              onChange={newDate => {
+              onChange={(newDate) => {
                 form.setFieldsValue({
                   [source]: newDate,
                 });
                 formOptions.getValueFromEvent &&
-                  formOptions.getValueFromEvent(newDate.toISOString());
+                  formOptions.getValueFromEvent(newDate?.toISOString());
               }}
               style={{ marginBottom: 10 }}
               value={values}
@@ -65,14 +73,15 @@ const FormDatePicker = props => {
               className="viewTimePicker"
             />
           )}
-          {form.getFieldDecorator(source, config)(
+          <Form.Item name={source} {...config}>
             <DatePicker
               allowClear={false}
               disabled={disabled}
-              format="ddd - MMM DD YYYY"
+              format={formatDate}
               className="viewDatePicker"
-            />,
-          )}
+              style={{ display: isShowDate ? 'block' : 'none' }}
+            />
+          </Form.Item>
         </div>
       </FormItemUI>
     </DateTimePickerWrapper>
@@ -91,11 +100,15 @@ FormDatePicker.propTypes = {
   formOptions: PropTypes.object,
   disabled: PropTypes.bool,
   isShowTime: PropTypes.bool,
+  isShowDate: PropTypes.bool,
+  formatDate: PropTypes.string,
 };
 
 FormDatePicker.defaultProps = {
   isShowTime: true,
+  isShowDate: true,
   formOptions: {},
+  formatDate: 'ddd - MMM DD YYYY',
 };
 
 export default FormDatePicker;

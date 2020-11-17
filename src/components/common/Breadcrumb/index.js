@@ -5,22 +5,16 @@ import { Link } from 'react-router-dom';
 import Text from '../Text';
 
 const CustomBreadcrumb = props => (
-  <Breadcrumb
-    separator={(
-      <Text inline type="h3">
-        {'>'}
-      </Text>
-)}
-  >
+  <Breadcrumb separator={<Text inline>&gt;</Text>}>
     {props.data.map((data, index) => (
       <Breadcrumb.Item key={data.path}>
         <Link href={data.path} to={data.path}>
           {index === props.data.length - 1 ? (
-            <Text inline type="h3">
+            <Text inline>
               {data.title}
             </Text>
           ) : (
-            <Text inline type="h3">
+            <Text inline>
               {data.title}
             </Text>
           )}

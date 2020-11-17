@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { List } from 'antd';
-import Text from '../../../../components/common/Text';
+import Text from 'components/common/Text';
 import { formatDateTime } from '../../../../utils/textUtils';
 import ActivitiesLogWrapper from './style';
 
@@ -21,10 +21,10 @@ const ActivitiesLog = ({ dataSource }) => (
             <Text type="smallText">{formatDateTime(item.time)}</Text>
           </div>
         </List.Item>
-        )}
+      )}
     />
   </ActivitiesLogWrapper>
-  );
+);
 ActivitiesLog.propTypes = {
   dataSource: PropTypes.array,
 };

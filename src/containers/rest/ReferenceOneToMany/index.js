@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import CRUDActions from '../../../redux/crudActions';
-import { getRecordData } from '../../../utils/tools';
-import { searchReference } from '../../../redux/referenceData/slice';
-import { getReferenceArr } from '../../../redux/referenceData/selectors';
-import { PRIMARY_KEY } from '../../../redux/crudCreator/slice';
+import { searchReference } from 'redux/referenceData/actions';
+import { getReferenceArr } from 'redux/referenceData/selectors';
+import CRUDActions from 'redux/crudActions';
+import { getRecordData } from 'utils/tools';
+import { PRIMARY_KEY } from 'redux/crudCreator/dataProvider';
 
 class RefOneToMany extends Component {
   componentDidMount() {
@@ -21,7 +21,7 @@ class RefOneToMany extends Component {
     );
   }
 
-  onSearch = text => {
+  onSearch = (text) => {
     const { searchProp } = this.props;
     this.props.search({
       where: {
@@ -36,9 +36,9 @@ class RefOneToMany extends Component {
     });
   };
 
-  addReference = data => {
+  addReference = (data) => {
     const { record, source, mappedBy } = this.props;
-    const convertData = data.map(item => ({
+    const convertData = data.map((item) => ({
       ...item,
       [mappedBy]: getRecordData(record, source),
     }));
@@ -98,20 +98,27 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = (dispatch, props) => ({
   search: (text, searchKey) =>
-    dispatch(searchReference(props.resource, text, searchKey)),
+    dispatch(searchReference({ resource: props.resource, text, searchKey })),
   retrieveList: (filter, isRefresh) =>
     dispatch(
-      CRUDActions[props.resource].getAll(filter, {
-        isRefresh,
+      CRUDActions[props.resource].getAll({
+        data: filter,
+        options: {
+          isRefresh,
+        },
       }),
     ),
-  gotoShowPage: id => props.history.push(`/auth/${props.resource}/${id}/show`),
-  gotoEditPage: id => props.history.push(`/auth/${props.resource}/${id}/edit`),
-  deleteItem: id =>
+  gotoShowPage: (id) =>
+    props.history.push(`/auth/${props.resource}/${id}/show`),
+  gotoEditPage: (id) =>
+    props.history.push(`/auth/${props.resource}/${id}/edit`),
+  deleteItem: (id) =>
     dispatch(
       CRUDActions[props.resource].edit({
-        [PRIMARY_KEY]: id,
-        [props.mappedBy]: null,
+        data: {
+          [PRIMARY_KEY]: id,
+          [props.mappedBy]: null,
+        },
       }),
     ),
 });

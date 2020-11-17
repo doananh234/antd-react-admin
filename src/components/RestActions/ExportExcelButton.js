@@ -16,7 +16,7 @@ const StyledButton = styled(Button)`
 const ExportExcelButton = ({ resource, resourceFilter }) => {
   const query = {
     limit: resourceFilter.limit,
-    offset: resourceFilter.limit * (resourceFilter.page - 1),
+    offset: resourceFilter.limit * resourceFilter.offset,
     filter: JSON.stringify(getValidData(resourceFilter.filter)),
   };
   return (

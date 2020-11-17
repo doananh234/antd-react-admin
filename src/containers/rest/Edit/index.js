@@ -1,120 +1,145 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useLayoutEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import i18n from 'i18next';
-import { goBack as goBackAction, replace } from 'connected-react-router';
-import { Icon } from 'antd';
-import Text from '../../../components/common/Text';
-import CRUDActions from '../../../redux/crudActions';
-import RestEditComponent from '../../../components/RestLayout/Edit';
-import { getIdByUrl } from '../../../utils/tools';
-import { PRIMARY_KEY } from '../../../redux/crudCreator/slice';
-import crudSelectors from '../../../redux/crudSelectors';
+import { useHistory, useLocation } from 'react-router';
+import Text from 'components/common/Text';
+import RestEditComponent from 'components/RestLayout/Edit';
+import CRUDActions from 'redux/crudActions';
+import { getIdByUrl } from 'utils/tools';
+import { PRIMARY_KEY } from 'redux/crudCreator/dataProvider';
+import crudSelectors from 'redux/crudSelectors';
 
-class RestEdit extends Component {
-  componentDidMount() {
-    this.props.retrieveOneRecord(getIdByUrl(this.props));
-  }
-
-  componentWillUnmount() {
-    this.props.clearCurrent();
-  }
-
-  closeModal = () => {
-    const { replaceRoute, location } = this.props;
-    replaceRoute(location.pathname);
+const RestEdit = (props) => {
+  const {
+    showModal,
+    visibleModal,
+    header,
+    resource,
+    customOnSubmit,
+    defaultOptions,
+    customOnBack,
+  } = props;
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const location = useLocation();
+  const id = getIdByUrl(props, location);
+  const loading = useSelector(
+    crudSelectors[props.resource].getLoadingCurrentRecord,
+  );
+  const errorRequest = useSelector(crudSelectors[props.resource].getError);
+  const record = useSelector(crudSelectors[props.resource].getCurrentData);
+  const closeModal = () => {
+    history.replace(location.pathname);
   };
+  const gotoShowPage = (id) =>
+    history.push(`${location.pathname.replace('/:id/edit', '')}/${id}/show`);
 
-  onBack = () => {
-    const { visibleModal, goBack } = this.props;
+  const onBack = () => {
     if (!visibleModal) {
-      goBack();
+      history.goBack();
     } else {
-      this.closeModal();
+      closeModal();
     }
   };
 
-  onSubmit = data => {
-    const { onSubmit } = this.props;
-    onSubmit(getIdByUrl(this.props), data);
+  const onSubmit = (data) => {
+    if (customOnSubmit) {
+      dispatch(
+        customOnSubmit({
+          id,
+          data,
+          options: {
+            isBack: true,
+            ...defaultOptions,
+          },
+        }),
+      );
+    } else
+      dispatch(
+        CRUDActions[resource].edit({
+          data: {
+            ...data,
+            [PRIMARY_KEY]: id,
+          },
+          options: { isBack: !customOnBack, ...defaultOptions },
+        }),
+      ).then(({ payload: { data, error } }) => {
+        if (
+          data.id &&
+          !error &&
+          !(!defaultOptions || defaultOptions.isBack === false)
+        ) {
+          customOnBack ? customOnBack() : onBack();
+        }
+      });
   };
 
-  render() {
-    const { showModal, header, resource } = this.props;
-    return !showModal ? (
-      <RestEditComponent
-        {...this.props}
-        onBack={this.onBack}
-        onSubmit={this.onSubmit}
-      />
-    ) : (
-      <>
-        {header !== null && (
-          <Text type="h3" className="modalTitleContent">
-            <div className="modalTitle">
-              {!header || typeof header === 'string'
-                ? i18n.t(header || `${resource}.editPage`)
-                : header}
-            </div>
-            <Icon
-              onClick={this.onBack}
-              className="modalBtnBack"
-              type="ic-close"
-            />
-          </Text>
-        )}
-        <RestEditComponent
-          {...this.props}
-          showModal
-          onBack={this.onBack}
-          onSubmit={this.onSubmit}
-        />
-      </>
+  useLayoutEffect(() => {
+    dispatch(
+      CRUDActions[resource].getDataById({
+        data: {
+          [PRIMARY_KEY]: id,
+        },
+        options: { isRequestApi: true, isRefresh: true, ...defaultOptions },
+      }),
     );
-  }
-}
-RestEdit.propTypes = {
-  retrieveOneRecord: PropTypes.func,
-  onSubmit: PropTypes.func,
-  title: PropTypes.any,
-  resource: PropTypes.string,
-  goBack: PropTypes.func,
-  location: PropTypes.object,
-  showModal: PropTypes.bool,
-  replaceRoute: PropTypes.func,
-  header: PropTypes.string,
-  visibleModal: PropTypes.bool,
-  clearCurrent: PropTypes.func,
+    return () => {
+      dispatch(CRUDActions[resource].clearCurrent());
+    };
+    // eslint-disable-next-line
+  }, []);
+  const content = (
+    <RestEditComponent
+      {...props}
+      resource={resource}
+      header={header}
+      customOnSubmit={customOnSubmit}
+      showModal={showModal}
+      onBack={onBack}
+      onSubmit={onSubmit}
+      loading={loading}
+      record={record}
+      error={errorRequest}
+      gotoShowPage={gotoShowPage}
+    />
+  );
+  return !showModal ? (
+    content
+  ) : (
+    <>
+      {header !== null && (
+        <Text type="h3" className="modalTitleContent">
+          <div className="modalTitle">
+            {!header || typeof header === 'string'
+              ? i18n.t(header || `${resource}.editPage`)
+              : header}
+          </div>
+          <span
+            role="presentation"
+            onClick={onBack}
+            className="modalBtnBack"
+            type="anticon ic-close"
+          />
+        </Text>
+      )}
+      {content}
+    </>
+  );
 };
 
-const mapStateToProps = (state, props) => ({
-  loading: crudSelectors[props.resource].getLoadingCurrentRecord(state),
-  errorRequest: crudSelectors[props.resource].getError(state),
-  record: crudSelectors[props.resource].getCurrentData(state),
-  location: state.router.location,
-});
+RestEdit.propTypes = {
+  resource: PropTypes.string,
+  showModal: PropTypes.bool,
+  header: PropTypes.string,
+  visibleModal: PropTypes.bool,
+  defaultOptions: PropTypes.object,
+  customOnSubmit: PropTypes.func,
+  customOnBack: PropTypes.func,
+};
 
-const mapDispatchToProps = (dispatch, props) => ({
-  retrieveOneRecord: id =>
-    dispatch(
-      CRUDActions[props.resource].getById({
-        [PRIMARY_KEY]: id,
-      }),
-    ),
-  clearCurrent: () => dispatch(CRUDActions[props.resource].clearCurrent()),
-  onSubmit: (id, data) =>
-    dispatch(
-      CRUDActions[props.resource].edit({
-        ...data,
-        [PRIMARY_KEY]: id,
-      }),
-    ),
-  gotoShowPage: id =>
-    props.history.push(
-      `${props.match.path.replace('/:id/edit', '')}/${id}/show`,
-    ),
-  goBack: () => dispatch(goBackAction()),
-  replaceRoute: data => dispatch(replace(data)),
-});
+RestEdit.defaultProps = {
+  defaultOptions: {},
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(RestEdit);
+export default RestEdit;

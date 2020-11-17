@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useLayoutEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { pick } from 'lodash';
-import { connect, useDispatch } from 'react-redux';
-import { push } from 'connected-react-router';
+import { pick, isEmpty } from 'lodash';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import CRUDActions from 'redux/crudActions';
 import crudSelectors from 'redux/crudSelectors';
 import RestListComponent from 'components/RestLayout/List';
@@ -12,38 +11,58 @@ import {
   getValidData,
   convertObjToSearchStr,
 } from 'utils/tools';
-import { PRIMARY_KEY } from 'redux/crudCreator/slice';
+import { PRIMARY_KEY } from 'redux/crudCreator/dataProvider';
 import useRouter from 'hooks/useRouter';
 
-const RestList = props => {
-  const { location } = useRouter();
+const RestList = (props) => {
+  const { location, history } = useRouter();
   const dispatch = useDispatch();
-
-  useEffect(() => {
+  const loading = useSelector(crudSelectors[props.resource].getLoading);
+  const resourceData = useSelector(crudSelectors[props.resource].getDataArr);
+  const resourceFilter = useSelector(crudSelectors[props.resource].getFilters);
+  const { initialFilter, defaultOptions } = props;
+  const retrieveList = useCallback(
+    (filter = { filter: {} }, isRefresh) =>
+      dispatch(
+        CRUDActions[props.resource].getAll({
+          data: {
+            ...props.initialFilter,
+            ...filter,
+            filter:
+              props.initialFilter?.filter && filter.filter
+                ? { ...props.initialFilter.filter, ...filter.filter }
+                : props.initialFilter?.filter || filter.filter,
+          },
+          options: { ...defaultOptions, isRefresh },
+        }),
+      ),
+    [dispatch, props.resource, defaultOptions, props.initialFilter],
+  );
+  useLayoutEffect(() => {
+    const { getFromUrl } = props;
     const filter =
-      (location && getFilterFromUrl(location.search)) || props.initialFilter;
-    props.retrieveList(filter || { limit: 20, page: 1, filter: {} }, true);
+      (getFromUrl && getFilterFromUrl(location.search)) || initialFilter;
+    retrieveList(isEmpty(filter) || { limit: 10, offset: 0, filter: {} }, true);
+    // eslint-disable-next-line
   }, []);
 
-  const pushQuery = searchStr => {
-    dispatch(
-      push(
-        props.customPath
-          ? `${props.customPath}?${searchStr}`
-          : `${location.pathname}?${searchStr}`,
-      ),
+  const pushQuery = (searchStr) => {
+    history.push(
+      props.customPath
+        ? `${props.customPath}?${searchStr}`
+        : `${location.pathname}?${searchStr}`,
     );
   };
 
-  const pushRoute = data => dispatch(push(data));
+  const pushRoute = (data) => history.push(data);
 
-  const retrieveList = filter => {
+  const retrievedList = (filter, isRefresh = true) => {
     const { isUpdateRoute } = props;
     isUpdateRoute && pushQuery(getSearch(filter));
-    props.retrieveList(filter, true);
+    retrieveList(filter, isRefresh);
   };
 
-  const gotoEditPage = id => {
+  const gotoEditPage = (id) => {
     const { redirects, resource } = props;
     const route = `/${resource}/${id}/edit`;
     if (redirects.edit === 'modal') {
@@ -53,7 +72,7 @@ const RestList = props => {
     }
   };
 
-  const gotoShowPage = id => {
+  const gotoShowPage = (id) => {
     const { redirects, resource } = props;
     const route = `/${resource}/${id}/show`;
     if (redirects.edit === 'modal') {
@@ -65,7 +84,9 @@ const RestList = props => {
 
   const gotoCreatePage = () => {
     const { redirects, resource, rootPath, initCreateData } = props;
-    const route = `${rootPath}/${resource}/create`;
+    const route = `${rootPath}/${resource}/create?${convertObjToSearchStr(
+      initCreateData,
+    )}`;
     if (redirects.create === 'modal') {
       pushRoute(`#${resource}/create?${convertObjToSearchStr(initCreateData)}`);
     } else {
@@ -74,81 +95,70 @@ const RestList = props => {
   };
 
   const getFilterData = () => {
-    const { resourceFilter, isUpdateRoute } = props;
+    const { isUpdateRoute } = props;
     const filter =
       (location && getFilterFromUrl(location.search)) || props.initialFilter;
     return isUpdateRoute
-      ? { ...filter, ...pick(resourceFilter, ['limit', 'page', 'count']) }
+      ? {
+          ...filter,
+          ...pick(resourceFilter, ['limit', 'offset', 'count', 'orderBy']),
+          limit: resourceFilter.limit || filter?.limit,
+          offset: resourceFilter.offset || filter?.offset,
+          orderBy: resourceFilter.orderBy || filter?.orderBy,
+        }
       : getValidData(resourceFilter);
   };
-
   return (
     <RestListComponent
       header={`${props.resource}.header`}
       {...props}
+      loading={loading}
+      resourceData={resourceData}
       resourceFilter={getFilterData()}
       gotoEditPage={gotoEditPage}
       gotoCreatePage={gotoCreatePage}
       gotoShowPage={gotoShowPage}
-      retrieveList={retrieveList}
+      retrieveList={retrievedList}
     />
   );
 };
 
-const mapStateToProps = (state, props) => ({
-  loading: crudSelectors[props.resource].getLoading(state, props),
-  resourceData: crudSelectors[props.resource].getDataArr(state, props),
-  resourceFilter: crudSelectors[props.resource].getFilters(state, props),
-});
+const mapStateToProps = () => ({});
 
 const mapDispatchToProps = (dispatch, props) => ({
-  retrieveList: (filter = { filter: {} }, isRefresh) =>
-    dispatch(
-      CRUDActions[props.resource].getAll(
-        {
-          ...props.initialFilter,
-          ...filter,
-          filter:
-            props.initialFilter?.filter && filter.filter
-              ? { ...props.initialFilter.filter, ...filter.filter }
-              : props.initialFilter?.filter || filter.filter,
-        },
-        { ...props.defaultOptions, isRefresh },
-      ),
-    ),
   customQuery: (id, queryUrl, data, isChangeToEdit) =>
     dispatch(
-      CRUDActions[props.resource].edit(
-        {
+      CRUDActions[props.resource].edit({
+        data: {
           ...data,
           [PRIMARY_KEY]: id,
         },
-        {
+        options: {
           ...props.defaultOptions,
           isChangeToEdit,
           customApiResource: queryUrl,
           isBack: false,
         },
-      ),
+      }),
     ),
   updateRecord: (id, data, isChangeToEdit) =>
     dispatch(
-      CRUDActions[props.resource].edit(
-        {
+      CRUDActions[props.resource].edit({
+        data: {
           ...data,
           [PRIMARY_KEY]: id,
         },
-        { ...props.defaultOptions, isChangeToEdit, isBack: false },
-      ),
+        options: { ...props.defaultOptions, isChangeToEdit, isBack: false },
+      }),
     ),
-  deleteItem: id =>
+  deleteItem: (id) =>
     dispatch(
-      CRUDActions[props.resource].del(
-        {
+      CRUDActions[props.resource].del({
+        data: {
           [PRIMARY_KEY]: id,
         },
-        { ...props.defaultOptions, isBack: false },
-      ),
+        options: { ...props.defaultOptions, isBack: false },
+      }),
     ),
   exportExcel: () => dispatch(CRUDActions[props.resource].exportExcel()),
 });
@@ -165,6 +175,8 @@ RestList.propTypes = {
   initCreateData: PropTypes.object,
   resourceFilter: PropTypes.object,
   customPath: PropTypes.string,
+  defaultOptions: PropTypes.object,
+  getFromUrl: PropTypes.bool,
 };
 
 ConnectRestList.propTypes = {
@@ -175,11 +187,13 @@ ConnectRestList.propTypes = {
   rootPath: PropTypes.string,
   isUpdateRoute: PropTypes.bool,
   initCreateData: PropTypes.object,
+  defaultOptions: PropTypes.object,
 };
 
 ConnectRestList.defaultProps = {
   isUpdateRoute: true,
   rootPath: '',
+  getFromUrl: true,
   redirects: {
     edit: 'modal',
     create: 'modal',

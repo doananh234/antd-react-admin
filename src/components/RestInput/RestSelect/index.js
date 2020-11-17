@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { getRecordData } from 'utils/tools';
 import FormSelect from '../../form/FormSelect';
-import { getRecordData } from '../../../utils/tools';
 import { RestInputContext } from '../RestInputContext';
 
 const RestSelect = props => (

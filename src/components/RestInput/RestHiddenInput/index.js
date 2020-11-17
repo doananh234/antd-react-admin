@@ -1,8 +1,8 @@
 import React from 'react';
 import { Input } from 'antd';
 import PropTypes from 'prop-types';
+import { getRecordData } from 'utils/tools';
 import FormItem from '../../form/FormItem';
-import { getRecordData } from '../../../utils/tools';
 import { RestInputContext } from '../RestInputContext';
 
 const RestHiddenInput = props => (

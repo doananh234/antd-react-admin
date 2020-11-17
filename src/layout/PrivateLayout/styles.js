@@ -1,24 +1,20 @@
 import styled from 'styled-components';
+import { Layout } from 'antd';
 
-const PrivateLayoutWrapper = styled.div`
-  .windowView {
-    height: 100vh;
+const PrivateLayoutWrapper = styled(Layout)`
+  min-height: 100vh;
+  .ant-layout {
+    transition: all 0.2s ease 0s;
+    padding-left: ${({ collapsed }) =>
+      collapsed === 'true' ? '64px' : '200px'};
+
+    @media only screen and (max-width: 640px) {
+      padding-left: 0px;
+    }
   }
-  .mainView {
-    height: 100vh;
-    margin-left: 64px;
-    overflow: hidden;
-    transition: all 0.3s ease 0s;
-    background: ${({ theme }) => theme.background.container};
-  }
-  .mainWithoutSidebar {
+  .ant-anchor-wrapper {
     margin-left: 0px;
-    .content {
-      padding: 0px;
-    }
-    .ant-layout {
-      height: 100%;
-    }
+    padding-left: 0px;
   }
   .container {
     overflow-y: auto;
@@ -26,10 +22,11 @@ const PrivateLayoutWrapper = styled.div`
     display: flex;
     flex-direction: column;
   }
+
   .content {
     padding: 36px 24px;
     flex: 1;
-    ${'' /* @media only screen and (max-width: 430px) {
+    ${'' /* @media only screen and (max-width: 640px) {
       padding-top: 80px;
     } */}
   }
@@ -37,12 +34,12 @@ const PrivateLayoutWrapper = styled.div`
     font-size: 20px;
     padding: 5px;
     cursor: pointer;
-    transition: color 0.3s;
+    transition: color 0.2s;
     margin-right: 10px;
     &:hover {
       color: ${({ theme }) => theme.palette.primary};
     }
-    @media only screen and (max-width: 430px) {
+    @media only screen and (max-width: 640px) {
       color: ${({ theme }) => theme.palette.primary};
     }
   }
@@ -52,7 +49,7 @@ const PrivateLayoutWrapper = styled.div`
     line-height: 64px;
     cursor: pointer;
     color: ${({ theme }) => theme.palette.primary};
-    transition: color 0.3s;
+    transition: color 0.2s;
     position: fixed;
     top: 0px;
     left: 20px;
@@ -61,13 +58,13 @@ const PrivateLayoutWrapper = styled.div`
     &:hover {
       color: ${({ theme }) => theme.palette.primary};
     }
-    @media only screen and (max-width: 430px) {
+    @media only screen and (max-width: 640px) {
       display: block;
     }
   }
 
   .logo {
-    height: 60px;
+    height: 64px;
     display: flex;
     align-items: center;
     position: relative;
@@ -81,7 +78,42 @@ const PrivateLayoutWrapper = styled.div`
     .fullLogo {
       position: absolute;
       opacity: 0;
-      transition: all 0.3s;
+      transition: all 0.2s;
+    }
+  }
+  .sider-wrapper {
+    height: 100vh;
+    display: flex;
+    position: fixed;
+    top: 0;
+    z-index: 999;
+    background: ${({ theme }) => theme.background.content};
+
+    .ant-menu {
+      background: ${({ theme }) => theme.palette.primary};
+      border-right: none;
+    }
+    .ant-menu-item {
+      color: ${({ theme }) => theme.background.gray};
+      display: flex;
+      align-items: center;
+      height: 56px;
+      &.ant-menu-item-selected {
+        background: ${({ theme }) => theme.palette.primary};
+        color: ${({ theme }) => theme.background.content};
+        border-right: 2px solid ${({ theme }) => theme.border.light};
+        .anticon {
+          color: ${({ theme }) => theme.background.content};
+          line-height: 0;
+        }
+      }
+      .anticon {
+        font-size: 24px;
+        width: 64px;
+        left: 0px;
+        position: absolute;
+        line-height: 0;
+      }
     }
   }
 
@@ -89,8 +121,7 @@ const PrivateLayoutWrapper = styled.div`
     overflow: hidden;
     height: 100vh;
     position: fixed;
-    left: 0;
-    background: ${({ theme }) => theme.background.content};
+    ${'' /* background: ${({ theme }) => theme.background.content}; */}
     border-right: 1px solid ${({ theme }) => theme.border.default};
 
     .ant-menu {
@@ -101,19 +132,26 @@ const PrivateLayoutWrapper = styled.div`
       display: flex;
       align-items: center;
       height: 56px;
-      & > span {
-        padding-left: 30px;
+      svg {
+        fill: ${({ theme }) => theme.text.secondary};
+      }
+      & .menu-label {
+        margin-top: 0;
+        padding-left: 40px;
       }
       &.ant-menu-item-selected {
-        background: ${({ theme }) => theme.sidebar.activeBG};
-        color: ${({ theme }) => theme.sidebar.activeText};
+        background: ${({ theme }) => theme.background.content};
+        color: ${({ theme }) => theme.palette.primary};
+        ${'' /* border-right: 2px solid ${({ theme }) => theme.border.primary}; */}
         & > span {
-          color: ${({ theme }) => theme.sidebar.activeText};
+          color: ${({ theme }) => theme.palette.primary};
           font-weight: ${({ theme }) => theme.fontWeight.bold};
         }
-
+        svg {
+          fill: ${({ theme }) => theme.palette.primary};
+        }
         .anticon {
-          color: ${({ theme }) => theme.sidebar.activeText};
+          color: ${({ theme }) => theme.palette.primary};
         }
       }
       .anticon {
@@ -133,22 +171,20 @@ const PrivateLayoutWrapper = styled.div`
     display: flex;
     justify-content: space-between;
     transition: all 0.5s ease 0.2s;
-    @media only screen and (max-width: 430px) {
-      display: inherit;
+    @media only screen and (max-width: 640px) {
     }
 
     .title {
       display: none;
       opacity: 0;
-      transition: opacity 0.3s;
+      transition: opacity 0.2s;
       text-align: center;
-      @media only screen and (max-width: 430px) {
+      @media only screen and (max-width: 640px) {
         opacity: 1;
         display: inline-block;
         padding-left: 20px;
-        font-size: 20px;
+        font-size: 16px;
         font-weight: 500;
-        width: 100%;
       }
     }
 
@@ -157,7 +193,7 @@ const PrivateLayoutWrapper = styled.div`
         font-size: 24px;
       }
     }
-    ${'' /* @media only screen and (max-width: 430px) {
+    ${'' /* @media only screen and (max-width: 640px) {
       margin-top: -80px;
     } */}
   }
@@ -170,7 +206,7 @@ const PrivateLayoutWrapper = styled.div`
 
   .footer {
     text-align: center;
-    @media only screen and (max-width: 430px) {
+    @media only screen and (max-width: 640px) {
       display: none;
     }
   }
@@ -180,15 +216,16 @@ const PrivateLayoutWrapper = styled.div`
     position: absolute;
   }
   .sidebar {
-    background: ${({ theme }) => theme.background.content};
+    ${'' /* background: ${({ theme }) => theme.background.content}; */}
     border-right: 1px solid ${({ theme }) => theme.background.content};
     .ant-menu {
-      background: ${({ theme }) => theme.background.content};
-      border-right: 1px solid ${({ theme }) => theme.background.content};
+      ${'' /* background: ${({ theme }) => theme.background.content}; */}
+      border-right: 0px solid ${({ theme }) => theme.background.content};
     }
   }
 
-  #collapsedTracker:checked ~ .sidebar {
+  #collapsedTracker:checked ~ .sidebar,
+  #collapsedTracker:checked ~ .sider-wrapper {
     .logo {
       .fullLogo {
         opacity: 1;
@@ -199,18 +236,25 @@ const PrivateLayoutWrapper = styled.div`
   #collapsedTracker:checked ~ .mainView {
     margin-left: 200px !important;
   }
-  @media only screen and (max-width: 430px) {
+  @media only screen and (max-width: 640px) {
+    .sider-wrapper-true {
+      aside {
+        display: none;
+      }
+    }
+
     .sidebar {
-      left: -80px;
+      ${'' /* left: -80px; */}
       position: fixed;
-      z-index: 9999;
+      z-index: 999;
+      height: 100vh;
     }
     .mainView {
       margin-left: 0px;
       z-index: 1;
     }
     .overlay {
-      z-index: 9998;
+      z-index: 998;
       position: fixed;
       top: 0;
       right: 0;
@@ -257,7 +301,7 @@ const PrivateLayoutWrapper = styled.div`
     .tabIcon {
       font-size: 25px;
     }
-    @media only screen and (max-width: 430px) {
+    @media only screen and (max-width: 640px) {
       bottom: 0px;
     }
   }
@@ -285,6 +329,16 @@ const PrivateLayoutWrapper = styled.div`
 
   .ant-table-tbody {
     background: ${({ theme }) => theme.background.content};
+  }
+
+  &.mainWithoutSidebar {
+    margin-left: 0px;
+    .content {
+      padding: 0px;
+    }
+    .ant-layout {
+      padding-left: 0px;
+    }
   }
 `;
 

@@ -7,7 +7,40 @@
   "plugins": ["react", "react-hooks"],
   "settings": {
     "import/resolver": {
-      "node": {} // placed above other resolver configs
+      "node": {}, // placed above other resolver configs
+      "alias": {
+        "map": [
+          ["components", "./src/components"],
+          ["components/*", "./src/components/*"],
+          ["pages", "./src/pages"],
+          ["pages/*", "./src/pages/*"],
+          ["constants", "./src/constants"],
+          ["containers", "./src/containers"],
+          ["containers/*", "./src/containers/*"],
+          ["routes", "./src/routes"],
+          ["routes/*", "./src/routes/*"],
+          ["themes", "./src/themes"],
+          ["themes/*", "./src/themes/*"],
+          ["utils", "./src/utils"],
+          ["utils/*", "./src/utils/*"],
+          ["redux", "./src/redux"],
+          ["redux/*", "./src/redux/*"],
+          ["assets", "./src/assets"],
+          ["assets/*", "./src/assets/*"],
+          ["assets/img/*", "./src/assets/img/*"],
+          ["api", "./src/api"],
+          ["api/*", "./src/api/*"],
+          ["layout", "./src/layout"],
+          ["layout/*", "./src/layout/*"],
+          ["hooks", "./src/hooks"],
+          ["hooks/*", "./src/hooks/*"],
+          ["configs", "./src/configs"],
+          ["configs/*", "./src/configs/*"],
+          ["data", "./src/data"],
+          ["data/*", "./src/data/*"]
+        ],
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
     }
   },
   "globals": {
@@ -46,7 +79,6 @@
     "react/jsx-props-no-spreading": 0,
     "jsx-a11y/control-has-associated-label": 0,
     "react/no-danger": 0,
-    "import/no-unresolved": 0,
     "no-shadow": 0,
     "no-param-reassign": [
       "error",

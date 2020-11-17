@@ -11,8 +11,8 @@ const GridPhotosWrapper = styled.div`
   }
 
   .imageCount {
-    width: 100px;
-    height: 100px;
+    width: ${({ width }) => `${width}px`};
+    height: ${({ height }) => `${height}px`};
     border-radius: 4px;
     position: relative;
     display: inline-block;
@@ -37,17 +37,19 @@ const GridPhotosWrapper = styled.div`
       left: 0px;
       right: 5px;
       bottom: 0px;
-      width: 100px;
-      height: 100px;
+      width: ${({ width }) => `${width}px`};
+      height: ${({ height }) => `${height}px`};
       display: flex;
       z-index: 2;
       align-items: center;
       justify-content: center;
       border-radius: 4px;
       background: rgba(0, 0, 0, 0.3);
-      visibility: hidden;
+      visibility: visible;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
       &:hover {
-        visibility: visible;
       }
       .anticon {
         color: #fff;
@@ -68,8 +70,8 @@ const GridPhotosWrapper = styled.div`
   }
 
   .image {
-    width: 100px;
-    height: 100px;
+    width: ${({ width }) => `${width}px`};
+    height: ${({ height }) => `${height}px`};
     border-radius: 4px;
   }
 `;

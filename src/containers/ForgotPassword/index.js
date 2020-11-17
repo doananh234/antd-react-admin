@@ -1,140 +1,116 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import i18next from 'i18next';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Form, Button, Icon, Divider } from 'antd';
-import { forgotPassword as forgotPasswordAction } from 'redux/auth/slice';
+import { Form, Button, Divider } from 'antd';
+import { forgotPassword as forgotPasswordAction } from 'redux/auth/actions';
+import { MailOutlined } from '@ant-design/icons';
+import MaterialInput from 'components/common/MaterialInput';
+import Text from 'components/common/Text';
 import ForgotPasswordStyleWrapper from './styles';
-import MaterialInput from '../../components/common/MaterialInput';
-import Text from '../../components/common/Text';
 
 const FormItem = Form.Item;
 
-class ForgotPassword extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isRequestSuccess: false,
-    };
-  }
-
-  // eslint-disable-next-line react/no-deprecated
-  componentWillReceiveProps(nextProps) {
-    const { loading } = this.props;
-    if (loading && !nextProps.loading && !nextProps.error) {
-      this.setState({ isRequestSuccess: true });
-    }
-  }
-
-  handleLogin = e => {
-    e.preventDefault();
-    const { form, forgotPassword } = this.props;
-    form.validateFields((err, values) => {
-      if (!err && values) {
-        const { email } = values;
-        forgotPassword(email);
-      }
-    });
+const ForgotPassword = () => {
+  const [isRequestSuccess, setSsRequestSuccess] = useState(false);
+  const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  const loading = useSelector(state => state.auth.loading);
+  const forgotPassword = params => dispatch(forgotPasswordAction(params));
+  const handleLogin = () => {
+    form
+      .validateFields()
+      .then(values => {
+        // if (values) {
+        //   const { email } = values;
+        //   forgotPassword(email).then(({ payload }) => {
+        //     payload && setSsRequestSuccess(true);
+        //   });
+        // } hơi ẩu nha a
+        forgotPassword(values);
+        setSsRequestSuccess(true);
+      })
+      .catch(() => {});
   };
-
-  render() {
-    const { isRequestSuccess } = this.state;
-    const { form, loading } = this.props;
-    const { getFieldDecorator } = form;
-    if (isRequestSuccess) {
-      return (
-        <ForgotPasswordStyleWrapper className="isoSignInPage">
-          <div className="isoLoginContentWrapper">
-            <div className="isoLoginContent">
-              <Text type="h3" align="center">
-                {i18next.t('forgotPassword.success.title')}
-              </Text>
-              <Text align="center" className="txtDescription">
-                {i18next.t('forgotPassword.success.description')}
-              </Text>
-              <br />
-              <Button type="primary">
-                <Link to="/login">{i18next.t('login.loginBtn')}</Link>
-              </Button>
-            </div>
-          </div>
-        </ForgotPasswordStyleWrapper>
-      );
-    }
+  if (isRequestSuccess) {
     return (
       <ForgotPasswordStyleWrapper className="isoSignInPage">
         <div className="isoLoginContentWrapper">
           <div className="isoLoginContent">
             <Text type="h3" align="center">
-              {i18next.t('forgotPassword.title')}
+              {i18next.t('forgotPassword.success.title')}
             </Text>
-            <div className="isoSignInForm">
-              <Form onSubmit={this.handleLogin}>
-                <div className="isoInputWrapper">
-                  <FormItem>
-                    {getFieldDecorator('email', {
-                      rules: [
-                        {
-                          required: true,
-                          message: i18next.t(
-                            'input.email.validateMsg.required',
-                          ),
-                        },
-                        {
-                          type: 'email',
-                          message: i18next.t('input.email.validateMsg.invalid'),
-                        },
-                      ],
-                    })(
-                      <MaterialInput
-                        placeholder={i18next.t('login.yourEmail')}
-                        prefix=<Icon
-                          type="mail"
-                          style={{ color: 'rgba(0,0,0,.25)' }}
-                        />
-                      />,
-                    )}
-                  </FormItem>
-                </div>
-                <div className="buttonWrapper">
-                  <Button
-                    loading={loading}
-                    type="primary"
-                    htmlType="submit"
-                    onClick={this.handleLogin}
-                  >
-                    {i18next.t('button.resetMyPassword')}
-                  </Button>
-                  <Divider>{i18next.t('text.or')}</Divider>
-                  <Button type="secondary">
-                    <Link to="/login">{i18next.t('login.loginBtn')}</Link>
-                  </Button>
-                </div>
-              </Form>
-            </div>
+            <Text align="center" className="txtDescription">
+              {i18next.t('forgotPassword.success.description')}
+            </Text>
+            <br />
+            <Button type="primary">
+              <Link to="/login">{i18next.t('login.loginBtn')}</Link>
+            </Button>
           </div>
         </div>
       </ForgotPasswordStyleWrapper>
     );
   }
-}
-
-ForgotPassword.propTypes = {
-  loading: PropTypes.bool,
-  forgotPassword: PropTypes.func,
-  form: PropTypes.object,
-  error: PropTypes.object,
+  return (
+    <ForgotPasswordStyleWrapper className="isoSignInPage">
+      <div className="isoLoginContentWrapper">
+        <div className="isoLoginContent">
+          <Text type="h3" align="center">
+            {i18next.t('forgotPassword.title')}
+          </Text>
+          <div className="isoSignInForm">
+            <Form form={form} onFinish={handleLogin}>
+              <div className="isoInputWrapper">
+                <FormItem
+                  name="email"
+                  rules={[
+                    {
+                      required: true,
+                      message: i18next.t('input.email.validateMsg.required'),
+                    },
+                    {
+                      type: 'email',
+                      message: i18next.t('input.email.validateMsg.invalid'),
+                    },
+                  ]}
+                >
+                  <MaterialInput
+                    placeholder={i18next.t('login.yourEmail')}
+                    prefix={
+                      <MailOutlined
+                        style={{
+                          color: 'rgba(0,0,0,.25)',
+                          marginTop: '3px',
+                          fontSize: '20px',
+                        }}
+                      />
+                    }
+                  />
+                </FormItem>
+              </div>
+              <div className="buttonWrapper">
+                <Button
+                  loading={loading}
+                  type="primary"
+                  htmlType="submit"
+                  onClick={handleLogin}
+                >
+                  {i18next.t('button.resetMyPassword')}
+                </Button>
+                <Divider>{i18next.t('text.or')}</Divider>
+                <Button type="secondary">
+                  <Link to="/login">{i18next.t('login.loginBtn')}</Link>
+                </Button>
+              </div>
+            </Form>
+          </div>
+        </div>
+      </div>
+    </ForgotPasswordStyleWrapper>
+  );
 };
 
-const WrappedForgotPasswordForm = Form.create()(ForgotPassword);
+ForgotPassword.propTypes = {};
 
-export default connect(
-  state => ({
-    loading: state.auth.loading,
-    error: state.auth.error,
-  }),
-  dispatch => ({
-    forgotPassword: email => dispatch(forgotPasswordAction(email)),
-  }),
-)(WrappedForgotPasswordForm);
+export default ForgotPassword;

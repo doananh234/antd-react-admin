@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Avatar, Spin } from 'antd';
+import { getRecordData } from 'utils/tools';
 import { ImageWrapper } from './styles';
-import { getRecordData } from '../../../utils/tools';
 
-const RestImageField = props => {
+const RestImageField = (props) => {
   if (props.record) {
     return props.type === 'avatar' ? (
       <Avatar

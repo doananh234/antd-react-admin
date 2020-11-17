@@ -1,81 +1,71 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import I18n from 'i18next';
+import _, { zipObjectDeep } from 'lodash';
 import { Form, Button, Row, Col } from 'antd';
 import { FilterFormWrapper } from './styles';
-import Box from '../../common/Box';
+import { RestInputContext } from '../../RestInput/RestInputContext';
 
-class FormComponent extends Component {
-  onFilter = () => {
-    const { form, format, retrieveList } = this.props;
-    form.validateFields((err, values) => {
-      if (!err) {
-        retrieveList({ filter: format(values) });
-      }
+const FormComponent = ({ format, resourceFilter, children, retrieveList }) => {
+  const [form] = Form.useForm();
+  const onFilter = () => {
+    form.validateFields().then((values) => {
+      const parseToObj = zipObjectDeep(Object.keys(values), _.values(values));
+      retrieveList({ filter: format(parseToObj) });
     });
   };
-
-  onClear = () => {
-    this.props.form.resetFields();
-    this.props.retrieveList({ filter: {} });
+  const onClear = () => {
+    retrieveList({ filter: {} });
+    setTimeout(() => {
+      form.resetFields();
+    }, 0);
   };
-
-  render() {
-    const { form, children, retrieveList, resourceFilter } = this.props;
-    const components = React.Children.map(children, element =>
-      React.cloneElement(element, {
-        form,
-        record: resourceFilter.filter || {},
-        retrieveList,
-        required: false,
-      }),
-    );
-    return (
-      <Box>
-        <FilterFormWrapper>
-          <div className="filterContainer">
-            <div className="filterContent">{components}</div>
-            <div className="filterActions">
-              <Row gutter={10}>
-                <Col span={12}>
-                  <Button
-                    type="primary"
-                    onClick={this.onFilter}
-                    className="filterButton"
-                  >
-                    {I18n.t('button.filter')}
-                  </Button>
-                </Col>
-                <Col span={12}>
-                  <Button
-                    onClick={this.onClear}
-                    className="filterButton clearButton"
-                  >
-                    {I18n.t('button.clearFilter')}
-                  </Button>
-                </Col>
-              </Row>
-            </div>
-          </div>
-        </FilterFormWrapper>
-      </Box>
-    );
-  }
-}
-
-const FilterForm = Form.create()(FormComponent);
-const RestFilterForm = props => <FilterForm {...props} />;
+  return (
+    <FilterFormWrapper layout="vertical" form={form}>
+      <div className="filterContainer">
+        <div className="filterContent">
+          <RestInputContext.Provider
+            value={{
+              form,
+              record: resourceFilter.filter || {},
+              handleSubmit: onFilter,
+            }}
+          >
+            {children}
+          </RestInputContext.Provider>
+        </div>
+        <div className="filterActions">
+          <Row gutter={10}>
+            <Col lg={12} md={24} sm={24} xs={24} className="col-filter">
+              <Button
+                type="primary"
+                onClick={onFilter}
+                className="filterButton"
+              >
+                {I18n.t('button.filter')}
+              </Button>
+            </Col>
+            <Col lg={12} md={24} sm={24} xs={24} className="col-clear">
+              <Button onClick={onClear} className="filterButton clearButton">
+                {I18n.t('button.clearFilter')}
+              </Button>
+            </Col>
+          </Row>
+        </div>
+      </div>
+    </FilterFormWrapper>
+  );
+};
 
 FormComponent.propTypes = {
   children: PropTypes.node,
   retrieveList: PropTypes.func,
-  resourceFilter: PropTypes.any,
-  form: PropTypes.object,
   format: PropTypes.func,
+  resourceFilter: PropTypes.object,
 };
 
 FormComponent.defaultProps = {
-  format: values => values,
+  format: (values) => values,
 };
 
-export default RestFilterForm;
+export default FormComponent;
