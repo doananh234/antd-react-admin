@@ -8,4 +8,3 @@
   - [Container API](/docs/screen-api)
   - [Redux & Redux-saga](/docs/redux)
   - [Components](/docs/components)
-- [API](/api/README)
