@@ -16,6 +16,7 @@
 
 ## Structure
 
+- `src/@redux`: We save all config for redux at here. can create `src/@redux/auth` for manager `auth` reducer.
 - `src/containers`: We save all container&components of a page in here.
 - `src/pages`: We save all pages of the app in here.
 - `src/components`: We save all reuse components in here.
